@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="bg-white p-4 rounded shadow-sm">
+    <div class="row">
+        <div class="col-lg-8">
+            <span class="badge bg-primary mb-2">{{ doctor.specialty }}</span>
+            <h1 class="fw-bold text-dark">Dr. {{ doctor.name }}</h1>
+            <p class="text-muted lead">{{ doctor.qualification }}</p>
+            <hr>
+            <p>🏥 <strong>Hospital/Chamber:</strong> {{ doctor.hospital_name }}</p>
+            <p>📅 <strong>Available Days:</strong> {{ doctor.available_days }}</p>
+            <p>⏰ <strong>Visiting Hours:</strong> {{ doctor.visiting_hours }}</p>
+        </div>
+        <div class="col-lg-4 text-center">
+            <div class="card bg-light border-0 p-3 shadow-sm">
+                <h3 class="text-success fw-bold mb-3">৳{{ doctor.consultation_fee }}</h3>
+                <a href="{% url 'book_appointment' doctor.pk %}" class="btn btn-primary w-100 py-2 fw-bold">Book Appointment Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
