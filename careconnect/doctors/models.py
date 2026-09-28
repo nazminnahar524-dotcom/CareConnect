@@ -13,3 +13,5 @@ class Doctor(models.Model):
     visiting_hours = models.CharField(max_length=100) # e.g., 5 PM - 8 PM
     phone = models.CharField(max_length=30, blank=True, null=True)
 
+    def __str__(self):
+        return f"Dr. {self.name} - {self.specialty}"
