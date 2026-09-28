@@ -1,20 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="bg-white p-4 rounded shadow-sm">
-    <div class="row">
+<div class="container py-4">
+    <div class="row justify-content-center">
         <div class="col-lg-8">
-            <span class="badge bg-primary mb-2">{{ doctor.specialty }}</span>
-            <h1 class="fw-bold text-dark">Dr. {{ doctor.name }}</h1>
-            <p class="text-muted lead">{{ doctor.qualification }}</p>
-            <hr>
-            <p>🏥 <strong>Hospital/Chamber:</strong> {{ doctor.hospital_name }}</p>
-            <p>📅 <strong>Available Days:</strong> {{ doctor.available_days }}</p>
-            <p>⏰ <strong>Visiting Hours:</strong> {{ doctor.visiting_hours }}</p>
-        </div>
-        <div class="col-lg-4 text-center">
-            <div class="card bg-light border-0 p-3 shadow-sm">
-                <h3 class="text-success fw-bold mb-3">৳{{ doctor.consultation_fee }}</h3>
-                <a href="{% url 'book_appointment' doctor.pk %}" class="btn btn-primary w-100 py-2 fw-bold">Book Appointment Now</a>
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white">
+                <div class="bg-teal py-2"></div>
+                <div class="card-body p-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-teal bg-opacity-10 text-teal rounded-circle d-flex align-items-center justify-content-center fw-bold me-4 shadow-sm" style="width: 75px; height: 75px; font-size: 1.8rem;">
+                            <i class="fas fa-user-doctor"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-dark fw-bold mb-1">Dr. {{ doctor.name }}</h2>
+                            <p class="text-teal fs-5 fw-semibold mb-0">{{ doctor.specialty }}</p>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25 my-4">
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-2 text-secondary"><strong class="text-dark">Qualifications:</strong><br>{{ doctor.qualification }}</p>
+                            <p class="mb-2 text-secondary"><strong class="text-dark">Hospital:</strong><br>{{ doctor.hospital_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2 text-secondary"><strong class="text-dark">Available Days:</strong><br>{{ doctor.available_days }}</p>
+                            <p class="mb-2 text-secondary"><strong class="text-dark">Visiting Hours:</strong><br>{{ doctor.visiting_hours }}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-4 mb-4 d-flex justify-content-between align-items-center">
+                        <span class="text-muted fw-medium">Consultation Fee</span>
+                        <span class="text-teal fw-bold fs-4">৳{{ doctor.consultation_fee }}</span>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'doctor_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Back to List</a>
+                        <a href="{% url 'book_appointment' doctor.pk %}" class="btn btn-teal rounded-pill px-5 flex-grow-1 shadow-sm fw-semibold py-2">
+                            <i class="fas fa-calendar-plus me-2"></i> Book Appointment Now
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
