@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="fw-bold text-primary mb-4">My Booked Appointments</h2>
+<div class="row">
+    <div class="col-12">
+        <div class="list-group shadow-sm">
+            {% for app in appointments %}
+                <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <h5 class="mb-1 text-dark">Dr. {{ app.doctor.name }} <small class="text-muted fs-6">({{ app.doctor.specialty }})</small></h5>
+                        <p class="mb-1 text-muted small">🏥 {{ app.doctor.hospital_name }}</p>
+                        <p class="mb-0">📅 <strong>Date:</strong> {{ app.appointment_date }} | ⏰ <strong>Slot:</strong> {{ app.time_slot }}</p>
+                    </div>
+                    <span class="badge bg-success fs-6 px-3 py-2">{{ app.status }}</span>
+                </div>
+            {% empty %}
+                <p class="text-muted p-3">You have no booked appointments yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
