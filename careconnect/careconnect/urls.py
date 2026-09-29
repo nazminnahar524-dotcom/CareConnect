@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+
 from django.contrib import admin
 from django.urls import path, include
 from . import views
@@ -23,5 +25,6 @@ urlpatterns = [
     path('', views.home_view, name='home'),
     path('doctors/', include('doctors.urls')),
     path('appointments/', include('appointments.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),  # এই লাইনটি যুক্ত করুন
+    path('accounts/signup/', views.signup_view, name='signup'),  # নতুন সাইন-আপ পাথ এখানে যুক্ত হলো
+    path('accounts/', include('django.contrib.auth.urls')),  # বিল্ট-ইন লগইন/লগআউট ইউআরএল
 ]
