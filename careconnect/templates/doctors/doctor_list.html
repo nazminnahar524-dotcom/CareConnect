@@ -1,69 +1,11 @@
 {% extends 'base.html' %}
+{% block title %}Doctors · CareConnect{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <!-- Header & Search Bar -->
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-6">
-            <h2 class="fw-bold text-dark mb-1">
-                <i class="fas fa-user-md text-teal me-2"></i>Available Specialist Doctors
-            </h2>
-            <p class="text-muted mb-0">Find and book consultations with top-rated medical experts.</p>
-        </div>
-        <div class="col-md-6">
-            <form method="GET" class="d-flex gap-2 mt-3 mt-md-0">
-                <input type="text" name="q" value="{{ query }}" class="form-control rounded-pill px-3 shadow-sm" placeholder="Search doctor or hospital...">
-                <button type="submit" class="btn btn-teal rounded-pill px-4 shadow-sm">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Doctor Cards Grid -->
-    <div class="row g-4">
-        {% for doctor in doctors %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden bg-white position-relative">
-                <div class="bg-teal py-1"></div>
-                <div class="card-body p-4 d-flex flex-column">
-                    <div class="d-flex align-items-center mb-3">
-                        <!-- Circle er vetor 'Dr' text use kora holo, jeta 100% reliable ebong professional dekhabe -->
-                        <div class="bg-teal text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0 fw-bold" style="width: 50px; height: 50px; font-size: 1.1rem;">
-                            Dr
-                        </div>
-                        <div class="overflow-hidden ms-3">
-                            <h5 class="card-title fw-bold text-dark mb-1 text-truncate" title="Dr. {{ doctor.name }}">Dr. {{ doctor.name }}</h5>
-                            <span class="badge bg-light text-dark border fw-semibold rounded-pill px-2 py-1 small">{{ doctor.specialty }}</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 text-secondary small">
-                        <p class="mb-1 text-truncate"><i class="fas fa-hospital text-muted me-2"></i>{{ doctor.hospital_name }}</p>
-                        <p class="mb-0 text-truncate"><i class="fas fa-graduation-cap text-muted me-2"></i>{{ doctor.qualification }}</p>
-                    </div>
-
-                    <hr class="text-muted opacity-25 my-2">
-
-                    <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
-                        <span class="text-teal fw-bold fs-5">৳{{ doctor.consultation_fee }}</span>
-                        <a href="{% url 'doctor_detail' doctor.pk %}" class="btn btn-outline-teal btn-sm px-4 rounded-pill fw-semibold" style="border-color: var(--medical-teal); color: var(--medical-teal);">
-                            View Profile
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <div class="card border-0 shadow-sm p-5 rounded-4 bg-white">
-                <div class="text-teal opacity-50 mb-3" style="font-size: 3.5rem;">
-                    <i class="fas fa-search-minus"></i>
-                </div>
-                <h4 class="fw-bold text-dark">No Doctors Found</h4>
-                <p class="text-muted">Try adjusting your search criteria or check back later.</p>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-3"><div><div class="small fw-bold" style="color:var(--cc-green)">CARE DIRECTORY</div><h2 class="fw-bold mb-1">Doctors</h2><p class="cc-muted mb-0">Find a doctor by specialty, hospital or name and book your visit.</p></div><a href="{% url 'my_appointments' %}" class="btn btn-outline-cc rounded-3"><i class="fa-regular fa-calendar-check me-1"></i> My Appointments</a></div>
+<div class="row g-3 mb-4"><div class="col-6 col-xl-3"><div class="cc-card cc-stat"><div class="d-flex justify-content-between"><div><div class="value">{{ doctors|length }}</div><div class="label">DOCTORS FOUND</div></div><span class="cc-icon"><i class="fa-solid fa-user-doctor"></i></span></div></div></div><div class="col-6 col-xl-3"><div class="cc-card cc-stat"><div class="d-flex justify-content-between"><div><div class="value">{{ specialties|length }}</div><div class="label">SPECIALTIES</div></div><span class="cc-icon"><i class="fa-solid fa-stethoscope"></i></span></div></div></div><div class="col-6 col-xl-3"><div class="cc-card cc-stat"><div class="d-flex justify-content-between"><div><div class="value">24/7</div><div class="label">CARE SUPPORT</div></div><span class="cc-icon"><i class="fa-solid fa-headset"></i></span></div></div></div><div class="col-6 col-xl-3"><div class="cc-card cc-stat"><div class="d-flex justify-content-between"><div><div class="value">Secure</div><div class="label">ACCOUNT ACCESS</div></div><span class="cc-icon"><i class="fa-solid fa-shield-heart"></i></span></div></div></div></div>
+<div class="row g-3">
+<aside class="col-xl-3 col-lg-4"><div class="cc-card p-3 p-lg-4 sticky-lg-top" style="top:92px"><div class="d-flex justify-content-between align-items-center mb-3"><h6 class="fw-bold mb-0">Filter Doctors</h6>{% if query or selected_specialty %}<a href="{% url 'doctor_list' %}" class="small" style="color:var(--cc-green)">Clear</a>{% endif %}</div><form method="get"><label class="cc-filter-title d-block mb-2">Search</label><input name="q" value="{{ query }}" class="form-control mb-3" placeholder="Doctor or hospital"><label class="cc-filter-title d-block mb-2">Specialty</label><select name="specialty" class="form-select mb-4"><option value="">All specialties</option>{% for item in specialties %}<option value="{{ item }}" {% if selected_specialty == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select><button class="btn btn-cc w-100 rounded-3" type="submit">Apply Filters</button></form><hr><div class="small cc-muted"><i class="fa-solid fa-lock me-1" style="color:var(--cc-green)"></i> Doctor information and booking are available to signed-in users.</div></div></aside>
+<section class="col-xl-6 col-lg-8"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold mb-0">Find a Doctor</h6><span class="small cc-muted">{{ doctors|length }} result{{ doctors|length|pluralize }}</span></div>{% for doctor in doctors %}<div class="cc-card cc-doctor-row p-3 mb-3"><div class="d-flex gap-3"><div class="cc-doctor-avatar"><i class="fa-solid fa-user-doctor"></i></div><div class="flex-grow-1 min-w-0"><div class="d-flex justify-content-between gap-2"><div><h6 class="fw-bold mb-1">Dr. {{ doctor.name }}</h6><span class="cc-chip">{{ doctor.specialty }}</span></div><div class="text-end"><div class="small cc-muted">Consultation</div><strong style="color:var(--cc-green)">৳{{ doctor.consultation_fee }}</strong></div></div><div class="row g-2 mt-2 small cc-muted"><div class="col-12"><i class="fa-solid fa-hospital me-2" style="color:var(--cc-green)"></i>{{ doctor.hospital_name }}</div><div class="col-md-6"><i class="fa-solid fa-graduation-cap me-2" style="color:var(--cc-green)"></i>{{ doctor.qualification }}</div><div class="col-md-6"><i class="fa-regular fa-clock me-2" style="color:var(--cc-green)"></i>{{ doctor.visiting_hours }}</div></div><div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top"><span class="small cc-muted"><i class="fa-regular fa-calendar me-1"></i>{{ doctor.available_days }}</span><a href="{% url 'doctor_detail' doctor.pk %}" class="btn btn-outline-cc btn-sm rounded-3">View Details</a></div></div></div></div>{% empty %}<div class="cc-card p-5 text-center"><span class="cc-icon mb-3"><i class="fa-solid fa-magnifying-glass"></i></span><h5 class="fw-bold">No doctors found</h5><p class="cc-muted mb-0">Try another name, hospital or specialty.</p></div>{% endfor %}</section>
+<aside class="col-xl-3"><div class="cc-card p-3 mb-3"><h6 class="fw-bold">Book an Appointment</h6><p class="small cc-muted">Choose a doctor, view availability and reserve a consultation from the doctor profile.</p><a href="#" class="btn btn-cc w-100 rounded-3 disabled">Select a doctor first</a></div><div class="cc-card p-3"><h6 class="fw-bold">Important Note</h6><p class="small cc-muted mb-0">Please verify the doctor, hospital and visiting schedule before your appointment.</p></div></aside>
 </div>
 {% endblock %}

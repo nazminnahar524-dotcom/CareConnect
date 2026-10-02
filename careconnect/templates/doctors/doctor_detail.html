@@ -1,149 +1,56 @@
 {% extends 'base.html' %}
+{% block title %}Dr. {{ doctor.name }} · CareConnect{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb mb-0 small">
-            <li class="breadcrumb-item"><a href="{% url 'doctor_list' %}" class="text-teal text-decoration-none">Home</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'doctor_list' %}" class="text-teal text-decoration-none">Doctors</a></li>
-            <li class="breadcrumb-item active text-muted" aria-current="page">Dr. {{ doctor.name }}</li>
-        </ol>
-    </nav>
-
+<div class="container-fluid px-0">
+    <div class="mb-3"><a href="{% url 'doctor_list' %}" class="small fw-semibold" style="color:var(--cc-green);"><i class="fa-solid fa-arrow-left me-1"></i> Back to doctors</a></div>
     <div class="row g-4">
-        <!-- Left Column: Doctor Profile & Compact Details -->
         <div class="col-lg-8">
-            <!-- Top Profile Card -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
-                <div class="row align-items-center">
-                    <div class="col-auto">
-                        <div class="bg-teal text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm fw-bold" style="width: 75px; height: 75px; font-size: 1.5rem;">
-                            Dr
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                            <div>
-                                <h3 class="fw-bold text-dark mb-1">Dr. {{ doctor.name }} <i class="fas fa-check-circle text-teal fs-6" title="Verified Doctor"></i></h3>
-                                <p class="text-teal fw-semibold mb-1 small">{{ doctor.specialty }} • {{ doctor.qualification }}</p>
-                            </div>
-                            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill small">
-                                <i class="fas fa-shield-alt text-teal me-1"></i> Verified Expert
-                            </span>
-                        </div>
-
-                        <div class="d-flex flex-wrap gap-3 mt-2 text-muted small">
-                            <span><i class="fas fa-star text-warning me-1"></i> <strong class="text-dark">4.8</strong> (128 Reviews)</span>
-                            <span><i class="fas fa-user-injured text-teal me-1"></i> <strong class="text-dark">250+</strong> Patients</span>
-                            <span><i class="fas fa-award text-teal me-1"></i> <strong class="text-dark">15+</strong> Years Exp.</span>
-                        </div>
-
-                        <p class="text-muted small mb-0 mt-2 pt-2 border-top border-light">
-                            <i class="fas fa-hospital text-teal me-1"></i> {{ doctor.hospital_name }}
-                        </p>
+            <div class="cc-card p-4 p-lg-5 mb-3">
+                <div class="d-flex flex-column flex-md-row align-items-md-center gap-4">
+                    <div class="cc-icon flex-shrink-0" style="width:78px;height:78px;border-radius:20px;font-size:1.7rem;"><i class="fa-solid fa-user-doctor"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex flex-wrap justify-content-between gap-2"><div><span class="badge rounded-pill mb-2" style="background:var(--cc-green-soft);color:var(--cc-green);">{{ doctor.specialty }}</span><h2 class="fw-bold mb-1">Dr. {{ doctor.name }}</h2><p class="cc-muted mb-2">{{ doctor.qualification }}</p></div><span class="badge rounded-pill bg-light text-dark border align-self-start"><i class="fa-solid fa-circle-check me-1" style="color:var(--cc-green);"></i>Listed doctor</span></div>
+                        <div class="small cc-muted"><i class="fa-solid fa-hospital me-2" style="color:var(--cc-green);"></i>{{ doctor.hospital_name }}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- About Doctor & Professional Info -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
-                <h5 class="fw-bold text-dark mb-3"><i class="fas fa-user-md text-teal me-2"></i>About Doctor</h5>
-                <p class="text-secondary small lh-lg mb-3">
-                    Dr. {{ doctor.name }} is a highly qualified specialist in {{ doctor.specialty }}, currently practicing at {{ doctor.hospital_name }}. Dedicated to providing comprehensive medical care, accurate diagnosis, and advanced treatment plans.
-                </p>
-
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">Specialization</span>
-                            <strong class="text-dark">{{ doctor.specialty }}</strong>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">Qualifications</span>
-                            <strong class="text-dark">{{ doctor.qualification }}</strong>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="cc-card p-4 p-lg-5 mb-4">
+                <h5 class="fw-bold mb-3">Doctor information</h5>
+                <p class="cc-muted small lh-lg">Dr. {{ doctor.name }} is a {{ doctor.specialty }} specialist practicing at {{ doctor.hospital_name }}. The information shown here is based on the doctor record currently stored in CareConnect.</p>
                 <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">Available Days</span>
-                            <strong class="text-dark">{{ doctor.available_days }}</strong>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="p-3 bg-light rounded-3">
-                            <span class="text-muted small d-block">Visiting Hours</span>
-                            <strong class="text-dark">{{ doctor.visiting_hours }}</strong>
-                        </div>
-                    </div>
+                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Specialization</small><strong>{{ doctor.specialty }}</strong></div></div>
+                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Qualification</small><strong>{{ doctor.qualification }}</strong></div></div>
+                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Available days</small><strong>{{ doctor.available_days }}</strong></div></div>
+                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Visiting hours</small><strong>{{ doctor.visiting_hours }}</strong></div></div>
                 </div>
             </div>
 
-            <!-- Important Notes Box -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-                <h6 class="fw-bold text-dark mb-3"><i class="fas fa-info-circle text-teal me-2"></i>Important Note</h6>
-                <div class="row g-3 small text-muted">
-                    <div class="col-md-4 d-flex align-items-start">
-                        <i class="fas fa-hospital-user text-teal me-2 mt-1"></i>
-                        <span>In-person visit only at hospital chamber.</span>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-start">
-                        <i class="fas fa-clock text-teal me-2 mt-1"></i>
-                        <span>Arrive 15 minutes early for paperwork.</span>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-start">
-                        <i class="fas fa-file-medical text-teal me-2 mt-1"></i>
-                        <span>Bring previous medical reports if any.</span>
-                    </div>
-                </div>
+            <div class="cc-card p-4">
+                <h6 class="fw-bold mb-3">Before your visit</h6>
+                <div class="row g-3 small cc-muted"><div class="col-md-4"><i class="fa-solid fa-clock me-2" style="color:var(--cc-green);"></i>Arrive early</div><div class="col-md-4"><i class="fa-solid fa-file-medical me-2" style="color:var(--cc-green);"></i>Bring reports</div><div class="col-md-4"><i class="fa-solid fa-hospital-user me-2" style="color:var(--cc-green);"></i>Visit hospital chamber</div></div>
             </div>
         </div>
 
-      <!-- Right Column: Booking Sidebar -->
         <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white position-sticky" style="top: 20px;">
-                <h5 class="fw-bold text-dark mb-3">Book an Appointment</h5>
-                <div class="mb-3">
-                    <!-- ইনলাইন সিএসএসযুক্ত ব্যাজ, যা কখনোই ফাঁকা দেখাবে না -->
-                    <div style="background-color: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; text-align: center; border: 1px solid rgba(46, 125, 50, 0.2);">
-                        <i class="fas fa-check-circle me-1"></i> In-Person Visit Only
-                    </div>
-                </div>
-
-                <form action="{% url 'book_appointment' doctor.pk %}" method="POST">
+            <div class="cc-card p-4 position-sticky" style="top:92px;">
+                <div class="d-flex justify-content-between align-items-center mb-3"><h5 class="fw-bold mb-0">Book an appointment</h5><span class="cc-icon" style="width:38px;height:38px;"><i class="fa-regular fa-calendar"></i></span></div>
+                <div class="p-3 rounded-3 mb-4" style="background:var(--cc-green-soft);"><div class="small cc-muted">Consultation fee</div><div class="fw-bold fs-4" style="color:var(--cc-green);">৳{{ doctor.consultation_fee }}</div></div>
+                {% if user.is_authenticated %}
+                <form action="{% url 'book_appointment' doctor.pk %}" method="post">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Select Date</label>
-                        <input type="date" name="appointment_date" class="form-control rounded-pill px-3 shadow-sm border-light bg-light" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Select Time Slot</label>
-                        <select name="time_slot" class="form-select rounded-pill px-3 shadow-sm border-light bg-light" required>
-                            <option value="5:00 PM - 5:30 PM">5:00 PM - 5:30 PM</option>
-                            <option value="5:30 PM - 6:00 PM">5:30 PM - 6:00 PM</option>
-                            <option value="6:00 PM - 6:30 PM">6:00 PM - 6:30 PM</option>
-                            <option value="7:00 PM - 7:30 PM">7:00 PM - 7:30 PM</option>
-                        </select>
-                    </div>
-
-                    <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center">
-                        <span class="text-muted small">Consultation Fee</span>
-                        <span class="text-teal fw-bold fs-5">৳{{ doctor.consultation_fee }}</span>
-                    </div>
-
-                    <button type="submit" class="btn btn-teal w-100 py-2 rounded-pill shadow-sm fw-semibold mb-3">
-                        Continue to Book <i class="fas fa-arrow-right ms-1"></i>
-                    </button>
-
-                    <p class="text-center text-muted small mb-0" style="font-size: 0.8rem;">
-                        <i class="fas fa-lock text-teal me-1"></i> Your booking is secure and confidential.
-                    </p>
+                    <label class="form-label small fw-semibold">Select date</label><input type="date" name="appointment_date" min="{% now 'Y-m-d' %}" class="form-control mb-3" required>
+                    <label class="form-label small fw-semibold">Select time slot</label><select name="time_slot" class="form-select mb-4" required><option value="">Choose a slot</option><option>5:00 PM - 5:30 PM</option><option>5:30 PM - 6:00 PM</option><option>6:00 PM - 6:30 PM</option><option>7:00 PM - 7:30 PM</option></select>
+                    <button class="btn btn-cc w-100 rounded-pill py-2" type="submit">Book appointment <i class="fa-solid fa-arrow-right ms-1"></i></button>
                 </form>
+                {% else %}
+                    <p class="small cc-muted">Please log in before booking an appointment. Your selected doctor will remain available after login.</p>
+                    <a href="{% url 'login' %}?next={% url 'doctor_detail' doctor.pk %}" class="btn btn-cc w-100 rounded-pill py-2">Log in to book</a>
+                    <a href="{% url 'signup' %}" class="btn btn-outline-cc w-100 rounded-pill py-2 mt-2">Create account</a>
+                {% endif %}
+                <p class="text-center cc-muted small mt-3 mb-0"><i class="fa-solid fa-lock me-1"></i>Secure account-based booking.</p>
             </div>
         </div>
+    </div>
+</div>
 {% endblock %}

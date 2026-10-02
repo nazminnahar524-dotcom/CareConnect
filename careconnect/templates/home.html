@@ -1,9 +1,52 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CareConnect Home</title>
-</head>
-<body>
-    <h1>Welcome to CareConnect Dashboard</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Dashboard · CareConnect{% endblock %}
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="cc-card p-4 p-lg-5 mb-4" style="background:linear-gradient(135deg,#ffffff 0%,#effaf5 100%);">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill px-3 py-2 mb-3" style="background:var(--cc-green-soft);color:var(--cc-green);"><i class="fa-solid fa-shield-heart me-1"></i> Healthcare information portal</span>
+                <h1 class="fw-bold mb-2" style="font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-1.5px;">Find care. <span style="color:var(--cc-green);">Share hope.</span> Save lives.</h1>
+                <p class="cc-muted fs-5 mb-4">Search doctors and hospitals, book appointments, and keep your healthcare information in one place.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'doctor_list' %}" class="btn btn-cc rounded-pill px-4 py-2"><i class="fa-solid fa-user-doctor me-2"></i>Find a Doctor</a>
+                    <a href="{% url 'my_appointments' %}" class="btn btn-outline-cc rounded-pill px-4 py-2"><i class="fa-regular fa-calendar-check me-2"></i>My Appointments</a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cc-card p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3"><span class="cc-icon"><i class="fa-solid fa-heart-pulse"></i></span><div><div class="fw-bold">Welcome, {{ user.username }}</div><small class="cc-muted">Your CareConnect dashboard</small></div></div>
+                    <div class="row g-3">
+                        <div class="col-6"><div class="cc-stat cc-card p-3"><small class="cc-muted">Doctors</small><div class="fs-3 fw-bold">{{ doctors_count }}</div></div></div>
+                        <div class="col-6"><div class="cc-stat cc-card p-3"><small class="cc-muted">My bookings</small><div class="fs-3 fw-bold">{{ appointments_count }}</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-3"><div><h4 class="fw-bold mb-1">Upcoming appointments</h4><p class="cc-muted mb-0">Your next scheduled consultations.</p></div><a href="{% url 'my_appointments' %}" class="small fw-bold" style="color:var(--cc-green);">View all</a></div>
+            {% if upcoming_appointments %}
+                {% for app in upcoming_appointments %}
+                <div class="cc-card p-3 p-lg-4 mb-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center gap-3"><span class="cc-icon"><i class="fa-solid fa-user-doctor"></i></span><div><div class="fw-bold">Dr. {{ app.doctor.name }}</div><div class="cc-muted small">{{ app.doctor.specialty }} · {{ app.doctor.hospital_name }}</div></div></div>
+                    <div class="text-md-end"><div class="fw-semibold">{{ app.appointment_date }}</div><div class="cc-muted small">{{ app.time_slot }}</div></div>
+                    <span class="badge rounded-pill text-bg-success px-3 py-2">{{ app.status }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="cc-card p-5 text-center"><span class="cc-icon mb-3"><i class="fa-regular fa-calendar"></i></span><h5 class="fw-bold">No upcoming appointments</h5><p class="cc-muted">Find a doctor and book your first consultation.</p><a href="{% url 'doctor_list' %}" class="btn btn-cc rounded-pill px-4">Browse Doctors</a></div>
+            {% endif %}
+        </div>
+        <div class="col-lg-4">
+            <div class="cc-card p-4">
+                <h5 class="fw-bold mb-3">Quick actions</h5>
+                <a href="{% url 'doctor_list' %}" class="d-flex align-items-center gap-3 p-3 rounded-3 mb-2" style="background:#f8fbf9;color:var(--cc-text);"><span class="cc-icon"><i class="fa-solid fa-stethoscope"></i></span><span><b>Find doctors</b><small class="d-block cc-muted">Search by name or hospital</small></span></a>
+                <a href="{% url 'my_appointments' %}" class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:#f8fbf9;color:var(--cc-text);"><span class="cc-icon"><i class="fa-solid fa-calendar-check"></i></span><span><b>Appointments</b><small class="d-block cc-muted">Manage your bookings</small></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

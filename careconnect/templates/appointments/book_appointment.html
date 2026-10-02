@@ -1,32 +1,24 @@
 {% extends 'base.html' %}
+{% block title %}Book appointment · CareConnect{% endblock %}
 {% block content %}
-<div class="container py-4">
+<div class="container py-2 py-lg-4">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-white">
-                <div class="bg-teal py-2"></div>
-                <div class="card-body p-4 p-md-5">
-                    <h3 class="fw-bold text-dark mb-2">Confirm Appointment</h3>
-                    <p class="text-muted small mb-4">Booking consultation with <strong class="text-teal">Dr. {{ doctor.name }}</strong> (Fee: <span class="text-teal fw-bold">৳{{ doctor.consultation_fee }}</span>)</p>
-
-                    <form method="POST">
+        <div class="col-lg-8">
+            <div class="mb-4"><a href="{% url 'doctor_detail' doctor.pk %}" class="small fw-semibold" style="color:var(--cc-green);"><i class="fa-solid fa-arrow-left me-1"></i> Back to doctor profile</a></div>
+            <div class="cc-card overflow-hidden">
+                <div class="p-4 p-lg-5 border-bottom" style="background:linear-gradient(135deg,#fff,#effaf5);">
+                    <div class="d-flex align-items-center gap-3"><span class="cc-icon" style="width:58px;height:58px;"><i class="fa-solid fa-calendar-plus"></i></span><div><div class="small fw-semibold" style="color:var(--cc-green);">APPOINTMENT REQUEST</div><h2 class="fw-bold mb-1">Book with Dr. {{ doctor.name }}</h2><div class="cc-muted">{{ doctor.specialty }} · {{ doctor.hospital_name }}</div></div></div>
+                </div>
+                <div class="p-4 p-lg-5">
+                    <form method="post">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold text-secondary">Preferred Date</label>
-                            <input type="date" name="appointment_date" class="form-control rounded-pill px-3 shadow-sm" required>
+                        <div class="row g-4">
+                            <div class="col-md-6"><label class="form-label fw-semibold">Appointment date</label><input type="date" name="appointment_date" min="{{ today }}" class="form-control" required><div class="form-text">Past dates are not allowed.</div></div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Time slot</label><select name="time_slot" class="form-select" required><option value="">Choose a slot</option><option>5:00 PM - 5:30 PM</option><option>5:30 PM - 6:00 PM</option><option>6:00 PM - 6:30 PM</option><option>7:00 PM - 7:30 PM</option></select></div>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold text-secondary">Time Slot</label>
-                            <select name="time_slot" class="form-select rounded-pill px-3 shadow-sm" required>
-                                <option value="5:00 PM - 5:30 PM">5:00 PM - 5:30 PM</option>
-                                <option value="5:30 PM - 6:00 PM">5:30 PM - 6:00 PM</option>
-                                <option value="6:00 PM - 6:30 PM">6:00 PM - 6:30 PM</option>
-                                <option value="7:00 PM - 7:30 PM">7:00 PM - 7:30 PM</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-teal w-100 py-2 rounded-pill shadow-sm fw-semibold">
-                            <i class="fas fa-check-circle me-1"></i> Confirm & Pay at Chamber
-                        </button>
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 my-4" style="background:#f8fbf9;"><span class="cc-muted">Consultation fee</span><strong style="color:var(--cc-green);font-size:1.25rem;">৳{{ doctor.consultation_fee }}</strong></div>
+                        <button class="btn btn-cc w-100 rounded-pill py-2" type="submit"><i class="fa-solid fa-calendar-check me-2"></i>Confirm appointment</button>
+                        <p class="text-center cc-muted small mt-3 mb-0"><i class="fa-solid fa-lock me-1"></i>Your booking is linked to your CareConnect account.</p>
                     </form>
                 </div>
             </div>
