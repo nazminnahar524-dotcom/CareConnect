@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5 bg-white">
+
+                <!-- Branding Header -->
+                <div class="text-center mb-4">
+                    <div class="bg-light-teal text-teal rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm"
+                         style="width: 65px; height: 65px;">
+                        <i class="fas fa-sign-in-alt fa-lg"></i>
+                    </div>
+
+                    <h3 class="fw-bold text-dark">Welcome Back</h3>
+
+                    <p class="text-muted small">
+                        Log in to CareConnect to manage your appointments and access your account.
+                    </p>
+                </div>
+
+                <!-- Login Form -->
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        {{ form|crispy }}
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-teal w-100 py-2 fw-bold text-white shadow-sm rounded-pill mt-3"
+                            style="background-color: #0d9488; transition: all 0.3s ease;">
+                        Log In
+                    </button>
+                </form>
+
+                <!-- Footer Switch -->
+                <div class="text-center mt-4">
+                    <p class="small text-muted mb-0">
+                        Don't have an account?
+                        <a href="{% url 'signup' %}"
+                           class="text-teal fw-bold text-decoration-none">
+                            Sign up here
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-teal:hover {
+        background-color: #0f766e !important;
+    }
+
+    .bg-light-teal {
+        background-color: #ccfbf1;
+    }
+
+    .text-teal {
+        color: #0d9488 !important;
+    }
+
+    .form-control:focus {
+        border-color: #0d9488;
+        box-shadow: 0 0 0 0.25rem rgba(13, 148, 136, 0.15);
+    }
+</style>
+{% endblock %}
