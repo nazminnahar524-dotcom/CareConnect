@@ -1,0 +1,37 @@
+/* =========================================
+   Pharmacy Admin Location Picker
+========================================= */
+
+.pharmacy-location-wrapper {
+    margin-top: 20px;
+    padding: 18px;
+    border: 1px solid #d9e2e8;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.pharmacy-location-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.pharmacy-location-help {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.pharmacy-map {
+    width: 100%;
+    height: 420px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.pharmacy-location-message {
+    margin-top: 10px;
+    color: #475569;
+    font-size: 13px;
+}
