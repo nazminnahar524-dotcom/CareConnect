@@ -1,8 +1,13 @@
 /* =========================================
    Pharmacy Admin Location Picker
+   Leaflet + Esri World Street Map
 ========================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================================
+       Get Django Latitude / Longitude Fields
+    ========================================= */
 
     const latitudeField =
         document.getElementById("id_latitude");
@@ -10,14 +15,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const longitudeField =
         document.getElementById("id_longitude");
 
-    // Latitude/Longitude field না থাকলে stop
+
+    // Fields না থাকলে কিছু করবে না
     if (!latitudeField || !longitudeField) {
         return;
     }
 
-    // Default location: Dhaka
+
+    /* =========================================
+       Default Location: Dhaka
+    ========================================= */
+
     const defaultLatitude = 23.8103;
     const defaultLongitude = 90.4125;
+
 
     let latitude =
         parseFloat(latitudeField.value);
@@ -25,29 +36,35 @@ document.addEventListener("DOMContentLoaded", function () {
     let longitude =
         parseFloat(longitudeField.value);
 
+
     const hasExistingLocation =
         !isNaN(latitude) &&
         !isNaN(longitude);
 
+
     // Existing location না থাকলে Dhaka
     if (!hasExistingLocation) {
+
         latitude = defaultLatitude;
         longitude = defaultLongitude;
+
     }
 
-    /*
-    =========================================
-    Create Location Section
-    =========================================
-    */
+
+    /* =========================================
+       Create Map Wrapper
+    ========================================= */
 
     const mapWrapper =
         document.createElement("div");
 
+
     mapWrapper.className =
         "pharmacy-location-wrapper";
 
+
     mapWrapper.innerHTML = `
+
         <div class="pharmacy-location-title">
             Pharmacy Location
         </div>
@@ -65,16 +82,17 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="pharmacy-location-message">
             Select the exact pharmacy location on the map.
         </div>
+
     `;
 
-    /*
-    =========================================
-    Insert Map Before Latitude
-    =========================================
-    */
+
+    /* =========================================
+       Insert Map Before Latitude
+    ========================================= */
 
     const latitudeRow =
         latitudeField.closest(".form-row");
+
 
     if (latitudeRow) {
 
@@ -89,13 +107,13 @@ document.addEventListener("DOMContentLoaded", function () {
             mapWrapper,
             latitudeField
         );
+
     }
 
-    /*
-    =========================================
-    Create Leaflet Map
-    =========================================
-    */
+
+    /* =========================================
+       Create Leaflet Map
+    ========================================= */
 
     const map =
         L.map(
@@ -105,29 +123,32 @@ document.addEventListener("DOMContentLoaded", function () {
             hasExistingLocation ? 16 : 12
         );
 
-    /*
-    =========================================
-    OpenStreetMap
-    =========================================
-    */
+
+    /* =========================================
+       ESRI World Street Map
+    ========================================= */
 
     L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
         {
             maxZoom: 19,
 
             attribution:
-                "&copy; OpenStreetMap contributors"
+                "Tiles &copy; Esri"
         }
     ).addTo(map);
 
+
+    /* =========================================
+       Marker
+    ========================================= */
+
     let marker = null;
 
-    /*
-    =========================================
-    Existing Marker
-    =========================================
-    */
+
+    /* =========================================
+       Existing Marker
+    ========================================= */
 
     if (hasExistingLocation) {
 
@@ -141,11 +162,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    /*
-    =========================================
-    Update Coordinates
-    =========================================
-    */
+
+    /* =========================================
+       Update Coordinates
+    ========================================= */
 
     function updateCoordinates(lat, lng) {
 
@@ -154,13 +174,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         longitudeField.value =
             Number(lng).toFixed(6);
+
     }
 
-    /*
-    =========================================
-    Marker Drag
-    =========================================
-    */
+
+    /* =========================================
+       Marker Drag
+    ========================================= */
 
     function handleMarkerDrag() {
 
@@ -168,14 +188,22 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+
         const position =
             marker.getLatLng();
+
 
         updateCoordinates(
             position.lat,
             position.lng
         );
+
     }
+
+
+    /* =========================================
+       Existing Marker Drag Event
+    ========================================= */
 
     if (marker) {
 
@@ -183,13 +211,13 @@ document.addEventListener("DOMContentLoaded", function () {
             "dragend",
             handleMarkerDrag
         );
+
     }
 
-    /*
-    =========================================
-    Map Click
-    =========================================
-    */
+
+    /* =========================================
+       Map Click
+    ========================================= */
 
     map.on(
         "click",
@@ -201,6 +229,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const lng =
                 event.latlng.lng;
 
+
+            /* -----------------------------
+               Create Marker
+            ----------------------------- */
+
             if (!marker) {
 
                 marker =
@@ -211,34 +244,44 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     ).addTo(map);
 
+
                 marker.on(
                     "dragend",
                     handleMarkerDrag
                 );
 
-            } else {
+            }
+
+
+            /* -----------------------------
+               Move Existing Marker
+            ----------------------------- */
+
+            else {
 
                 marker.setLatLng(
                     [lat, lng]
                 );
+
             }
 
-            /*
-            Update Django fields
-            */
+
+            /* -----------------------------
+               Update Django Fields
+            ----------------------------- */
 
             updateCoordinates(
                 lat,
                 lng
             );
+
         }
     );
 
-    /*
-    =========================================
-    Fix Leaflet Map Size
-    =========================================
-    */
+
+    /* =========================================
+       Fix Leaflet Map Size
+    ========================================= */
 
     setTimeout(
         function () {
@@ -246,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
             map.invalidateSize();
 
         },
-        300
+        500
     );
 
 });
