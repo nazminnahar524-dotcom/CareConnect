@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ pharmacy.name }} | CareConnect
+    </title>
+
+
+    <!-- =========================================
+         LEAFLET CSS
+    ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f5f7fb;
+
+            color: #1f2937;
+
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================== */
+
+        .top-header {
+
+            min-height: 72px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                12px 35px;
+
+        }
+
+
+        .logo {
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            color: #2563eb;
+
+        }
+
+
+        .header-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+        .header-icon {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 50%;
+
+            background: #f1f5f9;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        /* =========================================
+           MAIN CONTAINER
+        ========================================== */
+
+        .container {
+
+            width: 94%;
+
+            max-width: 1200px;
+
+            margin:
+                25px auto 50px;
+
+        }
+
+
+        /* =========================================
+           BACK BUTTON
+        ========================================== */
+
+        .back-btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            color: #475569;
+
+            font-size: 14px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .back-btn:hover {
+
+            color: #2563eb;
+
+        }
+
+
+        /* =========================================
+           PROFILE HEADER
+        ========================================== */
+
+        .profile-card {
+
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .profile-top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                flex-start;
+
+            gap: 20px;
+
+        }
+
+
+        .profile-name {
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .profile-address {
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+        }
+
+
+        .verified {
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+            padding:
+                7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+        }
+
+
+        .unverified {
+
+            background: #f1f5f9;
+
+            color: #64748b;
+
+            padding:
+                7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            white-space: nowrap;
+
+        }
+
+
+        /* =========================================
+           DISTANCE
+        ========================================== */
+
+        .distance-box {
+
+            margin-top: 18px;
+
+            padding:
+                12px 15px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid #dbeafe;
+
+            border-radius: 9px;
+
+            color: #1d4ed8;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================================
+           ACTION BUTTONS
+        ========================================== */
+
+        .actions {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .action-btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            padding:
+                10px 16px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            transition:
+                0.2s ease;
+
+        }
+
+
+        .primary-btn {
+
+            background: #2563eb;
+
+            color: white;
+
+        }
+
+
+        .primary-btn:hover {
+
+            background: #1d4ed8;
+
+        }
+
+
+        .secondary-btn {
+
+            background: #eff6ff;
+
+            color: #2563eb;
+
+        }
+
+
+        .secondary-btn:hover {
+
+            background: #dbeafe;
+
+        }
+
+
+        .call-btn {
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+        }
+
+
+        .call-btn:hover {
+
+            background: #d1fae5;
+
+        }
+
+
+        /* =========================================
+           INFORMATION GRID
+        ========================================== */
+
+        .details-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+
+        }
+
+
+        .info-card {
+
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+        }
+
+
+        .info-card h2 {
+
+            font-size: 18px;
+
+            color: #111827;
+
+            margin-bottom: 16px;
+
+        }
+
+
+        /* =========================================
+           INFO ROW
+        ========================================== */
+
+        .info-row {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 15px;
+
+            padding:
+                11px 0;
+
+            border-bottom:
+                1px solid #f1f5f9;
+
+            font-size: 13px;
+
+        }
+
+
+        .info-row:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .info-label {
+
+            color: #64748b;
+
+        }
+
+
+        .info-value {
+
+            color: #111827;
+
+            font-weight: 600;
+
+            text-align: right;
+
+        }
+
+
+        /* =========================================
+           SERVICES
+        ========================================== */
+
+        .service-list {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+
+        }
+
+
+        .service-tag {
+
+            background: #f1f5f9;
+
+            color: #475569;
+
+            padding:
+                7px 10px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+        }
+
+
+        .service-tag.active {
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+        }
+
+
+        /* =========================================
+           OPEN STATUS
+        ========================================== */
+
+        .open-status {
+
+            display: inline-block;
+
+            padding:
+                6px 10px;
+
+            border-radius: 7px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+        }
+
+
+        .open {
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+        }
+
+
+        .closed {
+
+            background: #fef2f2;
+
+            color: #b91c1c;
+
+        }
+
+
+        .unknown {
+
+            background: #f1f5f9;
+
+            color: #64748b;
+
+        }
+
+
+        /* =========================================
+           MAP CARD
+        ========================================== */
+
+        .map-card {
+
+            background: white;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .map-card h2 {
+
+            font-size: 18px;
+
+            color: #111827;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        /* =========================================
+           LEAFLET MAP
+        ========================================== */
+
+        #pharmacyMap {
+
+            width: 100%;
+
+            height: 400px;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+        }
+
+
+        /* =========================================
+           MAP INFO
+        ========================================== */
+
+        .map-info {
+
+            margin-top: 12px;
+
+            padding:
+                10px 12px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 8px;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+        }
+
+
+        .no-map {
+
+            background: #f8fafc;
+
+            border:
+                1px dashed #cbd5e1;
+
+            padding: 40px 20px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            border-radius: 10px;
+
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 800px) {
+
+            .top-header {
+
+                padding:
+                    12px 15px;
+
+            }
+
+
+            .container {
+
+                width: 95%;
+
+            }
+
+
+            .profile-top {
+
+                flex-direction: column;
+
+            }
+
+
+            .details-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .profile-name {
+
+                font-size: 25px;
+
+            }
+
+
+            #pharmacyMap {
+
+                height: 350px;
+
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .actions {
+
+                flex-direction: column;
+
+            }
+
+
+            .action-btn {
+
+                width: 100%;
+
+                text-align: center;
+
+            }
+
+
+            .info-row {
+
+                flex-direction: column;
+
+                gap: 5px;
+
+            }
+
+
+            .info-value {
+
+                text-align: left;
+
+            }
+
+
+            #pharmacyMap {
+
+                height: 300px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     HEADER
+========================================== -->
+
+<header class="top-header">
+
+    <div class="logo">
+        CareConnect
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="header-icon">
+            🔔
+        </div>
+
+
+        <div class="header-icon">
+            💬
+        </div>
+
+
+        <div class="header-icon">
+            👤
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================
+     MAIN
+========================================== -->
+
+<main class="container">
+
+
+    <!-- BACK BUTTON -->
+
+    <a
+        href="{% url 'pharmacy_list' %}"
+        class="back-btn"
+    >
+        ← Back to Pharmacies
+    </a>
+
+
+    <!-- =====================================
+         PROFILE HEADER
+    ====================================== -->
+
+    <section class="profile-card">
+
+
+        <div class="profile-top">
+
+
+            <div>
+
+                <h1 class="profile-name">
+                    {{ pharmacy.name }}
+                </h1>
+
+
+                <div class="profile-address">
+
+                    📍
+
+                    {{ pharmacy.address }}
+
+
+                    {% if pharmacy.area %}
+
+                        , {{ pharmacy.area }}
+
+                    {% endif %}
+
+
+                    {% if pharmacy.district %}
+
+                        , {{ pharmacy.district }}
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            {% if pharmacy.verified %}
+
+                <span class="verified">
+
+                    ✓ CareConnect Verified
+
+                </span>
+
+            {% else %}
+
+                <span class="unverified">
+
+                    Unverified
+
+                </span>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =====================================
+             DISTANCE
+        ====================================== -->
+
+        {% if distance_km is not None %}
+
+            <div class="distance-box">
+
+                📍
+
+                This pharmacy is approximately
+
+                <strong>
+
+                    {{ distance_km }} km
+
+                </strong>
+
+                away from your live location.
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             ACTION BUTTONS
+        ====================================== -->
+
+        <div class="actions">
+
+
+            {% if pharmacy.phone %}
+
+                <a
+                    href="tel:{{ pharmacy.phone }}"
+                    class="action-btn call-btn"
+                >
+
+                    ☎ Call Pharmacy
+
+                </a>
+
+            {% endif %}
+
+
+            {% if google_maps_url %}
+
+                <a
+                    href="{{ google_maps_url }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="action-btn primary-btn"
+                >
+
+                    🗺 Get Directions
+
+                </a>
+
+            {% endif %}
+
+
+            {% if pharmacy.website %}
+
+                <a
+                    href="{{ pharmacy.website }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="action-btn secondary-btn"
+                >
+
+                    🌐 Visit Website
+
+                </a>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================
+         INFORMATION GRID
+    ====================================== -->
+
+    <div class="details-grid">
+
+
+        <!-- =================================
+             PHARMACY INFORMATION
+        ================================== -->
+
+        <section class="info-card">
+
+
+            <h2>
+                Pharmacy Information
+            </h2>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Name
+                </span>
+
+                <span class="info-value">
+                    {{ pharmacy.name }}
+                </span>
+
+            </div>
+
+
+            {% if pharmacy.license_number %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        License Number
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.license_number }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if pharmacy.license_status %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        License Status
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.license_status }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if pharmacy.division %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Division
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.division }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if pharmacy.district %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        District
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.district }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if pharmacy.area %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Area
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.area }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+        </section>
+
+
+        <!-- =================================
+             CONTACT INFORMATION
+        ================================== -->
+
+        <section class="info-card">
+
+
+            <h2>
+                Contact Information
+            </h2>
+
+
+            {% if pharmacy.phone %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Phone
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.phone }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if pharmacy.email %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Email
+                    </span>
+
+                    <span class="info-value">
+                        {{ pharmacy.email }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if pharmacy.website %}
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Website
+                    </span>
+
+                    <span class="info-value">
+                        Available
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Address
+                </span>
+
+                <span class="info-value">
+                    {{ pharmacy.address }}
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================
+             SERVICES
+        ================================== -->
+
+        <section class="info-card">
+
+
+            <h2>
+                Services & Facilities
+            </h2>
+
+
+            <div class="service-list">
+
+
+                {% if pharmacy.is_24_7 %}
+
+                    <span class="service-tag active">
+
+                        ✓ Open 24/7
+
+                    </span>
+
+                {% endif %}
+
+
+                {% if pharmacy.emergency %}
+
+                    <span class="service-tag active">
+
+                        ✓ Emergency Service
+
+                    </span>
+
+                {% endif %}
+
+
+                {% if pharmacy.home_delivery %}
+
+                    <span class="service-tag active">
+
+                        ✓ Home Delivery
+
+                    </span>
+
+                {% endif %}
+
+
+                {% if pharmacy.online_order %}
+
+                    <span class="service-tag active">
+
+                        ✓ Online Order
+
+                    </span>
+
+                {% endif %}
+
+
+                {% if pharmacy.medicine_available %}
+
+                    <span class="service-tag active">
+
+                        ✓ Medicine Available
+
+                    </span>
+
+                {% endif %}
+
+
+                {% if pharmacy.verified %}
+
+                    <span class="service-tag active">
+
+                        ✓ CareConnect Verified
+
+                    </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================
+             WORKING HOURS
+        ================================== -->
+
+        <section class="info-card">
+
+
+            <h2>
+                Working Hours
+            </h2>
+
+
+            <div class="info-row">
+
+
+                <span class="info-label">
+                    Current Status
+                </span>
+
+
+                <span class="info-value">
+
+
+                    {% if is_open_now is True %}
+
+                        <span class="open-status open">
+
+                            ● Open Now
+
+                        </span>
+
+
+                    {% elif is_open_now is False %}
+
+                        <span class="open-status closed">
+
+                            ● Closed Now
+
+                        </span>
+
+
+                    {% else %}
+
+                        <span class="open-status unknown">
+
+                            Status unavailable
+
+                        </span>
+
+                    {% endif %}
+
+
+                </span>
+
+
+            </div>
+
+
+            {% if pharmacy.is_24_7 %}
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Opening Hours
+                    </span>
+
+                    <span class="info-value">
+                        Open 24 Hours
+                    </span>
+
+                </div>
+
+
+            {% else %}
+
+
+                {% if pharmacy.opening_time %}
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Opening Time
+                        </span>
+
+                        <span class="info-value">
+                            {{ pharmacy.opening_time }}
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if pharmacy.closing_time %}
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Closing Time
+                        </span>
+
+                        <span class="info-value">
+                            {{ pharmacy.closing_time }}
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+
+            {% endif %}
+
+
+        </section>
+
+
+    </div>
+
+
+    <!-- =====================================
+         PHARMACY MAP
+    ====================================== -->
+
+    <section class="map-card">
+
+
+        <h2>
+            Pharmacy Location
+        </h2>
+
+
+        {% if pharmacy.latitude is not None and pharmacy.longitude is not None %}
+
+
+            <div id="pharmacyMap"></div>
+
+
+            <div class="map-info">
+
+                📍
+
+                Showing the registered location of
+
+                <strong>
+                    {{ pharmacy.name }}
+                </strong>
+
+                on the map.
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="no-map">
+
+                📍
+
+                <br>
+                <br>
+
+                Location coordinates are not
+                available for this pharmacy.
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================================
+     LEAFLET JAVASCRIPT
+========================================== -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+
+{% if pharmacy.latitude is not None and pharmacy.longitude is not None %}
+
+
+<script>
+
+    /* =========================================
+       PHARMACY COORDINATES
+    ========================================== */
+
+    const pharmacyLatitude =
+        Number("{{ pharmacy.latitude }}");
+
+    const pharmacyLongitude =
+        Number("{{ pharmacy.longitude }}");
+
+
+    /* =========================================
+       CHECK COORDINATES
+    ========================================== */
+
+    if (
+        Number.isFinite(pharmacyLatitude) &&
+        Number.isFinite(pharmacyLongitude)
+    ) {
+
+
+        /* =====================================
+           CREATE MAP
+        ====================================== */
+
+        const map =
+            L.map("pharmacyMap")
+                .setView(
+                    [
+                        pharmacyLatitude,
+                        pharmacyLongitude
+                    ],
+                    16
+                );
+
+
+        /* =====================================
+           MAP TILE LAYER
+
+           Using Esri World Street Map
+           instead of OpenStreetMap standard
+           tiles because the previous tile
+           server was returning HTTP 403.
+        ====================================== */
+
+        L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+            {
+                maxZoom: 19,
+
+                attribution:
+                    "Tiles &copy; Esri"
+            }
+        ).addTo(map);
+
+
+        /* =====================================
+           PHARMACY MARKER
+        ====================================== */
+
+        const pharmacyMarker =
+
+            L.marker(
+                [
+                    pharmacyLatitude,
+                    pharmacyLongitude
+                ]
+            ).addTo(map);
+
+
+        /* =====================================
+           POPUP
+        ====================================== */
+
+        pharmacyMarker.bindPopup(
+
+            `
+                <div
+                    style="
+                        min-width: 180px;
+                        font-family: Arial, sans-serif;
+                    "
+                >
+
+                    <strong
+                        style="
+                            font-size: 15px;
+                        "
+                    >
+                        {{ pharmacy.name|escapejs }}
+                    </strong>
+
+
+                    <br>
+
+
+                    <span
+                        style="
+                            font-size: 12px;
+                            color: #64748b;
+                        "
+                    >
+                        {{ pharmacy.address|escapejs }}
+                    </span>
+
+                </div>
+            `
+
+        ).openPopup();
+
+
+        /* =====================================
+           FIX MAP DISPLAY
+
+           Helps Leaflet correctly calculate
+           its size after the page loads.
+        ====================================== */
+
+        setTimeout(
+            function () {
+
+                map.invalidateSize();
+
+            },
+            200
+        );
+
+
+    }
+
+</script>
+
+
+{% endif %}
+
+
+</body>
+
+</html>
