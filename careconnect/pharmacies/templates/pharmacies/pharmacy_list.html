@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1137,16 +1137,13 @@
                                 </button>
 
 
-                                <button
-                                    type="button"
+                                <a
+                                    href="{% url 'pharmacy_detail' pharmacy.id %}"
                                     class="details-btn"
-                                    onclick="showPharmacyDetails(
-                                        '{{ pharmacy.name|escapejs }}',
-                                        '{{ pharmacy.address|escapejs }}'
-                                    )"
+                                    style="text-decoration: none; display: inline-block;"
                                 >
                                     View Details →
-                                </button>
+                                </a>
 
                             </div>
 
@@ -1322,6 +1319,9 @@
 
                 const longitude =
                     position.coords.longitude;
+
+                const userLatitude = latitude;
+                const userLongitude = longitude;
 
 
                 /*
@@ -1688,24 +1688,21 @@
 
                                             <div>
 
-                                                <button
-                                                    type="button"
+                                                <a
+                                                    href="#"
                                                     class="details-btn"
-                                                    onclick="showNearbyPharmacyDetails(
-                                                        '${escapeJs(
-                                                            pharmacy.name
-                                                        )}',
-                                                        '${escapeJs(
-                                                            pharmacy.address
-                                                        )}',
-                                                        '${escapeJs(
-                                                            pharmacy.phone ||
-                                                            "Phone not available"
-                                                        )}'
-                                                    )"
+                                                    style="text-decoration: none; display: inline-block;"
+                                                    onclick="
+                                                        openNearbyPharmacyProfile(
+                                                            ${pharmacy.id},
+                                                            ${userLatitude},
+                                                            ${userLongitude}
+                                                        );
+                                                        return false;
+                                                    "
                                                 >
                                                     View Details →
-                                                </button>
+                                                </a>
 
                                             </div>
 
@@ -1941,49 +1938,33 @@
 
     /*
      * =====================================================
-     * NEARBY PHARMACY DETAILS
+     * OPEN PHARMACY PROFILE FROM NEARBY RESULTS
      * =====================================================
      */
 
-    function showNearbyPharmacyDetails(
-        name,
-        address,
-        phone
+    function openNearbyPharmacyProfile(
+        pharmacyId,
+        userLatitude,
+        userLongitude
     ) {
 
-        alert(
-            "Pharmacy Details\n\n" +
-            "Name: " +
-            name +
-            "\n" +
-            "Address: " +
-            address +
-            "\n" +
-            "Phone: " +
-            phone
-        );
-    }
+        const detailBaseUrl =
+            "{% url 'pharmacy_detail' 999999 %}";
 
+        const detailUrl =
+            detailBaseUrl.replace(
+                "999999",
+                pharmacyId
+            );
 
-    /*
-     * =====================================================
-     * NORMAL PHARMACY DETAILS
-     * =====================================================
-     */
+        const finalUrl =
+            detailUrl +
+            "?lat=" +
+            encodeURIComponent(userLatitude) +
+            "&lng=" +
+            encodeURIComponent(userLongitude);
 
-    function showPharmacyDetails(
-        name,
-        address
-    ) {
-
-        alert(
-            "Pharmacy Details\n\n" +
-            "Name: " +
-            name +
-            "\n" +
-            "Address: " +
-            address
-        );
+        window.location.href = finalUrl;
     }
 
 
