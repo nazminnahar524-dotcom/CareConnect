@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'appointments',
     'crispy_forms',
     'crispy_bootstrap5',
+    'hospitals',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
