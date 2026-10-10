@@ -2,107 +2,85 @@
 
 {% block content %}
 <div class="container py-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-success"><i class="bi bi-hospital"></i> Registered Hospitals</h2>
-            <p class="text-muted mb-0">Explore partner hospitals and check real-time bed capacity.</p>
-        </div>
-        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+    <div class="mb-4">
+        <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm mb-3">
+            <i class="bi bi-arrow-left"></i> Back to Hospitals
+        </a>
+        <h2 class="fw-bold text-success"><i class="bi bi-hospital"></i> {{ hospital.name }}</h2>
+        <p class="text-muted">Detailed profile, facilities, and capacity status.</p>
     </div>
 
-    <!-- Summary Statistics Cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm bg-white p-3 border-start border-success border-4">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-success-subtle text-success p-3 rounded-3 fs-3 me-3">
-                        <i class="bi bi-buildings"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Partner Hospitals</h6>
-                        <h3 class="fw-bold mb-0 text-success">{{ total_hospitals }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm bg-white p-3 border-start border-primary border-4">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-primary-subtle text-primary p-3 rounded-3 fs-3 me-3">
-                        <i class="bi bi-door-open"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Network Beds</h6>
-                        <h3 class="fw-bold mb-0 text-primary">{{ total_beds }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Search Bar Section -->
-    <div class="card border-0 shadow-sm mb-4 bg-white">
-        <div class="card-body">
-            <form method="GET" action="{% url 'hospital_list' %}" class="row g-2 align-items-center">
-                <div class="col-md-10">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" name="q" value="{{ query }}" class="form-control border-start-0 bg-light" placeholder="Search hospitals by name...">
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-success w-100">Filter</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Hospital Grid -->
     <div class="row">
-        {% for hospital in hospitals %}
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title text-success fw-bold mb-0">
-                                <a href="{% url 'hospital_detail' hospital.pk %}" class="text-decoration-none text-success">
-                                    <i class="bi bi-building"></i> {{ hospital.name }}
-                                </a>
-                            </h5>
-                            <span class="badge bg-success-subtle text-success border border-success px-2 py-1">Active</span>
-                        </div>
-                        <hr class="text-muted opacity-25">
-                        <p class="card-text mb-2 text-secondary"><i class="bi bi-geo-alt-fill text-danger"></i> <strong>Location:</strong> {{ hospital.location }}</p>
-                        <p class="card-text mb-2 text-secondary"><i class="bi bi-telephone-fill text-primary"></i> <strong>Helpline:</strong> {{ hospital.helpline|default:hospital.emergency_contact|default:"Not provided" }}</p>
-                        <p class="card-text mb-3 text-secondary"><i class="bi bi-door-open-fill text-success"></i> <strong>Total Beds:</strong> <span class="fw-bold text-dark">{{ hospital.total_beds|default:"0" }}</span></p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'hospital_detail' hospital.pk %}" class="btn btn-sm btn-outline-success w-100">
-                            <i class="bi bi-info-circle"></i> View Details
-                        </a>
-                        {% if hospital.helpline %}
-                        <a href="tel:{{ hospital.helpline }}" class="btn btn-sm btn-success">
-                            <i class="bi bi-telephone"></i> Call
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="card border-0 shadow-sm text-center py-5 bg-white">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
-                    <i class="bi bi-search display-4 text-muted mb-3 d-block"></i>
-                    <h5 class="fw-bold text-dark">No hospitals found</h5>
-                    <p class="text-muted">Try adjusting your search query.</p>
-                    <a href="{% url 'hospital_list' %}" class="btn btn-sm btn-outline-secondary mt-2">Reset Search</a>
+                    <h4 class="card-title text-success mb-3">Hospital Information</h4>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 200px;"><i class="bi bi-building text-secondary"></i> Name:</th>
+                                <td>{{ hospital.name }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><i class="bi bi-geo-alt-fill text-danger"></i> Location/Address:</th>
+                                <td>{{ hospital.location }} {% if hospital.address %}({{ hospital.address }}){% endif %}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><i class="bi bi-telephone-fill text-primary"></i> Helpline:</th>
+                                <td>{{ hospital.helpline|default:hospital.emergency_contact|default:"Not provided" }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><i class="bi bi-envelope text-secondary"></i> Email:</th>
+                                <td>{{ hospital.email|default:"Not provided" }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><i class="bi bi-door-open-fill text-success"></i> Total Beds:</th>
+                                <td><span class="badge bg-success fs-6">{{ hospital.total_beds|default:"0" }}</span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><i class="bi bi-person-badge text-primary"></i> Total Doctors:</th>
+                                <td><span class="badge bg-primary fs-6">{{ hospital.total_doctors|default:"0" }}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {% if hospital.description %}
+                    <hr class="text-muted opacity-25 my-4">
+                    <h5 class="fw-bold text-success mb-2">About</h5>
+                    <p class="text-muted">{{ hospital.description }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        {% endfor %}
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-white mb-4">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-headset text-success display-4 mb-3 d-block"></i>
+                    <h5 class="fw-bold">Need Assistance?</h5>
+                    <p class="text-muted small">Contact hospital administration directly for inquiries.</p>
+                    {% if hospital.helpline %}
+                    <a href="tel:{{ hospital.helpline }}" class="btn btn-success w-100">
+                        <i class="bi bi-telephone"></i> Call Helpline
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Facilities Badges Card -->
+            <div class="card shadow-sm border-0 bg-white">
+                <div class="card-body">
+                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-shield-check"></i> Facilities</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="bi {% if hospital.has_emergency %}bi-check-circle-fill text-success{% else %}bi-x-circle-fill text-muted{% endif %}"></i> Emergency Care</li>
+                        <li class="mb-2"><i class="bi {% if hospital.has_icu %}bi-check-circle-fill text-success{% else %}bi-x-circle-fill text-muted{% endif %}"></i> ICU Available</li>
+                        <li class="mb-2"><i class="bi {% if hospital.has_ccu %}bi-check-circle-fill text-success{% else %}bi-x-circle-fill text-muted{% endif %}"></i> CCU Available</li>
+                        <li class="mb-2"><i class="bi {% if hospital.has_ambulance %}bi-check-circle-fill text-success{% else %}bi-x-circle-fill text-muted{% endif %}"></i> Ambulance Service</li>
+                        <li class="mb-2"><i class="bi {% if hospital.has_pharmacy %}bi-check-circle-fill text-success{% else %}bi-x-circle-fill text-muted{% endif %}"></i> Pharmacy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
