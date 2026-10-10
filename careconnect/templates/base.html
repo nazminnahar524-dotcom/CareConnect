@@ -1,58 +1,460 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}CareConnect{% endblock %}</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
-        :root{--cc-green:#138a63;--cc-dark:#12664d;--cc-soft:#eaf8f2;--cc-bg:#f6faf8;--cc-text:#1b2924;--cc-muted:#74827c;--cc-border:#e2ebe7;--cc-card:#fff}
-        *{box-sizing:border-box} body{margin:0;background:var(--cc-bg);color:var(--cc-text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px} a{text-decoration:none}
-        .cc-top{background:#fff;border-bottom:1px solid var(--cc-border);min-height:68px}.cc-brand{font-weight:800;color:#18241f!important;letter-spacing:-.4px}.cc-mark{width:34px;height:34px;border-radius:10px;background:var(--cc-soft);display:inline-flex;align-items:center;justify-content:center;color:var(--cc-green);margin-right:8px}.cc-location{font-size:12px;border:1px solid var(--cc-border);background:#fbfdfc;border-radius:10px;padding:7px 10px;color:#52615b}.cc-search{max-width:390px}.cc-search .form-control{border-right:0;background:#fbfdfc;border-color:var(--cc-border);height:40px}.cc-search .btn{background:var(--cc-green);color:#fff;border-color:var(--cc-green);width:42px}.cc-action{width:38px;height:38px;border:1px solid var(--cc-border);border-radius:11px;background:#fff;color:#53635c;display:inline-flex;align-items:center;justify-content:center}.cc-user{border:1px solid var(--cc-border);background:#fff;border-radius:12px;padding:6px 10px;font-size:12px;font-weight:700}
-        .cc-tabs{background:#fff;border-bottom:1px solid var(--cc-border)}.cc-tabs .nav-link{color:#65736d;font-weight:650;padding:13px 18px;border-bottom:2px solid transparent}.cc-tabs .nav-link.active,.cc-tabs .nav-link:hover{color:var(--cc-green);border-bottom-color:var(--cc-green)}
-        .cc-page{max-width:1500px;margin:0 auto;padding:22px 24px 34px}.cc-card{background:var(--cc-card);border:1px solid var(--cc-border);border-radius:14px;box-shadow:0 5px 18px rgba(22,74,55,.045)}.cc-muted{color:var(--cc-muted)}.cc-icon{width:42px;height:42px;border-radius:11px;background:var(--cc-soft);color:var(--cc-green);display:inline-flex;align-items:center;justify-content:center}.btn-cc{background:var(--cc-green);border-color:var(--cc-green);color:#fff;font-weight:700}.btn-cc:hover{background:var(--cc-dark);border-color:var(--cc-dark);color:#fff}.btn-outline-cc{color:var(--cc-green);border-color:#b8ddcf;font-weight:700}.btn-outline-cc:hover{background:var(--cc-soft);color:var(--cc-dark)}.form-control,.form-select{border-color:var(--cc-border);min-height:42px}.form-control:focus,.form-select:focus{border-color:#8fcdb9;box-shadow:0 0 0 .18rem rgba(19,138,99,.10)}
-        .cc-stat{padding:16px 17px;min-height:91px}.cc-stat .value{font-size:22px;font-weight:800}.cc-stat .label{font-size:11px;color:var(--cc-muted);margin-top:2px}.cc-doctor-avatar{width:70px;height:70px;border-radius:12px;background:#edf7f3;color:var(--cc-green);display:flex;align-items:center;justify-content:center;font-size:25px;flex:none}.cc-doctor-row{transition:.18s ease}.cc-doctor-row:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(22,74,55,.08)}.cc-filter-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.45px;color:#5f6d67}.cc-chip{display:inline-flex;align-items:center;border:1px solid var(--cc-border);background:#fff;border-radius:20px;padding:6px 10px;font-size:11px;color:#596760}.cc-footer{color:#82908a;font-size:12px}
-        @media(max-width:991px){.cc-page{padding:16px}.cc-location{display:none}.cc-search{max-width:none;margin:10px 0}.cc-tabs .nav-link{padding:11px 12px}.cc-user{width:100%}}
+        :root {
+            --cc-green: #138a63;
+            --cc-dark: #12664d;
+            --cc-soft: #eaf8f2;
+            --cc-bg: #f6faf8;
+            --cc-text: #1b2924;
+            --cc-muted: #74827c;
+            --cc-border: #e2ebe7;
+            --cc-card: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--cc-bg);
+            color: var(--cc-text);
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .cc-top {
+            background: #fff;
+            border-bottom: 1px solid var(--cc-border);
+            min-height: 68px;
+        }
+
+        .cc-brand {
+            font-weight: 800;
+            color: #18241f !important;
+            letter-spacing: -.4px;
+        }
+
+        .cc-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--cc-soft);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cc-green);
+            margin-right: 8px;
+        }
+
+        .cc-location {
+            font-size: 12px;
+            border: 1px solid var(--cc-border);
+            background: #fbfdfc;
+            border-radius: 10px;
+            padding: 7px 10px;
+            color: #52615b;
+        }
+
+        .cc-search {
+            max-width: 390px;
+        }
+
+        .cc-search .form-control {
+            border-right: 0;
+            background: #fbfdfc;
+            border-color: var(--cc-border);
+            height: 40px;
+        }
+
+        .cc-search .btn {
+            background: var(--cc-green);
+            color: #fff;
+            border-color: var(--cc-green);
+            width: 42px;
+        }
+
+        .cc-action {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--cc-border);
+            border-radius: 11px;
+            background: #fff;
+            color: #53635c;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cc-user {
+            border: 1px solid var(--cc-border);
+            background: #fff;
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .cc-tabs {
+            background: #fff;
+            border-bottom: 1px solid var(--cc-border);
+        }
+
+        .cc-tabs .nav-link {
+            color: #65736d;
+            font-weight: 650;
+            padding: 13px 18px;
+            border-bottom: 2px solid transparent;
+            transition: .2s;
+        }
+
+        .cc-tabs .nav-link.active,
+        .cc-tabs .nav-link:hover {
+            color: var(--cc-green);
+            border-bottom-color: var(--cc-green);
+        }
+
+        .cc-page {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 22px 24px 34px;
+        }
+
+        .cc-card {
+            background: var(--cc-card);
+            border: 1px solid var(--cc-border);
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(22, 74, 55, .045);
+        }
+
+        .cc-muted {
+            color: var(--cc-muted);
+        }
+
+        .cc-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: var(--cc-soft);
+            color: var(--cc-green);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-cc {
+            background: var(--cc-green);
+            border-color: var(--cc-green);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn-cc:hover {
+            background: var(--cc-dark);
+            border-color: var(--cc-dark);
+            color: #fff;
+        }
+
+        .btn-outline-cc {
+            color: var(--cc-green);
+            border-color: #b8ddcf;
+            font-weight: 700;
+        }
+
+        .btn-outline-cc:hover {
+            background: var(--cc-soft);
+            color: var(--cc-dark);
+        }
+
+        .form-control,
+        .form-select {
+            border-color: var(--cc-border);
+            min-height: 42px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #8fcdb9;
+            box-shadow: 0 0 0 .18rem rgba(19, 138, 99, .10);
+        }
+
+        .cc-footer {
+            color: #82908a;
+            font-size: 12px;
+        }
+
+        @media (max-width: 991px) {
+            .cc-page {
+                padding: 16px;
+            }
+
+            .cc-location {
+                display: none;
+            }
+
+            .cc-search {
+                max-width: none;
+                margin: 10px 0;
+            }
+
+            .cc-tabs .nav-link {
+                padding: 11px 12px;
+            }
+
+            .cc-user {
+                width: 100%;
+            }
+        }
     </style>
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
+
+<!-- Top Navigation -->
 <nav class="navbar navbar-expand-xl cc-top sticky-top">
-  <div class="container-fluid px-3 px-xl-4">
-    <a class="navbar-brand cc-brand d-flex align-items-center me-3" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}"><span class="cc-mark"><i class="fa-solid fa-heart-pulse"></i></span>Care<span style="color:var(--cc-green)">Connect</span></a>
-    {% if user.is_authenticated %}<span class="cc-location me-3"><i class="fa-solid fa-location-dot me-1" style="color:var(--cc-green)"></i>Dharmondhi, Dhaka <i class="fa-solid fa-chevron-down ms-1" style="font-size:9px"></i></span>{% endif %}
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ccNav"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="ccNav">
-      {% if user.is_authenticated %}
-      <form action="{% url 'doctor_list' %}" method="get" class="input-group cc-search ms-xl-2 me-auto"><input class="form-control" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search doctors, hospitals, specialties..."><button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button></form>
-      <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
-        <span class="cc-action"><i class="fa-regular fa-bell"></i></span><span class="cc-action"><i class="fa-regular fa-comment-dots"></i></span>
-        <div class="dropdown"><button class="cc-user dropdown-toggle" data-bs-toggle="dropdown" type="button"><i class="fa-regular fa-circle-user me-1" style="color:var(--cc-green)"></i>Hi, {{ user.username }}</button><ul class="dropdown-menu dropdown-menu-end shadow-sm border-0"><li><a class="dropdown-item" href="{% url 'my_appointments' %}">My Appointments</a></li><li><hr class="dropdown-divider"></li><li><form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="dropdown-item text-danger" type="submit">Log out</button></form></li></ul></div>
-      </div>
-      {% else %}
-      <div class="ms-auto d-flex gap-2"><a class="btn btn-outline-cc rounded-3 px-3" href="{% url 'login' %}">Log in</a><a class="btn btn-cc rounded-3 px-3" href="{% url 'signup' %}">Sign up</a></div>
-      {% endif %}
+    <div class="container-fluid px-3 px-xl-4">
+
+        <a class="navbar-brand cc-brand d-flex align-items-center me-3"
+           href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}">
+
+            <span class="cc-mark">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </span>
+
+            Care<span style="color: var(--cc-green)">Connect</span>
+        </a>
+
+        {% if user.is_authenticated %}
+        <span class="cc-location me-3">
+            <i class="fa-solid fa-location-dot me-1"
+               style="color: var(--cc-green)"></i>
+            Dharmondhi, Dhaka
+            <i class="fa-solid fa-chevron-down ms-1"
+               style="font-size: 9px"></i>
+        </span>
+        {% endif %}
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#ccNav"
+                aria-controls="ccNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="ccNav">
+
+            {% if user.is_authenticated %}
+
+            <!-- Search -->
+            <form action="{% url 'doctor_list' %}"
+                  method="get"
+                  class="input-group cc-search ms-xl-2 me-auto">
+
+                <input class="form-control"
+                       name="q"
+                       value="{{ request.GET.q|default:'' }}"
+                       placeholder="Search doctors, hospitals, specialties...">
+
+                <button class="btn" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+
+            <!-- User Actions -->
+            <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
+
+                <span class="cc-action">
+                    <i class="fa-regular fa-bell"></i>
+                </span>
+
+                <span class="cc-action">
+                    <i class="fa-regular fa-comment-dots"></i>
+                </span>
+
+                <div class="dropdown">
+
+                    <button class="cc-user dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            type="button">
+
+                        <i class="fa-regular fa-circle-user me-1"
+                           style="color: var(--cc-green)"></i>
+
+                        Hi, {{ user.username }}
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+
+                        <li>
+                            <a class="dropdown-item"
+                               href="{% url 'my_appointments' %}">
+                                My Appointments
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-danger"
+                                        type="submit">
+                                    Log out
+                                </button>
+                            </form>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+            {% else %}
+
+            <div class="ms-auto d-flex gap-2">
+
+                <a class="btn btn-outline-cc rounded-3 px-3"
+                   href="{% url 'login' %}">
+                    Log in
+                </a>
+
+                <a class="btn btn-cc rounded-3 px-3"
+                   href="{% url 'signup' %}">
+                    Sign up
+                </a>
+
+            </div>
+
+            {% endif %}
+        </div>
     </div>
-  </div>
 </nav>
+
+
+<!-- Main Navigation Tabs -->
 {% if user.is_authenticated %}
+
 <div class="cc-tabs">
-  <div class="container-fluid px-3 px-xl-4">
-    <ul class="nav">
-      <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i> Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'doctor_list' %}"><i class="fa-solid fa-user-doctor me-1"></i> Doctors</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'my_appointments' %}"><i class="fa-regular fa-calendar-check me-1"></i> Appointments</a></li>
-      <li class="nav-item"><a class="nav-link text-danger fw-bold" href="{% url 'nearby_donors' %}"><i class="fa-solid fa-hand-holding-heart me-1"></i> Donors</a></li>
-    </ul>
-  </div>
+    <div class="container-fluid px-3 px-xl-4">
+
+        <ul class="nav">
+
+            <!-- Home -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                   href="{% url 'home' %}">
+
+                    <i class="fa-solid fa-house me-1"></i>
+                    Home
+                </a>
+            </li>
+
+            <!-- Doctors -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}"
+                   href="{% url 'doctor_list' %}">
+
+                    <i class="fa-solid fa-user-doctor me-1"></i>
+                    Doctors
+                </a>
+            </li>
+
+            <!-- Appointments -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}"
+                   href="{% url 'my_appointments' %}">
+
+                    <i class="fa-regular fa-calendar-check me-1"></i>
+                    Appointments
+                </a>
+            </li>
+
+            <!-- Pharmacies: NEW BUTTON -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}"
+                   href="{% url 'pharmacy_list' %}">
+
+                    <i class="fa-solid fa-prescription-bottle-medical me-1"></i>
+                    Pharmacies
+                </a>
+            </li>
+
+            <!-- Donors -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}"
+                   href="{% url 'nearby_donors' %}">
+
+                    <i class="fa-solid fa-hand-holding-heart me-1"></i>
+                    Donors
+                </a>
+            </li>
+
+        </ul>
+    </div>
 </div>
+
 {% endif %}
+
+
+<!-- Page Content -->
 <main class="cc-page">
-{% if messages %}{% for message in messages %}<div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} border-0 shadow-sm">{{ message }}</div>{% endfor %}{% endif %}
-{% block content %}{% endblock %}
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <div class="alert
+                {% if message.tags == 'error' %}
+                    alert-danger
+                {% else %}
+                    alert-success
+                {% endif %}
+                border-0 shadow-sm">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
 </main>
-<footer class="container-fluid px-4 pb-4 cc-footer">© 2026 CareConnect · Healthcare information and appointment portal</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>{% block extra_js %}{% endblock %}
-</body></html>
+
+
+<!-- Footer -->
+<footer class="container-fluid px-4 pb-4 cc-footer">
+    © 2026 CareConnect · Healthcare information and appointment portal
+</footer>
+
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
