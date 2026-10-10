@@ -2,36 +2,94 @@
 
 {% block content %}
 <div class="container py-4">
-    <div class="mb-4">
-        <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="bi bi-arrow-left"></i> Back to Hospitals
-        </a>
-        <h2 class="fw-bold text-success"><i class="bi bi-hospital"></i> {{ hospital.name }}</h2>
-        <p class="text-muted">Detailed profile and current bed availability status.</p>
+    <!-- Top Back Navigation & Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm mb-2">
+                <i class="bi bi-arrow-left"></i> Back to Hospitals
+            </a>
+            <h2 class="fw-bold text-success mb-1"><i class="bi bi-hospital"></i> {{ hospital.name }}</h2>
+            <p class="text-muted mb-0"><i class="bi bi-geo-alt-fill text-danger"></i> {{ hospital.location }} {% if hospital.address %}| {{ hospital.address }}{% endif %}</p>
+        </div>
+        <div>
+            {% if hospital.helpline %}
+            <a href="tel:{{ hospital.helpline }}" class="btn btn-success shadow-sm">
+                <i class="bi bi-telephone-fill"></i> Call Helpline
+            </a>
+            {% endif %}
+        </div>
     </div>
 
+    <!-- Quick Metrics Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-white p-3 border-start border-success border-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-success-subtle text-success p-3 rounded-3 fs-3 me-3">
+                        <i class="bi bi-door-open"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Beds</h6>
+                        <h3 class="fw-bold mb-0 text-success">{{ hospital.total_beds|default:"0" }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-white p-3 border-start border-primary border-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-primary-subtle text-primary p-3 rounded-3 fs-3 me-3">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Doctors</h6>
+                        <h3 class="fw-bold mb-0 text-primary">{{ hospital.total_doctors|default:"0" }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm bg-white p-3 border-start border-warning border-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-warning-subtle text-warning p-3 rounded-3 fs-3 me-3">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Rating & Reviews</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ hospital.rating|default:"4.5" }} <span class="fs-6 text-muted fw-normal">({{ hospital.reviews_count|default:"12" }} reviews)</span></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content & Sidebar Layout -->
     <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body">
-                    <h4 class="card-title text-success mb-3">Hospital Information</h4>
-                    <table class="table table-borderless">
+        <!-- Left Column: Detailed Information & Description -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0 mb-4 bg-white">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-success fw-bold mb-3"><i class="bi bi-info-circle"></i> Hospital Overview</h4>
+                    <p class="text-muted mb-4">{{ hospital.description|default:"Providing exceptional medical care, emergency response, and comprehensive healthcare services to patients in the region." }}</p>
+
+                    <h5 class="fw-bold text-dark mb-3">Contact & Communication</h5>
+                    <table class="table table-borderless align-middle mb-0">
                         <tbody>
                             <tr>
-                                <th scope="row" style="width: 200px;"><i class="bi bi-building text-secondary"></i> Name:</th>
-                                <td>{{ hospital.name }}</td>
+                                <th scope="row" style="width: 180px;" class="text-secondary"><i class="bi bi-telephone text-primary"></i> Helpline:</th>
+                                <td class="fw-bold">{{ hospital.helpline|default:"Not provided" }}</td>
                             </tr>
                             <tr>
-                                <th scope="row"><i class="bi bi-geo-alt-fill text-danger"></i> Location:</th>
-                                <td>{{ hospital.location }}</td>
+                                <th scope="row" class="text-secondary"><i class="bi bi-exclamation-triangle text-danger"></i> Emergency:</th>
+                                <td class="fw-bold text-danger">{{ hospital.emergency_contact|default:"Available 24/7" }}</td>
                             </tr>
                             <tr>
-                                <th scope="row"><i class="bi bi-telephone-fill text-primary"></i> Contact:</th>
-                                <td>{{ hospital.contact|default:"Not provided" }}</td>
+                                <th scope="row" class="text-secondary"><i class="bi bi-envelope text-success"></i> Email:</th>
+                                <td>{{ hospital.email|default:"contact@careconnect.org" }}</td>
                             </tr>
                             <tr>
-                                <th scope="row"><i class="bi bi-door-open-fill text-success"></i> Available Beds:</th>
-                                <td><span class="badge bg-success fs-6">{{ hospital.available_beds|default:"0" }}</span></td>
+                                <th scope="row" class="text-secondary"><i class="bi bi-globe text-info"></i> Website:</th>
+                                <td>{% if hospital.website %}<a href="{{ hospital.website }}" target="_blank" class="text-decoration-none">{{ hospital.website }}</a>{% else %}Not provided{% endif %}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -39,15 +97,46 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 bg-white">
-                <div class="card-body text-center py-4">
-                    <i class="bi bi-headset text-success display-4 mb-3 d-block"></i>
-                    <h5 class="fw-bold">Need Assistance?</h5>
-                    <p class="text-muted small">Contact hospital administration directly or reach out to CareConnect support.</p>
-                    {% if hospital.contact %}
-                    <a href="tel:{{ hospital.contact }}" class="btn btn-success w-100">
-                        <i class="bi bi-telephone"></i> Call Hospital
+        <!-- Right Column: Facilities & Emergency Support -->
+        <div class="col-lg-4">
+            <!-- Facilities Card -->
+            <div class="card shadow-sm border-0 bg-white mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-shield-check"></i> Available Facilities</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi {% if hospital.has_emergency %}bi-check-circle-fill text-success fs-5 me-2{% else %}bi-x-circle-fill text-muted fs-5 me-2{% endif %}"></i>
+                            <span>Emergency Care Unit</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi {% if hospital.has_icu %}bi-check-circle-fill text-success fs-5 me-2{% else %}bi-x-circle-fill text-muted fs-5 me-2{% endif %}"></i>
+                            <span>Intensive Care Unit (ICU)</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi {% if hospital.has_ccu %}bi-check-circle-fill text-success fs-5 me-2{% else %}bi-x-circle-fill text-muted fs-5 me-2{% endif %}"></i>
+                            <span>Critical Care Unit (CCU)</span>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <i class="bi {% if hospital.has_ambulance %}bi-check-circle-fill text-success fs-5 me-2{% else %}bi-x-circle-fill text-muted fs-5 me-2{% endif %}"></i>
+                            <span>24/7 Ambulance Service</span>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <i class="bi {% if hospital.has_pharmacy %}bi-check-circle-fill text-success fs-5 me-2{% else %}bi-x-circle-fill text-muted fs-5 me-2{% endif %}"></i>
+                            <span>In-house Pharmacy</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Assistance Card -->
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-headset display-4 mb-3 d-block text-white"></i>
+                    <h5 class="fw-bold">Need Immediate Help?</h5>
+                    <p class="small text-white-50 mb-3">Our support team and partner hospitals are connected to assist you anytime.</p>
+                    {% if hospital.helpline %}
+                    <a href="tel:{{ hospital.helpline }}" class="btn btn-light text-success fw-bold w-100">
+                        <i class="bi bi-telephone-fill"></i> Call Now
                     </a>
                     {% endif %}
                 </div>
