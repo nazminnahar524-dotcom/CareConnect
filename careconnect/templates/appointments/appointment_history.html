@@ -1,0 +1,61 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Appointment History · CareConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="fw-bold">Appointment History</h2>
+        <p class="cc-muted">Your completed and cancelled appointments.</p>
+    </div>
+
+    <a href="{% url 'my_appointments' %}" class="btn btn-cc rounded-3">
+        Upcoming Appointments
+    </a>
+</div>
+
+{% if appointments %}
+    <div class="row g-3">
+        {% for app in appointments %}
+            <div class="col-lg-6">
+                <div class="cc-card p-3 p-lg-4">
+                    <span class="cc-chip">{{ app.status }}</span>
+
+                    <h5 class="fw-bold mt-3">
+                        Dr. {{ app.doctor.name }}
+                    </h5>
+
+                    <div style="color:var(--cc-green)">
+                        {{ app.doctor.specialty }}
+                    </div>
+
+                    <p class="cc-muted mt-2 mb-1">
+                        {{ app.doctor.hospital_name }}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Date:</strong> {{ app.appointment_date }}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Time:</strong> {{ app.time_slot }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Fee:</strong> ৳{{ app.doctor.consultation_fee }}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="cc-card p-5 text-center">
+        <h4 class="fw-bold">No appointment history yet</h4>
+        <p class="cc-muted">Completed and cancelled appointments will appear here.</p>
+        <a href="{% url 'doctor_list' %}" class="btn btn-cc rounded-3">
+            Find a Doctor
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
