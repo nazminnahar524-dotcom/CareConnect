@@ -13,9 +13,9 @@ def hospital_list_view(request):
     if query:
         hospitals = hospitals.filter(name__icontains=query)
 
-    # Calculate summary metrics for the dashboard widgets
+    # Calculate summary metrics using the correct field name 'total_beds'
     total_hospitals = hospitals.count()
-    total_beds = hospitals.aggregate(Sum('available_beds'))['available_beds__sum'] or 0
+    total_beds = hospitals.aggregate(Sum('total_beds'))['total_beds__sum'] or 0
 
     context = {
         'hospitals': hospitals,
