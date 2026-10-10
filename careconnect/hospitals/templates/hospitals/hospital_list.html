@@ -2,16 +2,19 @@
 
 {% block content %}
 <div class="container py-4">
-    <!-- Header Section -->
+    <!-- Top Header Banner -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold text-success mb-1"><i class="bi bi-hospital"></i> Partner Hospital Directory</h2>
-            <p class="text-muted mb-0">Discover verified partner hospitals, emergency units, and real-time bed capacity.</p>
+            <h2 class="fw-bold text-success mb-1"><i class="bi bi-hospital"></i> Medical Network Directory</h2>
+            <p class="text-muted mb-0">Browse accredited partner hospitals, filter emergency units, and monitor real-time bed capacity.</p>
         </div>
-        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+        <div class="d-flex gap-2">
+            <a href="{% url 'doctor_list' %}" class="btn btn-outline-success btn-sm fw-bold"><i class="bi bi-person-badge"></i> Find Doctors</a>
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Dashboard</a>
+        </div>
     </div>
 
-    <!-- 4-Stat Metric Summary Bar -->
+    <!-- 4 Dashboard Metric Widget Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-6">
             <div class="card border-0 shadow-sm bg-white p-3 border-start border-success border-4 h-100">
@@ -20,7 +23,7 @@
                         <i class="bi bi-buildings"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Hospitals</h6>
+                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Partner Centers</h6>
                         <h3 class="fw-bold mb-0 text-success">{{ total_hospitals }}</h3>
                     </div>
                 </div>
@@ -43,10 +46,10 @@
             <div class="card border-0 shadow-sm bg-white p-3 border-start border-danger border-4 h-100">
                 <div class="d-flex align-items-center">
                     <div class="flex-shrink-0 bg-danger-subtle text-danger p-3 rounded-3 fs-3 me-3">
-                        <i class="bi bi-exclamation-triangle"></i>
+                        <i class="bi bi-shield-exclamation"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">24/7 Emergency</h6>
+                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">24/7 ER Units</h6>
                         <h3 class="fw-bold mb-0 text-danger">{{ emergency_centers }}</h3>
                     </div>
                 </div>
@@ -67,23 +70,34 @@
         </div>
     </div>
 
-    <!-- Split Main Layout: Left Sidebar Filters + Right Results -->
+    <!-- Main Layout -->
     <div class="row">
         <!-- Sidebar Filter Panel -->
         <div class="col-lg-3 mb-4">
-            <div class="card border-0 shadow-sm bg-white p-3">
-                <h5 class="fw-bold text-success mb-3"><i class="bi bi-funnel"></i> Filter Directory</h5>
+            <div class="card border-0 shadow-sm bg-white p-3 mb-4">
+                <h5 class="fw-bold text-success mb-3"><i class="bi bi-funnel-fill"></i> Directory Filters</h5>
                 <form method="GET" action="{% url 'hospital_list' %}">
                     <!-- Text Search -->
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Search Keyword</label>
-                        <input type="text" name="q" value="{{ query }}" class="form-control form-control-sm bg-light" placeholder="Hospital name or area...">
+                        <label class="form-label small fw-bold text-secondary">Search Name / Address</label>
+                        <input type="text" name="q" value="{{ query }}" class="form-control form-control-sm bg-light" placeholder="e.g. Labaid, Square...">
+                    </div>
+
+                    <!-- Location Select -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Location / Region</label>
+                        <select name="location" class="form-select form-select-sm bg-light">
+                            <option value="">All Locations</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc }}" {% if location_filter == loc %}selected{% endif %}>{{ loc }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <hr class="text-muted opacity-25">
 
                     <!-- Facility Checkboxes -->
-                    <label class="form-label small fw-bold text-secondary mb-2">Required Facilities</label>
+                    <label class="form-label small fw-bold text-secondary mb-2">Required Services</label>
 
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" name="emergency" value="true" id="chkEmergency" {% if has_emergency == 'true' %}checked{% endif %}>
@@ -92,7 +106,7 @@
 
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" name="icu" value="true" id="chkICU" {% if has_icu == 'true' %}checked{% endif %}>
-                        <label class="form-check-label small" for="chkICU"><i class="bi bi-activity text-primary me-1"></i> ICU Available</label>
+                        <label class="form-check-label small" for="chkICU"><i class="bi bi-activity text-primary me-1"></i> ICU Unit</label>
                     </div>
 
                     <div class="form-check mb-2">
@@ -102,8 +116,11 @@
 
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" name="pharmacy" value="true" id="chkPharmacy" {% if has_pharmacy == 'true' %}checked{% endif %}>
-                        <label class="form-check-label small" for="chkPharmacy"><i class="bi bi-capsule text-success me-1"></i> Pharmacy</label>
+                        <label class="form-check-label small" for="chkPharmacy"><i class="bi bi-capsule text-success me-1"></i> In-house Pharmacy</label>
                     </div>
+
+                    <!-- Preserve Sort option -->
+                    <input type="hidden" name="sort" value="{{ sort_by }}">
 
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-success btn-sm fw-bold"><i class="bi bi-search"></i> Apply Filters</button>
@@ -111,14 +128,47 @@
                     </div>
                 </form>
             </div>
+
+            <!-- Emergency Hotline Quick Banner -->
+            <div class="card border-0 shadow-sm bg-danger text-white p-3 text-center">
+                <i class="bi bi-telephone-outbound display-6 mb-2"></i>
+                <h6 class="fw-bold mb-1">Emergency Hotline</h6>
+                <p class="small text-white-50 mb-2">Direct ambulance dispatch & ER support</p>
+                <a href="tel:999" class="btn btn-light text-danger fw-bold btn-sm"><i class="bi bi-telephone-fill"></i> Call 999 / ER</a>
+            </div>
         </div>
 
-        <!-- Right Hospital Results Cards Grid -->
+        <!-- Right Main Results Panel -->
         <div class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted small fw-bold">Showing <span class="text-success">{{ results_count }}</span> partner hospitals</span>
+            <!-- Results Header & Sorting Bar -->
+            <div class="card border-0 shadow-sm bg-white p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <span class="text-muted small fw-bold">Found <span class="text-success fs-6">{{ results_count }}</span> hospitals matching criteria</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="small text-muted fw-bold text-nowrap"><i class="bi bi-sort-down"></i> Sort By:</label>
+                        <form method="GET" action="{% url 'hospital_list' %}" id="sortForm">
+                            <!-- Preserve active filters -->
+                            <input type="hidden" name="q" value="{{ query }}">
+                            <input type="hidden" name="location" value="{{ location_filter }}">
+                            <input type="hidden" name="emergency" value="{{ has_emergency }}">
+                            <input type="hidden" name="icu" value="{{ has_icu }}">
+                            <input type="hidden" name="ambulance" value="{{ has_ambulance }}">
+                            <input type="hidden" name="pharmacy" value="{{ has_pharmacy }}">
+
+                            <select name="sort" class="form-select form-select-sm bg-light" onchange="document.getElementById('sortForm').submit();">
+                                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
+                                <option value="beds_desc" {% if sort_by == 'beds_desc' %}selected{% endif %}>Bed Capacity (High-Low)</option>
+                                <option value="doctors_desc" {% if sort_by == 'doctors_desc' %}selected{% endif %}>Doctor Count (High-Low)</option>
+                                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
             </div>
 
+            <!-- Hospital Grid -->
             <div class="row">
                 {% for hospital in hospitals %}
                 <div class="col-md-6 mb-4">
@@ -135,32 +185,41 @@
                                         <i class="bi bi-patch-check-fill"></i> Verified
                                     </span>
                                 </div>
-                                <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> {{ hospital.location }}</p>
+                                <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> {{ hospital.location }} {% if hospital.address %}({{ hospital.address }}){% endif %}</p>
+
                                 <hr class="text-muted opacity-25">
 
+                                <!-- Capacity Indicator Bar -->
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <span><strong>Bed Capacity:</strong> {{ hospital.total_beds|default:"0" }} Beds</span>
+                                        <span class="text-success fw-bold">Active</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+
                                 <p class="card-text mb-2 small text-secondary">
-                                    <i class="bi bi-telephone-fill text-primary"></i> <strong>Helpline:</strong> {{ hospital.helpline|default:"Not provided" }}
-                                </p>
-                                <p class="card-text mb-2 small text-secondary">
-                                    <i class="bi bi-door-open-fill text-success"></i> <strong>Total Beds:</strong> <span class="fw-bold text-dark">{{ hospital.total_beds|default:"0" }}</span>
+                                    <i class="bi bi-telephone-fill text-primary"></i> <strong>Helpline:</strong> {{ hospital.helpline|default:hospital.emergency_contact|default:"Not provided" }}
                                 </p>
                                 <p class="card-text mb-3 small text-secondary">
-                                    <i class="bi bi-person-badge-fill text-info"></i> <strong>Doctors:</strong> <span class="fw-bold text-dark">{{ hospital.total_doctors|default:"0" }}</span>
+                                    <i class="bi bi-person-badge-fill text-info"></i> <strong>Available Doctors:</strong> <span class="fw-bold text-dark">{{ hospital.total_doctors|default:"0" }}</span>
                                 </p>
 
-                                <!-- Facility Indicators -->
+                                <!-- Facility Indicator Badges -->
                                 <div class="d-flex flex-wrap gap-1 mb-3">
                                     {% if hospital.has_emergency %}
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 0.7rem;">Emergency</span>
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 0.7rem;"><i class="bi bi-shield-plus me-1"></i>Emergency</span>
                                     {% endif %}
                                     {% if hospital.has_icu %}
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.7rem;">ICU</span>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.7rem;"><i class="bi bi-activity me-1"></i>ICU</span>
                                     {% endif %}
                                     {% if hospital.has_ambulance %}
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle text-dark" style="font-size: 0.7rem;">Ambulance</span>
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle text-dark" style="font-size: 0.7rem;"><i class="bi bi-truck me-1"></i>Ambulance</span>
                                     {% endif %}
                                     {% if hospital.has_pharmacy %}
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.7rem;">Pharmacy</span>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.7rem;"><i class="bi bi-capsule me-1"></i>Pharmacy</span>
                                     {% endif %}
                                 </div>
                             </div>
@@ -183,9 +242,9 @@
                     <div class="card border-0 shadow-sm text-center py-5 bg-white">
                         <div class="card-body">
                             <i class="bi bi-search display-4 text-muted mb-3 d-block"></i>
-                            <h5 class="fw-bold text-dark">No matching hospitals found</h5>
-                            <p class="text-muted small">Try unchecking some facilities or clear your search term.</p>
-                            <a href="{% url 'hospital_list' %}" class="btn btn-sm btn-outline-secondary mt-2">Reset Filters</a>
+                            <h5 class="fw-bold text-dark">No partner hospitals match your filters</h5>
+                            <p class="text-muted small">Try selecting a different location or clearing required facility filters.</p>
+                            <a href="{% url 'hospital_list' %}" class="btn btn-sm btn-outline-secondary mt-2">Reset All Filters</a>
                         </div>
                     </div>
                 </div>
