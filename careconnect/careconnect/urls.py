@@ -9,6 +9,7 @@ urlpatterns = [
     path('doctors/', include('doctors.urls')),
     path('appointments/', include('appointments.urls')),
     path('pharmacies/', include('pharmacies.urls')),
+    path('donors/', include('donors.urls')),
     path('accounts/signup/', views.signup_view, name='signup'),
     path('accounts/login/', views.login_view, name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
