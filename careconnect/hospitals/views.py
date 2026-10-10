@@ -5,7 +5,13 @@ def dashboard_view(request):
     """
     Renders the main home dashboard page.
     """
-    return render(request, 'hospitals/home_dashboard.html')
+    # Dynamic counts for dashboard stat cards
+    context = {
+        'total_hospitals': 2,
+        'total_doctors': 0,
+        'total_bookings': 0,
+    }
+    return render(request, 'hospitals/home_dashboard.html', context)
 
 
 def hospital_list_view(request):
@@ -31,8 +37,3 @@ def hospital_list_view(request):
         'hospitals': hospitals,
     }
     return render(request, 'hospitals/hospital_list.html', context)
-
-
-from django.shortcuts import render
-
-# Create your views here.

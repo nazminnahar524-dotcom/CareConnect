@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect - Available Hospitals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-success"><i class="bi bi-hospital"></i> Registered Hospitals</h2>
+                <p class="text-muted mb-0">Explore partner hospitals and check bed availability in real-time.</p>
+            </div>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        <div class="row">
+            {% for hospital in hospitals %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-success fw-bold"><i class="bi bi-building"></i> {{ hospital.name }}</h5>
+                        <hr>
+                        <p class="card-text mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> <strong>Location:</strong> {{ hospital.location }}</p>
+                        <p class="card-text mb-2"><i class="bi bi-telephone-fill text-primary"></i> <strong>Contact:</strong> {{ hospital.contact }}</p>
+                        <p class="card-text text-success mb-0"><i class="bi bi-door-open-fill"></i> <strong>Available Beds:</strong> {{ hospital.available_beds }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No hospitals registered yet.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>
