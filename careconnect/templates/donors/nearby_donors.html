@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Top Navigation & Summary -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary mb-2">&larr; Back to Home</a>
+            <h2 class="fw-bold text-success mb-0">Nearby Donors</h2>
+            <p class="text-muted">Find blood donors near you and save lives</p>
+        </div>
+        <div class="d-flex gap-3">
+            <div class="bg-light p-3 rounded-3 text-center border">
+                <h3 class="fw-bold mb-0 text-danger">{{ available_donors_count }}+</h3>
+                <small class="text-muted">Available Donors</small>
+            </div>
+            <div class="bg-light p-3 rounded-3 text-center border">
+                <h3 class="fw-bold mb-0 text-success">8</h3>
+                <small class="text-muted">Blood Groups</small>
+            </div>
+            <div class="bg-light p-3 rounded-3 text-center border">
+                <h3 class="fw-bold mb-0 text-primary">24/7</h3>
+                <small class="text-muted">Available Support</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Filter Sidebar -->
+        <div class="col-md-3">
+            <div class="card p-3 border-0 shadow-sm rounded-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">Filter Donors</h5>
+                    <a href="{% url 'nearby_donors' %}" class="text-decoration-none text-muted small">Reset</a>
+                </div>
+                <form method="GET" action="{% url 'nearby_donors' %}">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Blood Group</label>
+                        <select name="blood_group" class="form-select">
+                            <option value="">All Groups</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Gender</label>
+                        <select name="gender" class="form-select">
+                            <option value="All">All</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 fw-semibold mt-2">Apply Filters</button>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <h6 class="fw-bold text-danger">Need Blood?</h6>
+                    <p class="small text-muted mb-2">Request blood from nearby donors in just a few clicks.</p>
+                    <button class="btn btn-outline-danger btn-sm w-100 fw-semibold">Request Blood &gt;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donors List -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">{{ donors.count }} Donors Found</h5>
+                <span class="text-muted small">Sort by: <strong>Nearest</strong></span>
+            </div>
+
+            <div class="row g-3">
+                {% for donor in donors %}
+                <div class="col-md-6">
+                    <div class="card p-3 border-0 shadow-sm rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark">{{ donor.full_name }}</h5>
+                                <small class="text-muted">{{ donor.gender }}, {{ donor.age }} yrs</small>
+                            </div>
+                            <span class="badge bg-danger fs-6 px-3 py-2">{{ donor.blood_group }}</span>
+                        </div>
+                        
+                        <p class="text-muted small mb-2">
+                            📍 {{ donor.area }} • <strong>{{ donor.distance_km }} km away</strong>
+                        </p>
+
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            {% if donor.is_available %}
+                            <span class="badge bg-success-subtle text-success border border-success">Available Now</span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary">Not Available</span>
+                            {% endif %}
+                            <small class="text-muted">Last donated: {{ donor.last_donated_date|default:"N/A" }}</small>
+                        </div>
+
+                        <a href="{% url 'donor_detail' donor.id %}" class="btn btn-outline-success btn-sm w-100 mt-auto fw-semibold">View Details</a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <h5 class="text-muted">No donors found matching your search criteria.</h5>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
