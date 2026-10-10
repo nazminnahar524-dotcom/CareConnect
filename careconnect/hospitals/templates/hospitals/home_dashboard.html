@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 mb-4">
+        <a class="navbar-brand fw-bold text-success" href="{% url 'dashboard' %}">
+            <i class="bi bi-heart-pulse-fill"></i> CareConnect
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'dashboard' %}"><i class="bi bi-house-door"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-person-badge"></i> Doctors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-calendar-check"></i> Appointments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold text-primary" href="{% url 'hospital_list' %}"><i class="bi bi-hospital"></i> Hospitals</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Header -->
+        <div class="p-4 p-md-5 mb-4 rounded-3 bg-white border shadow-sm">
+            <small class="text-success fw-bold text-uppercase"><i class="bi bi-shield-check"></i> Healthcare Information Portal</small>
+            <h1 class="display-5 fw-bold mt-2">Find care. <span class="text-success">Share hope.</span> Save lives.</h1>
+            <p class="col-md-10 fs-5 text-muted">Search doctors and hospitals, book appointments, and keep your healthcare information in one place.</p>
+            <div class="mt-3">
+                <a href="{% url 'hospital_list' %}" class="btn btn-success btn-lg me-2"><i class="bi bi-hospital"></i> View Hospitals</a>
+                <a href="#" class="btn btn-outline-secondary btn-lg"><i class="bi bi-calendar-plus"></i> My Appointments</a>
+            </div>
+        </div>
+
+        <!-- Stat Cards Section -->
+        <div class="p-4 bg-white border rounded-3 shadow-sm mb-4">
+            <h5 class="fw-bold mb-3">Welcome, rairai</h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-light">
+                        <span class="text-muted small">Doctors</span>
+                        <h2 class="fw-bold mb-0">{{ total_doctors }}</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-light">
+                        <span class="text-muted small">My Bookings</span>
+                        <h2 class="fw-bold mb-0">{{ total_bookings }}</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded border-success bg-light">
+                        <span class="text-success small fw-bold">Available Hospitals</span>
+                        <h2 class="fw-bold mb-0 text-success">{{ total_hospitals }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
