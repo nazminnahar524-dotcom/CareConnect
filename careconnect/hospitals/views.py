@@ -1,39 +1,30 @@
-from django.shortcuts import render
-
-
-def dashboard_view(request):
-    """
-    Renders the main home dashboard page.
-    """
-    # Dynamic counts for dashboard stat cards
-    context = {
-        'total_hospitals': 2,
-        'total_doctors': 0,
-        'total_bookings': 0,
-    }
-    return render(request, 'hospitals/home_dashboard.html', context)
+from django.shortcuts import render, get_object_or_404
+from .models import Hospital
 
 
 def hospital_list_view(request):
     """
-    Renders the hospital listing page.
+    Renders the hospital listing page with filtering support.
     """
-    # Sample static data to display until database models are populated
-    hospitals = [
-        {
-            'name': 'City General Hospital',
-            'location': 'Dhaka',
-            'contact': '+880 1700-000000',
-            'available_beds': 12,
-        },
-        {
-            'name': 'CareConnect Central Clinic',
-            'location': 'Dhanmondi, Dhaka',
-            'contact': '+880 1800-000000',
-            'available_beds': 5,
-        },
-    ]
+    query = request.GET.get('q', '')
+    hospitals = Hospital.objects.all()
+
+    if query:
+        hospitals = hospitals.filter(name__icontains=query)
+
     context = {
         'hospitals': hospitals,
+        'total_count': hospitals.count(),
     }
     return render(request, 'hospitals/hospital_list.html', context)
+
+
+def hospital_detail_view(request, pk):
+    """
+    Renders the detailed view for a single hospital.
+    """
+    hospital = get_object_or_404(Hospital, pk=pk)
+    context = {
+        'hospital': hospital,
+    }
+    return render(request, 'hospitals/hospital_detail.html', context)

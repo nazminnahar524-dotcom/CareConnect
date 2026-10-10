@@ -41,11 +41,11 @@
 <div class="cc-tabs">
   <div class="container-fluid px-3 px-xl-4">
     <ul class="nav">
-      <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i> Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'doctor_list' %}"><i class="fa-solid fa-user-doctor me-1"></i> Doctors</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'hospital_list' %}"><i class="fa-solid fa-hospital me-1"></i> Hospitals</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'my_appointments' %}"><i class="fa-regular fa-calendar-check me-1"></i> Appointments</a></li>
-      <li class="nav-item"><a class="nav-link text-danger fw-bold" href="{% url 'nearby_donors' %}"><i class="fa-solid fa-hand-holding-heart me-1"></i> Donors</a></li>
+      <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i> Home</a></li>
+      <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}" href="{% url 'doctor_list' %}"><i class="fa-solid fa-user-doctor me-1"></i> Doctors</a></li>
+      <li class="nav-item"><a class="nav-link {% if 'hospital' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'hospital_list' %}"><i class="fa-solid fa-hospital me-1"></i> Hospitals</a></li>
+      <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}" href="{% url 'my_appointments' %}"><i class="fa-regular fa-calendar-check me-1"></i> Appointments</a></li>
+      <li class="nav-item"><a class="nav-link text-danger fw-bold {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}" href="{% url 'nearby_donors' %}"><i class="fa-solid fa-hand-holding-heart me-1"></i> Donors</a></li>
     </ul>
   </div>
 </div>
