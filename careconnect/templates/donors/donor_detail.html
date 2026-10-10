@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Top Navigation -->
+    <div class="mb-3">
+        <a href="{% url 'nearby_donors' %}" class="btn btn-sm btn-outline-secondary">&larr; Back to Nearby Donors</a>
+    </div>
+
+    <!-- Donor Header Profile Card -->
+    <div class="card p-4 border-0 shadow-sm rounded-3 mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px; font-size: 36px; font-weight: bold;">
+                    {{ donor.full_name|slice:":1" }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h3 class="fw-bold mb-0">{{ donor.full_name }}</h3>
+                    <span class="badge bg-danger fs-6">{{ donor.blood_group }}</span>
+                    {% if donor.is_available %}
+                    <span class="badge bg-success-subtle text-success border border-success">Available Now</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted mb-2">📍 {{ donor.area }} • {{ donor.distance_km }} km away</p>
+                <p class="small text-muted mb-0">Member Since: {{ donor.date_joined|date:"M d, Y" }}</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="#request-section" class="btn btn-success fw-semibold">Request Blood</a>
+                    <a href="https://wa.me/{{ donor.whatsapp_number }}" target="_blank" class="btn btn-outline-success fw-semibold">Message Donor</a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Stats Grid -->
+        <div class="row text-center g-2">
+            <div class="col-6 col-md-3">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Total Donations</small>
+                    <strong class="fs-5 text-dark">{{ donor.total_donations }} times</strong>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Last Donated</small>
+                    <strong class="fs-5 text-dark">{{ donor.last_donated_date|default:"N/A" }}</strong>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Occupation</small>
+                    <strong class="fs-6 text-dark">{{ donor.occupation }}</strong>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Languages</small>
+                    <strong class="fs-6 text-dark">{{ donor.languages }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column: About & History -->
+        <div class="col-md-7">
+            <!-- About Section -->
+            <div class="card p-4 border-0 shadow-sm rounded-3 mb-4">
+                <h5 class="fw-bold mb-3">About Donor</h5>
+                <table class="table table-borderless small mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted fw-semibold" style="width: 35%;">Full Name</td>
+                            <td>{{ donor.full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold">Location</td>
+                            <td>{{ donor.area }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold">Emergency Contact</td>
+                            <td><strong class="text-success">{{ donor.phone_number }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold">WhatsApp Number</td>
+                            <td>{{ donor.whatsapp_number }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold">Email</td>
+                            <td>{{ donor.email }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-semibold">Gender</td>
+                            <td>{{ donor.gender }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="p-3 bg-light rounded mt-3">
+                    <small class="fw-semibold text-muted d-block mb-1">Note:</small>
+                    <p class="small text-secondary mb-0">{{ donor.about_me }}</p>
+                </div>
+            </div>
+
+            <!-- Donation History Table -->
+            <div class="card p-4 border-0 shadow-sm rounded-3">
+                <h5 class="fw-bold mb-3">Donation History</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Blood Group</th>
+                                <th>Location</th>
+                                <th>Organization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for history in histories %}
+                            <tr>
+                                <td>{{ history.date }}</td>
+                                <td><span class="badge bg-danger">{{ history.blood_group }}</span></td>
+                                <td>{{ history.location }}</td>
+                                <td>{{ history.organization }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No history records found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Request Blood Form -->
+        <div class="col-md-5" id="request-section">
+            <div class="card p-4 border-0 shadow-sm rounded-3">
+                <h5 class="fw-bold text-danger mb-1">Request Blood</h5>
+                <p class="small text-muted mb-3">Send a blood request to this donor. They will be notified.</p>
+
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Required Blood Group</label>
+                        <input type="text" class="form-control" value="{{ donor.blood_group }}" readonly>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Units Needed</label>
+                            <select class="form-select small">
+                                <option>1 Unit</option>
+                                <option>2 Units</option>
+                                <option>3 Units</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Needed By</label>
+                            <input type="date" class="form-control small">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Hospital / Location</label>
+                        <input type="text" class="form-control" placeholder="e.g., Square Hospital, Dhaka">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Message (Optional)</label>
+                        <textarea class="form-control" rows="3" placeholder="Explain emergency details..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-success w-100 fw-semibold">Send Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
