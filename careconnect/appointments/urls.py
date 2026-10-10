@@ -4,18 +4,23 @@ from . import views
 
 urlpatterns = [
     path(
-        'book/<int:doctor_pk>/',
+        "book/<int:doctor_pk>/",
         views.book_appointment,
-        name='book_appointment'
+        name="book_appointment"
     ),
     path(
-        'my-list/',
+        "my-list/",
         views.my_appointments_view,
-        name='my_appointments'
+        name="my_appointments"
     ),
     path(
-        'history/',
+        "history/",
         views.appointment_history_view,
-        name='appointment_history'
+        name="appointment_history"
+    ),
+    path(
+        "cancel/<int:appointment_id>/",
+        views.cancel_appointment,
+        name="cancel_appointment"
     ),
 ]
