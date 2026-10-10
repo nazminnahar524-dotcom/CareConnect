@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4 border-0 shadow-sm rounded-3">
+                <h3 class="fw-bold text-success mb-2">Register as a Blood Donor</h3>
+                <p class="text-muted mb-4">Fill out the form below to join our donor list and help save lives.</p>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Full Name *</label>
+                            {{ form.full_name }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Blood Group *</label>
+                            {{ form.blood_group }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Gender *</label>
+                            {{ form.gender }}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Age</label>
+                            {{ form.age }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">District</label>
+                            {{ form.district }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Upazila</label>
+                            {{ form.upazila }}
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Area / Full Address *</label>
+                            {{ form.area }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Phone Number *</label>
+                            {{ form.phone_number }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">WhatsApp Number</label>
+                            {{ form.whatsapp_number }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Occupation</label>
+                            {{ form.occupation }}
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Languages Spoken</label>
+                            {{ form.languages }}
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">About Me / Notes</label>
+                            {{ form.about_me }}
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                {{ form.is_available }}
+                                <label class="form-check-label fw-semibold" for="{{ form.is_available.id_for_label }}">
+                                    I am currently available to donate blood
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-success w-100 fw-semibold py-2">Submit & Become a Donor</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
