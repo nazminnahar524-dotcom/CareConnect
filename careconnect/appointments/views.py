@@ -192,3 +192,5 @@ def cancel_appointment(request, appointment_id):
         messages.success(request, "Appointment cancelled successfully.")
 
     return redirect("my_appointments")
+
+
