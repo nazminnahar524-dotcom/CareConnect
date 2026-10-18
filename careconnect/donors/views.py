@@ -1,6 +1,8 @@
 import math
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import Donor
+from .forms import DonorRegistrationForm
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
@@ -47,3 +49,29 @@ def nearby_donors(request):
         'selected_gender': gender,
     }
     return render(request, 'donors/nearby_donors.html', context)
+
+
+def register_donor(request):
+    if request.method == 'POST':
+        form = DonorRegistrationForm(request.POST)
+        if form.is_valid():
+            donor = form.save(commit=False)
+            if request.user.is_authenticated:
+                donor.user = request.user
+            donor.save()
+            messages.success(request, 'Thank you for registering as a blood donor!')
+            return redirect('nearby_donors')
+    else:
+        form = DonorRegistrationForm()
+
+    return render(request, 'donors/register_donor.html', {'form': form})
+
+
+def donor_detail(request, donor_id):
+    donor = get_object_or_404(Donor, id=donor_id)
+    donation_history = donor.donation_history.all()
+    context = {
+        'donor': donor,
+        'donation_history': donation_history,
+    }
+    return render(request, 'donors/donor_detail.html', context)
