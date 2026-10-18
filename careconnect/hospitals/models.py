@@ -13,6 +13,10 @@ class Hospital(models.Model):
     total_doctors = models.IntegerField(default=24)
     distance = models.CharField(max_length=50, default="1.2 km away")
 
+    # Map Coordinates (allows null/blank to prevent IntegrityError on database)
+    latitude = models.FloatField(default=23.7461, null=True, blank=True)
+    longitude = models.FloatField(default=90.3742, null=True, blank=True)
+
     helpline = models.CharField(max_length=50, default="09612-345678")
     emergency_contact = models.CharField(max_length=50, default="01713-456789")
     email = models.EmailField(default="info@labaidgroup.com")
