@@ -3,14 +3,15 @@
 {% block title %}Nearby Donors - CareConnect{% endblock %}
 
 {% block extra_head %}
-<!-- Leaflet CSS & JS for Interactive Map -->
+<!-- Leaflet CSS & JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
     #map {
-        height: 180px;
-        width: 100%;
+        height: 180px !important;
+        width: 100% !important;
         border-radius: 12px;
+        border: 1px solid #e0e0e0;
         z-index: 1;
     }
     .location-card {
@@ -44,6 +45,7 @@
                     <small class="text-success fw-bold" style="cursor: pointer;" onclick="locateUser()">Detect My Location</small>
                 </div>
 
+                <!-- Map Container -->
                 <div id="map" class="mb-3"></div>
 
                 <div class="mb-2">
@@ -148,22 +150,28 @@
 </div>
 
 <script>
-    var userLat = {{ user_lat }};
-    var userLng = {{ user_lng }};
+    document.addEventListener("DOMContentLoaded", function () {
+        var userLat = {{ user_lat }};
+        var userLng = {{ user_lng }};
 
-    var map = L.map('map', { zoomControl: false }).setView([userLat, userLng], 13);
+        var map = L.map('map', { zoomControl: true }).setView([userLat, userLng], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
 
-    var marker = L.marker([userLat, userLng], { draggable: true }).addTo(map);
+        var marker = L.marker([userLat, userLng], { draggable: true }).addTo(map);
 
-    marker.on('dragend', function (e) {
-        var coord = e.target.getLatLng();
-        document.getElementById('lat-input').value = coord.lat;
-        document.getElementById('lng-input').value = coord.lng;
-        document.getElementById('filter-form').submit();
+        marker.on('dragend', function (e) {
+            var coord = e.target.getLatLng();
+            document.getElementById('lat-input').value = coord.lat;
+            document.getElementById('lng-input').value = coord.lng;
+            document.getElementById('filter-form').submit();
+        });
+
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 300);
     });
 
     function updateRadiusText(val) {
