@@ -6,65 +6,110 @@
     <title>CareConnect - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .dashboard-card {
+            border-radius: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 mb-4 shadow-sm">
         <a class="navbar-brand fw-bold text-success" href="{% url 'dashboard' %}">
-            <i class="bi bi-heart-pulse-fill"></i> CareConnect
+            <i class="bi bi-heart-pulse-fill me-1"></i> CareConnect
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'dashboard' %}"><i class="bi bi-house-door"></i> Home</a>
+                    <a class="nav-link active fw-bold text-success" href="{% url 'dashboard' %}"><i class="bi bi-house-door-fill me-1"></i> Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-person-badge"></i> Doctors</a>
+                    <a class="nav-link" href="#"><i class="bi bi-person-badge me-1"></i> Doctors</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-calendar-check"></i> Appointments</a>
+                    <a class="nav-link" href="#"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link fw-semibold text-primary" href="{% url 'hospital_list' %}"><i class="bi bi-hospital"></i> Hospitals</a>
+                    <a class="nav-link fw-semibold text-primary" href="{% url 'hospital_list' %}"><i class="bi bi-hospital me-1"></i> Hospitals</a>
                 </li>
             </ul>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="container">
+    <div class="container py-3">
         <!-- Hero Header -->
-        <div class="p-4 p-md-5 mb-4 rounded-3 bg-white border shadow-sm">
-            <small class="text-success fw-bold text-uppercase"><i class="bi bi-shield-check"></i> Healthcare Information Portal</small>
-            <h1 class="display-5 fw-bold mt-2">Find care. <span class="text-success">Share hope.</span> Save lives.</h1>
-            <p class="col-md-10 fs-5 text-muted">Search doctors and hospitals, book appointments, and keep your healthcare information in one place.</p>
-            <div class="mt-3">
-                <a href="{% url 'hospital_list' %}" class="btn btn-success btn-lg me-2"><i class="bi bi-hospital"></i> View Hospitals</a>
-                <a href="#" class="btn btn-outline-secondary btn-lg"><i class="bi bi-calendar-plus"></i> My Appointments</a>
+        <div class="p-4 p-md-5 mb-4 rounded-4 bg-white border-0 shadow-sm position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-4 opacity-10 d-none d-md-block">
+                <i class="bi bi-hospital display-1 text-success"></i>
+            </div>
+            <div style="max-width: 800px;">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 mb-3">
+                    <i class="bi bi-shield-check me-1"></i> Healthcare Information Portal
+                </span>
+                <h1 class="display-5 fw-bold mt-2 text-dark">Find care. <span class="text-success">Share hope.</span> Save lives.</h1>
+                <p class="fs-5 text-muted mb-4">Search accredited doctors and hospitals, book appointments seamlessly, and keep your vital healthcare data in one secure place.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'hospital_list' %}" class="btn btn-success btn-lg fw-bold rounded-pill px-4 shadow-sm">
+                        <i class="bi bi-hospital me-1"></i> View Hospitals & Map
+                    </a>
+                    <a href="#" class="btn btn-outline-secondary btn-lg fw-semibold rounded-pill px-4">
+                        <i class="bi bi-calendar-plus me-1"></i> My Appointments
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- Stat Cards Section -->
-        <div class="p-4 bg-white border rounded-3 shadow-sm mb-4">
-            <h5 class="fw-bold mb-3">Welcome, rairai</h5>
-            <div class="row g-3">
+        <div class="p-4 bg-white border-0 rounded-4 shadow-sm mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-speedometer2 text-success me-2"></i>Welcome back, rairai</h5>
+                <span class="text-muted small">Live System Metrics</span>
+            </div>
+            <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="p-3 border rounded bg-light">
-                        <span class="text-muted small">Doctors</span>
-                        <h2 class="fw-bold mb-0">{{ total_doctors }}</h2>
+                    <div class="p-4 border-0 rounded-4 bg-light shadow-sm dashboard-card border-start border-primary border-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold">Active Doctors</span>
+                                <h2 class="fw-bold mb-0 text-primary mt-1">{{ total_doctors }}</h2>
+                            </div>
+                            <div class="bg-primary-subtle text-primary p-3 rounded-3 fs-3">
+                                <i class="bi bi-person-badge-fill"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="p-3 border rounded bg-light">
-                        <span class="text-muted small">My Bookings</span>
-                        <h2 class="fw-bold mb-0">{{ total_bookings }}</h2>
+                    <div class="p-4 border-0 rounded-4 bg-light shadow-sm dashboard-card border-start border-warning border-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-bold">My Bookings</span>
+                                <h2 class="fw-bold mb-0 text-warning-emphasis mt-1">{{ total_bookings }}</h2>
+                            </div>
+                            <div class="bg-warning-subtle text-warning p-3 rounded-3 fs-3">
+                                <i class="bi bi-calendar-check-fill"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="p-3 border rounded border-success bg-light">
-                        <span class="text-success small fw-bold">Available Hospitals</span>
-                        <h2 class="fw-bold mb-0 text-success">{{ total_hospitals }}</h2>
+                    <div class="p-4 border-0 rounded-4 bg-light shadow-sm dashboard-card border-start border-success border-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-success small text-uppercase fw-bold">Available Hospitals</span>
+                                <h2 class="fw-bold mb-0 text-success mt-1">{{ total_hospitals }}</h2>
+                            </div>
+                            <div class="bg-success-subtle text-success p-3 rounded-3 fs-3">
+                                <i class="bi bi-buildings-fill"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
