@@ -11,6 +11,7 @@ urlpatterns = [
     path('doctors/', include('doctors.urls')),
     path('appointments/', include('appointments.urls')),  # <--- Add this back
     path('pharmacies/', include('pharmacies.urls')),
+    path('medicines/', include('medicines.urls')),
     path('donors/', include('donors.urls')),
     path('hospitals/', include('hospitals.urls')),
 
