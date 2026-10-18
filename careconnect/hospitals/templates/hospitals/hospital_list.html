@@ -22,8 +22,8 @@
         transform: translateY(-2px);
     }
     #hospitalMap {
-        height: 380px;
-        border-radius: 16px;
+        height: 320px;
+        border-radius: 12px;
         z-index: 1;
     }
     .leaflet-popup-content-wrapper {
@@ -107,18 +107,9 @@
         </div>
     </div>
 
-    <!-- Interactive Interactive Map Section -->
-    <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Interactive Network Map</h5>
-            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill"><i class="bi bi-broadcast me-1"></i> Live Geo-Locations</span>
-        </div>
-        <div id="hospitalMap" class="shadow-inner"></div>
-    </div>
-
     <!-- Main Directory Layout -->
     <div class="row">
-        <!-- Sidebar Filter Panel -->
+        <!-- Sidebar Filter Panel & Side Map -->
         <div class="col-lg-3 mb-4">
             <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-3">
                 <h5 class="fw-bold text-success mb-3"><i class="bi bi-funnel-fill me-2"></i>Directory Filters</h5>
@@ -175,6 +166,15 @@
                         <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm py-1"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters</a>
                     </div>
                 </form>
+            </div>
+
+            <!-- Side Interactive Map Section -->
+            <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Network Map</h6>
+                    <span class="badge bg-success-subtle text-success px-2 py-1" style="font-size: 0.65rem;"><i class="bi bi-broadcast me-1"></i> Live</span>
+                </div>
+                <div id="hospitalMap" class="shadow-inner"></div>
             </div>
 
             <!-- Emergency Hotline Card -->
@@ -323,11 +323,10 @@
                 var marker = L.marker([h.lat, h.lng]).addTo(map);
 
                 var popupContent = `
-                    <div style="min-width: 180px;">
-                        <h6 style="margin:0 0 4px 0; color:#198754; font-weight:bold;">${h.name}</h6>
-                        <p style="margin:0 0 6px 0; font-size:12px; color:#6c757d;"><i class="bi bi-geo-alt-fill text-danger"></i> ${h.location}</p>
-                        <p style="margin:0 0 8px 0; font-size:11px;"><strong>Beds:</strong> ${h.beds} | <strong>Doctors:</strong> ${h.doctors}</p>
-                        <a href="/hospitals/${h.id}/" class="btn btn-sm btn-success text-white w-100 style="font-size:11px; padding:2px 6px;">View Hospital</a>
+                    <div style="min-width: 160px;">
+                        <h6 style="margin:0 0 4px 0; color:#198754; font-weight:bold; font-size:13px;">${h.name}</h6>
+                        <p style="margin:0 0 6px 0; font-size:11px; color:#6c757d;"><i class="bi bi-geo-alt-fill text-danger"></i> ${h.location}</p>
+                        <a href="/hospitals/${h.id}/" class="btn btn-sm btn-success text-white w-100" style="font-size:11px; padding:2px 4px;">View Details</a>
                     </div>
                 `;
 
@@ -337,7 +336,7 @@
         });
 
         if (bounds.length > 0) {
-            map.fitBounds(bounds, { padding: [30, 30] });
+            map.fitBounds(bounds, { padding: [20, 20] });
         }
     });
 </script>
