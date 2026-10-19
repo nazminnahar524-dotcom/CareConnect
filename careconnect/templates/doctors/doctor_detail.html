@@ -1,56 +1,903 @@
+
 {% extends 'base.html' %}
-{% block title %}Dr. {{ doctor.name }} · CareConnect{% endblock %}
+
+{% block title %}Dr. {{ doctor.name }} | CareConnect{% endblock %}
+
 {% block content %}
-<div class="container-fluid px-0">
-    <div class="mb-3"><a href="{% url 'doctor_list' %}" class="small fw-semibold" style="color:var(--cc-green);"><i class="fa-solid fa-arrow-left me-1"></i> Back to doctors</a></div>
+
+<style>
+/* ========================================
+   CARECONNECT — DOCTOR DETAIL PAGE
+   All styling is local to this template.
+======================================== */
+
+.doctor-detail-page {
+    --dd-green: #16845b;
+    --dd-dark: #123d31;
+    --dd-soft: #e8f6ef;
+    --dd-border: #dce9e2;
+    --dd-text: #243b31;
+    --dd-muted: #6b7f76;
+    color: var(--dd-text);
+    padding: 12px 0 35px;
+}
+
+.doctor-detail-page * {
+    box-sizing: border-box;
+}
+
+.doctor-detail-page .dd-heading {
+    color: var(--dd-dark);
+    font-weight: 800;
+}
+
+.doctor-detail-page .dd-muted {
+    color: var(--dd-muted);
+}
+
+.doctor-detail-page .dd-card {
+    background: #ffffff;
+    border: 1px solid var(--dd-border);
+    border-radius: 20px;
+    box-shadow: 0 7px 25px rgba(18, 61, 49, 0.055);
+    overflow: hidden;
+}
+
+.doctor-detail-page .dd-back {
+    color: var(--dd-green);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.doctor-detail-page .dd-back:hover {
+    color: var(--dd-dark);
+}
+
+.doctor-detail-page .dd-eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    color: var(--dd-green);
+}
+
+.doctor-detail-page .dd-avatar {
+    width: 92px;
+    height: 92px;
+    min-width: 92px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 23px;
+    background: var(--dd-soft);
+    color: var(--dd-green);
+    font-size: 39px;
+}
+
+.doctor-detail-page .dd-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 30px;
+    background: var(--dd-soft);
+    color: var(--dd-green);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.doctor-detail-page .dd-profile-header {
+    padding: 30px;
+    background: linear-gradient(135deg, #ffffff 0%, #f0faf4 100%);
+    border-bottom: 1px solid var(--dd-border);
+}
+
+.doctor-detail-page .dd-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 14px;
+    background: var(--dd-soft);
+    color: var(--dd-green);
+    font-size: 19px;
+}
+
+.doctor-detail-page .dd-section {
+    padding: 26px;
+}
+
+.doctor-detail-page .dd-info {
+    height: 100%;
+    padding: 16px;
+    background: #f8fbf9;
+    border: 1px solid #e8f0eb;
+    border-radius: 13px;
+    overflow-wrap: anywhere;
+}
+
+.doctor-detail-page .dd-info-label {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--dd-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.doctor-detail-page .dd-info-value {
+    display: block;
+    color: var(--dd-dark);
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.6;
+}
+
+.doctor-detail-page .dd-info-description {
+    margin: 8px 0 0;
+    color: var(--dd-muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.doctor-detail-page .dd-fee-panel {
+    padding: 20px;
+    border: 1px solid #d9eee1;
+    border-radius: 15px;
+    background: var(--dd-soft);
+}
+
+.doctor-detail-page .dd-fee {
+    color: var(--dd-green);
+    font-size: 30px;
+    font-weight: 850;
+    line-height: 1.3;
+}
+
+.doctor-detail-page .dd-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 12px;
+    color: var(--dd-text);
+    background: #ffffff;
+    border: 1px solid var(--dd-border);
+    border-radius: 11px;
+}
+
+.doctor-detail-page .dd-input:focus {
+    outline: none;
+    border-color: var(--dd-green);
+    box-shadow: 0 0 0 3px rgba(22, 132, 91, 0.11);
+}
+
+.doctor-detail-page .dd-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--dd-dark);
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.doctor-detail-page .dd-btn {
+    display: inline-flex;
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 15px;
+    border: 1px solid var(--dd-green);
+    border-radius: 11px;
+    background: var(--dd-green);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.doctor-detail-page .dd-btn:hover {
+    background: var(--dd-dark);
+    border-color: var(--dd-dark);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.doctor-detail-page .dd-btn-outline {
+    background: #ffffff;
+    color: var(--dd-green);
+}
+
+.doctor-detail-page .dd-btn-outline:hover {
+    background: var(--dd-soft);
+    border-color: var(--dd-green);
+    color: var(--dd-dark);
+}
+
+.doctor-detail-page .dd-checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 23px;
+}
+
+.doctor-detail-page .dd-checklist-item:last-child {
+    margin-bottom: 0;
+}
+
+.doctor-detail-page .dd-check-icon {
+    display: flex;
+    width: 39px;
+    height: 39px;
+    min-width: 39px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    background: var(--dd-soft);
+    color: var(--dd-green);
+}
+
+.doctor-detail-page .dd-checklist-item h6 {
+    margin-bottom: 5px;
+    color: var(--dd-dark);
+    font-weight: 750;
+    font-size: 14px;
+}
+
+.doctor-detail-page .dd-checklist-item p {
+    margin: 0;
+    color: var(--dd-muted);
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.doctor-detail-page .dd-note {
+    padding: 16px;
+    border-radius: 13px;
+    background: #f0f7ff;
+    border: 1px solid #dceafa;
+    color: #365777;
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.doctor-detail-page .dd-booking-card {
+    position: sticky;
+    top: 90px;
+}
+
+.doctor-detail-page .dd-divider {
+    border-color: #e8efea;
+    opacity: 1;
+    margin: 22px 0;
+}
+
+@media (max-width: 767px) {
+    .doctor-detail-page {
+        padding-top: 4px;
+    }
+
+    .doctor-detail-page .dd-profile-header {
+        padding: 22px;
+    }
+
+    .doctor-detail-page .dd-section {
+        padding: 21px;
+    }
+
+    .doctor-detail-page .dd-avatar {
+        width: 72px;
+        height: 72px;
+        min-width: 72px;
+        font-size: 30px;
+        border-radius: 18px;
+    }
+
+    .doctor-detail-page .dd-booking-card {
+        position: static;
+    }
+}
+
+@media (max-width: 400px) {
+    .doctor-detail-page .dd-profile-header,
+    .doctor-detail-page .dd-section {
+        padding: 16px;
+    }
+
+    .doctor-detail-page .dd-fee {
+        font-size: 26px;
+    }
+}
+</style>
+
+<div class="doctor-detail-page">
+
+    <!-- Back navigation -->
+    <div class="mb-4">
+        <a href="{% url 'doctor_list' %}" class="dd-back">
+            <i class="fa-solid fa-arrow-left me-2"></i>
+            Back to Doctors
+        </a>
+    </div>
+
     <div class="row g-4">
+
+        <!-- ==================================
+             LEFT COLUMN: DOCTOR INFORMATION
+        =================================== -->
         <div class="col-lg-8">
-            <div class="cc-card p-4 p-lg-5 mb-3">
-                <div class="d-flex flex-column flex-md-row align-items-md-center gap-4">
-                    <div class="cc-icon flex-shrink-0" style="width:78px;height:78px;border-radius:20px;font-size:1.7rem;"><i class="fa-solid fa-user-doctor"></i></div>
-                    <div class="flex-grow-1">
-                        <div class="d-flex flex-wrap justify-content-between gap-2"><div><span class="badge rounded-pill mb-2" style="background:var(--cc-green-soft);color:var(--cc-green);">{{ doctor.specialty }}</span><h2 class="fw-bold mb-1">Dr. {{ doctor.name }}</h2><p class="cc-muted mb-2">{{ doctor.qualification }}</p></div><span class="badge rounded-pill bg-light text-dark border align-self-start"><i class="fa-solid fa-circle-check me-1" style="color:var(--cc-green);"></i>Listed doctor</span></div>
-                        <div class="small cc-muted"><i class="fa-solid fa-hospital me-2" style="color:var(--cc-green);"></i>{{ doctor.hospital_name }}</div>
+
+            <!-- Doctor profile header -->
+            <section class="dd-card mb-4">
+
+                <div class="dd-profile-header">
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-4">
+
+                        <div class="dd-avatar">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+
+                        <div class="flex-grow-1" style="min-width:0;">
+
+                            <div class="dd-eyebrow mb-2">
+                                CARECONNECT DOCTOR PROFILE
+                            </div>
+
+                            <h2 class="dd-heading mb-2">
+                                Dr. {{ doctor.name }}
+                            </h2>
+
+                            <div class="mb-3">
+                                <span class="dd-chip">
+                                    <i class="fa-solid fa-heart-pulse"></i>
+                                    {{ doctor.specialty }}
+                                </span>
+                            </div>
+
+                            <p class="dd-muted mb-2">
+                                <i class="fa-solid fa-graduation-cap me-2"
+                                   style="color:#16845b;"></i>
+                                {{ doctor.qualification }}
+                            </p>
+
+                            <p class="dd-muted mb-0">
+                                <i class="fa-solid fa-hospital me-2"
+                                   style="color:#16845b;"></i>
+                                {{ doctor.hospital_name }}
+                            </p>
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="cc-card p-4 p-lg-5 mb-4">
-                <h5 class="fw-bold mb-3">Doctor information</h5>
-                <p class="cc-muted small lh-lg">Dr. {{ doctor.name }} is a {{ doctor.specialty }} specialist practicing at {{ doctor.hospital_name }}. The information shown here is based on the doctor record currently stored in CareConnect.</p>
-                <div class="row g-3">
-                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Specialization</small><strong>{{ doctor.specialty }}</strong></div></div>
-                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Qualification</small><strong>{{ doctor.qualification }}</strong></div></div>
-                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Available days</small><strong>{{ doctor.available_days }}</strong></div></div>
-                    <div class="col-md-6"><div class="p-3 rounded-3" style="background:#f8fbf9;"><small class="cc-muted d-block">Visiting hours</small><strong>{{ doctor.visiting_hours }}</strong></div></div>
+                <div class="dd-section">
+
+                    <h5 class="dd-heading mb-2">
+                        Welcome to Dr. {{ doctor.name }}'s Profile
+                    </h5>
+
+                    <p class="dd-muted mb-0" style="line-height:1.9;">
+                        Explore the doctor's specialty, professional qualifications,
+                        hospital information and consultation schedule before
+                        requesting an appointment through CareConnect.
+                    </p>
+
                 </div>
-            </div>
+            </section>
 
-            <div class="cc-card p-4">
-                <h6 class="fw-bold mb-3">Before your visit</h6>
-                <div class="row g-3 small cc-muted"><div class="col-md-4"><i class="fa-solid fa-clock me-2" style="color:var(--cc-green);"></i>Arrive early</div><div class="col-md-4"><i class="fa-solid fa-file-medical me-2" style="color:var(--cc-green);"></i>Bring reports</div><div class="col-md-4"><i class="fa-solid fa-hospital-user me-2" style="color:var(--cc-green);"></i>Visit hospital chamber</div></div>
-            </div>
+            <!-- Doctor information -->
+            <section class="dd-card mb-4">
+
+                <div class="dd-section">
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="dd-icon">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </div>
+
+                        <div>
+                            <h4 class="dd-heading mb-1">
+                                Doctor Information
+                            </h4>
+
+                            <p class="dd-muted small mb-0">
+                                Professional background and consultation details
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="dd-muted mb-4" style="line-height:1.9;">
+                        Dr. {{ doctor.name }} is a {{ doctor.specialty }}
+                        specialist practicing at {{ doctor.hospital_name }}.
+                        Patients can review the doctor's recorded qualifications,
+                        available days and visiting hours before requesting
+                        an appointment.
+                    </p>
+
+                    <div class="row g-3">
+
+                        <!-- Specialty -->
+                        <div class="col-md-6">
+                            <div class="dd-info">
+
+                                <span class="dd-info-label">
+                                    <i class="fa-solid fa-heart-pulse me-2"></i>
+                                    Specialization
+                                </span>
+
+                                <span class="dd-info-value">
+                                    {{ doctor.specialty }}
+                                </span>
+
+                                <p class="dd-info-description">
+                                    Review the doctor's specialty to help determine
+                                    whether it matches the reason for your visit.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <!-- Qualifications -->
+                        <div class="col-md-6">
+                            <div class="dd-info">
+
+                                <span class="dd-info-label">
+                                    <i class="fa-solid fa-graduation-cap me-2"></i>
+                                    Qualifications
+                                </span>
+
+                                <span class="dd-info-value">
+                                    {{ doctor.qualification }}
+                                </span>
+
+                                <p class="dd-info-description">
+                                    Professional qualifications recorded in the
+                                    CareConnect doctor directory.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <!-- Available days -->
+                        <div class="col-md-6">
+                            <div class="dd-info">
+
+                                <span class="dd-info-label">
+                                    <i class="fa-regular fa-calendar-days me-2"></i>
+                                    Available Days
+                                </span>
+
+                                <span class="dd-info-value">
+                                    {{ doctor.available_days }}
+                                </span>
+
+                                <p class="dd-info-description">
+                                    Review the listed days before selecting your
+                                    preferred appointment date.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <!-- Visiting hours -->
+                        <div class="col-md-6">
+                            <div class="dd-info">
+
+                                <span class="dd-info-label">
+                                    <i class="fa-regular fa-clock me-2"></i>
+                                    Visiting Hours
+                                </span>
+
+                                <span class="dd-info-value">
+                                    {{ doctor.visiting_hours }}
+                                </span>
+
+                                <p class="dd-info-description">
+                                    Confirm the latest chamber schedule before
+                                    travelling to the hospital.
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <!-- Hospital -->
+                        <div class="col-12">
+                            <div class="dd-info">
+
+                                <span class="dd-info-label">
+                                    <i class="fa-solid fa-hospital me-2"></i>
+                                    Hospital / Chamber
+                                </span>
+
+                                <span class="dd-info-value">
+                                    {{ doctor.hospital_name }}
+                                </span>
+
+                                <p class="dd-info-description">
+                                    Contact the hospital if you need to verify
+                                    the chamber location, appointment procedure
+                                    or visiting schedule.
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Before booking -->
+                    <div class="p-3 p-md-4 rounded-3 mt-4"
+                         style="background:#e8f6ef;border:1px solid #dce9e2;">
+
+                        <h6 class="dd-heading mb-3">
+                            <i class="fa-solid fa-circle-info me-2"
+                               style="color:#16845b;"></i>
+                            Before Booking
+                        </h6>
+
+                        <ul class="dd-muted small ps-3 mb-0"
+                            style="line-height:1.9;">
+
+                            <li class="mb-2">
+                                Review the doctor's specialty and qualifications.
+                            </li>
+
+                            <li class="mb-2">
+                                Check the available days and visiting hours.
+                            </li>
+
+                            <li class="mb-2">
+                                Review the consultation fee before booking.
+                            </li>
+
+                            <li>
+                                Verify the hospital chamber schedule if necessary.
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Prepare for your visit -->
+            <section class="dd-card mb-4">
+
+                <div class="dd-section">
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="dd-icon">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+
+                        <div>
+                            <h4 class="dd-heading mb-1">
+                                Prepare for Your Visit
+                            </h4>
+
+                            <p class="dd-muted small mb-0">
+                                Helpful steps before your consultation
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Arrive early -->
+                    <div class="dd-checklist-item">
+
+                        <div class="dd-check-icon">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+
+                        <div>
+                            <h6>Arrive Early</h6>
+
+                            <p>
+                                Aim to arrive 15–20 minutes before your scheduled
+                                appointment. This allows time for registration,
+                                check-in and locating the doctor's chamber.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Bring reports -->
+                    <div class="dd-checklist-item">
+
+                        <div class="dd-check-icon">
+                            <i class="fa-solid fa-file-medical"></i>
+                        </div>
+
+                        <div>
+                            <h6>Bring Medical Reports</h6>
+
+                            <p>
+                                Bring relevant prescriptions, previous test
+                                reports, diagnostic results and a list of
+                                medicines you currently take.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Hospital confirmation -->
+                    <div class="dd-checklist-item">
+
+                        <div class="dd-check-icon">
+                            <i class="fa-solid fa-hospital-user"></i>
+                        </div>
+
+                        <div>
+                            <h6>Confirm the Hospital Chamber</h6>
+
+                            <p>
+                                Verify the chamber location, visiting hours and
+                                appointment confirmation with the hospital
+                                before travelling.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Prepare questions -->
+                    <div class="dd-checklist-item">
+
+                        <div class="dd-check-icon">
+                            <i class="fa-solid fa-notes-medical"></i>
+                        </div>
+
+                        <div>
+                            <h6>Prepare Your Questions</h6>
+
+                            <p>
+                                Make a note of your symptoms, when they started,
+                                relevant medical history and questions you want
+                                to discuss with the doctor.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Informational note -->
+                    <div class="dd-note mt-4">
+                        <i class="fa-solid fa-circle-info me-2"></i>
+                        <strong>Important:</strong>
+                        This page provides appointment preparation information.
+                        The doctor will assess your individual medical needs
+                        during the consultation.
+                    </div>
+
+                </div>
+            </section>
+
         </div>
 
+        <!-- ==================================
+             RIGHT COLUMN: BOOKING PANEL
+        =================================== -->
         <div class="col-lg-4">
-            <div class="cc-card p-4 position-sticky" style="top:92px;">
-                <div class="d-flex justify-content-between align-items-center mb-3"><h5 class="fw-bold mb-0">Book an appointment</h5><span class="cc-icon" style="width:38px;height:38px;"><i class="fa-regular fa-calendar"></i></span></div>
-                <div class="p-3 rounded-3 mb-4" style="background:var(--cc-green-soft);"><div class="small cc-muted">Consultation fee</div><div class="fw-bold fs-4" style="color:var(--cc-green);">৳{{ doctor.consultation_fee }}</div></div>
-                {% if user.is_authenticated %}
-                <form action="{% url 'book_appointment' doctor.pk %}" method="post">
-                    {% csrf_token %}
-                    <label class="form-label small fw-semibold">Select date</label><input type="date" name="appointment_date" min="{% now 'Y-m-d' %}" class="form-control mb-3" required>
-                    <label class="form-label small fw-semibold">Select time slot</label><select name="time_slot" class="form-select mb-4" required><option value="">Choose a slot</option><option>5:00 PM - 5:30 PM</option><option>5:30 PM - 6:00 PM</option><option>6:00 PM - 6:30 PM</option><option>7:00 PM - 7:30 PM</option></select>
-                    <button class="btn btn-cc w-100 rounded-pill py-2" type="submit">Book appointment <i class="fa-solid fa-arrow-right ms-1"></i></button>
-                </form>
-                {% else %}
-                    <p class="small cc-muted">Please log in before booking an appointment. Your selected doctor will remain available after login.</p>
-                    <a href="{% url 'login' %}?next={% url 'doctor_detail' doctor.pk %}" class="btn btn-cc w-100 rounded-pill py-2">Log in to book</a>
-                    <a href="{% url 'signup' %}" class="btn btn-outline-cc w-100 rounded-pill py-2 mt-2">Create account</a>
-                {% endif %}
-                <p class="text-center cc-muted small mt-3 mb-0"><i class="fa-solid fa-lock me-1"></i>Secure account-based booking.</p>
-            </div>
+
+            <aside class="dd-card dd-booking-card">
+
+                <div class="dd-section">
+
+                    <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+
+                        <div>
+                            <div class="dd-eyebrow mb-2">
+                                APPOINTMENTS
+                            </div>
+
+                            <h4 class="dd-heading mb-0">
+                                Book a Visit
+                            </h4>
+                        </div>
+
+                        <div class="dd-icon">
+                            <i class="fa-regular fa-calendar-check"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Consultation fee -->
+                    <div class="dd-fee-panel mb-4">
+
+                        <div class="dd-muted small mb-2">
+                            Consultation Fee
+                        </div>
+
+                        <div class="dd-fee">
+                            ৳{{ doctor.consultation_fee }}
+                        </div>
+
+                        <div class="dd-muted small mt-2">
+                            Fee recorded in CareConnect
+                        </div>
+
+                    </div>
+
+                    <!-- Doctor summary -->
+                    <div class="mb-3">
+
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="dd-icon"
+                                 style="width:38px;height:38px;min-width:38px;font-size:15px;">
+                                <i class="fa-solid fa-hospital"></i>
+                            </div>
+
+                            <div>
+                                <div class="dd-muted small">Hospital</div>
+                                <strong style="font-size:14px;">
+                                    {{ doctor.hospital_name }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="dd-icon"
+                                 style="width:38px;height:38px;min-width:38px;font-size:15px;">
+                                <i class="fa-regular fa-calendar"></i>
+                            </div>
+
+                            <div>
+                                <div class="dd-muted small">Available Days</div>
+                                <strong style="font-size:14px;">
+                                    {{ doctor.available_days }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <div class="dd-icon"
+                                 style="width:38px;height:38px;min-width:38px;font-size:15px;">
+                                <i class="fa-regular fa-clock"></i>
+                            </div>
+
+                            <div>
+                                <div class="dd-muted small">Visiting Hours</div>
+                                <strong style="font-size:14px;">
+                                    {{ doctor.visiting_hours }}
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="dd-divider">
+
+                    {% if user.is_authenticated %}
+
+                        <!-- Booking form -->
+                        <form action="{% url 'book_appointment' doctor.pk %}"
+                              method="post">
+
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+
+                                <label for="dd-date" class="dd-label">
+                                    Appointment Date
+                                </label>
+
+                                <input
+                                    id="dd-date"
+                                    class="dd-input"
+                                    type="date"
+                                    name="appointment_date"
+                                    min="{% now 'Y-m-d' %}"
+                                    required
+                                >
+
+                                <small class="dd-muted d-block mt-2">
+                                    Choose a suitable date.
+                                </small>
+
+                            </div>
+
+                            <div class="mb-4">
+
+                                <label for="dd-time" class="dd-label">
+                                    Preferred Time Slot
+                                </label>
+
+                                <select
+                                    id="dd-time"
+                                    class="dd-input"
+                                    name="time_slot"
+                                    required
+                                >
+                                    <option value="">Select a time slot</option>
+                                    <option value="5:00 PM - 5:30 PM">
+                                        5:00 PM - 5:30 PM
+                                    </option>
+                                    <option value="5:30 PM - 6:00 PM">
+                                        5:30 PM - 6:00 PM
+                                    </option>
+                                    <option value="6:00 PM - 6:30 PM">
+                                        6:00 PM - 6:30 PM
+                                    </option>
+                                    <option value="7:00 PM - 7:30 PM">
+                                        7:00 PM - 7:30 PM
+                                    </option>
+                                </select>
+
+                                <small class="dd-muted d-block mt-2">
+                                    Confirm that the selected slot is available.
+                                </small>
+
+                            </div>
+
+                            <button type="submit" class="dd-btn">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                Request Appointment
+                            </button>
+
+                        </form>
+
+                    {% else %}
+
+                        <div class="p-3 rounded-3 mb-3"
+                             style="background:#f8fbf9;border:1px solid #e8f0eb;">
+
+                            <h6 class="dd-heading mb-2">
+                                Sign in to Continue
+                            </h6>
+
+                            <p class="dd-muted small mb-0">
+                                Log in to your CareConnect account to request
+                                an appointment with this doctor.
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="{% url 'login' %}?next={% url 'doctor_detail' doctor.pk %}"
+                            class="dd-btn mb-2"
+                        >
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            Log In to Book
+                        </a>
+
+                        <a href="{% url 'signup' %}"
+                           class="dd-btn dd-btn-outline">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Create Account
+                        </a>
+
+                    {% endif %}
+
+                    <p class="dd-muted small text-center mt-4 mb-0">
+                        <i class="fa-solid fa-shield-halved me-1"
+                           style="color:#16845b;"></i>
+                        Secure account-based booking
+                    </p>
+
+                </div>
+            </aside>
+
+            <!-- Quick reminder -->
+            <section class="dd-card mt-4">
+                <div class="dd-section">
+
+                    <h6 class="dd-heading mb-3">
+                        <i class="fa-solid fa-lightbulb me-2"
+                           style="color:#16845b;"></i>
+                        Quick Reminder
+                    </h6>
+
+                    <p class="dd-muted small mb-0" style="line-height:1.9;">
+                        Review your appointment date, preferred time and
+                        consultation fee before submitting your booking request.
+                        Check the hospital's latest schedule if you are unsure
+                        whether the chamber is open.
+                    </p>
+
+                </div>
+            </section>
+
         </div>
+
     </div>
 </div>
+
 {% endblock %}
