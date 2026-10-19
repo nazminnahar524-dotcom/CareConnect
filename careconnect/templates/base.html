@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -23,10 +22,6 @@
             --cc-card: #fff;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             background: var(--cc-bg);
@@ -35,9 +30,7 @@
             font-size: 14px;
         }
 
-        a {
-            text-decoration: none;
-        }
+        a { text-decoration: none; }
 
         .cc-top {
             background: #fff;
@@ -52,28 +45,44 @@
         }
 
         .cc-mark {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
             background: var(--cc-soft);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             color: var(--cc-green);
             margin-right: 8px;
+            transition: transform 0.3s ease;
         }
 
-        .cc-location {
+        .cc-brand:hover .cc-mark {
+            transform: scale(1.1) rotate(6deg);
+        }
+
+        .cc-location-btn {
             font-size: 12px;
             border: 1px solid var(--cc-border);
             background: #fbfdfc;
             border-radius: 10px;
             padding: 7px 10px;
             color: #52615b;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .cc-search {
-            max-width: 390px;
+        .cc-location-btn:hover {
+            background: var(--cc-soft);
+            border-color: #b8ddcf;
+            color: var(--cc-dark);
+        }
+
+        /* Search & Autocomplete Results Box */
+        .cc-search-wrapper {
+            position: relative;
+            max-width: 420px;
+            width: 100%;
         }
 
         .cc-search .form-control {
@@ -90,7 +99,55 @@
             width: 42px;
         }
 
-        .cc-action {
+        .search-results-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-radius: 14px;
+            border: 1px solid var(--cc-border);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+            margin-top: 6px;
+            z-index: 1050;
+            display: none;
+            overflow: hidden;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--cc-text);
+            transition: background 0.2s ease;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--cc-soft);
+        }
+
+        .search-item-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--cc-soft);
+            color: var(--cc-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .cc-action-btn {
             width: 38px;
             height: 38px;
             border: 1px solid var(--cc-border);
@@ -100,6 +157,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .cc-action-btn:hover {
+            background: var(--cc-soft);
+            border-color: #b8ddcf;
+            color: var(--cc-green);
         }
 
         .cc-user {
@@ -136,90 +202,67 @@
             padding: 22px 24px 34px;
         }
 
-        .cc-card {
-            background: var(--cc-card);
-            border: 1px solid var(--cc-border);
-            border-radius: 14px;
-            box-shadow: 0 5px 18px rgba(22, 74, 55, .045);
-        }
-
-        .cc-muted {
-            color: var(--cc-muted);
-        }
-
-        .cc-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 11px;
-            background: var(--cc-soft);
-            color: var(--cc-green);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-cc {
-            background: var(--cc-green);
-            border-color: var(--cc-green);
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .btn-cc:hover {
-            background: var(--cc-dark);
-            border-color: var(--cc-dark);
-            color: #fff;
-        }
-
-        .btn-outline-cc {
-            color: var(--cc-green);
-            border-color: #b8ddcf;
-            font-weight: 700;
-        }
-
-        .btn-outline-cc:hover {
-            background: var(--cc-soft);
-            color: var(--cc-dark);
-        }
-
-        .form-control,
-        .form-select {
-            border-color: var(--cc-border);
-            min-height: 42px;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #8fcdb9;
-            box-shadow: 0 0 0 .18rem rgba(19, 138, 99, .10);
-        }
-
         .cc-footer {
             color: #82908a;
             font-size: 12px;
         }
 
+        .pulse-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+        }
+
+        /* Modern Chat Dropdown Box */
+        .chat-dropdown-menu {
+            width: 340px;
+            border-radius: 16px;
+            border: 1px solid var(--cc-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            padding: 16px;
+        }
+
+        .chat-messages-container {
+            max-height: 240px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 4px;
+        }
+
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            max-width: 85%;
+            line-height: 1.4;
+        }
+
+        .chat-bubble-support {
+            background: #f1f5f9;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+        }
+
+        .chat-bubble-user {
+            background: var(--cc-green);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+
         @media (max-width: 991px) {
-            .cc-page {
-                padding: 16px;
-            }
-
-            .cc-location {
-                display: none;
-            }
-
-            .cc-search {
-                max-width: none;
-                margin: 10px 0;
-            }
-
-            .cc-tabs .nav-link {
-                padding: 11px 12px;
-            }
-
-            .cc-user {
-                width: 100%;
-            }
+            .cc-page { padding: 16px; }
+            .cc-search-wrapper { max-width: none; margin: 10px 0; }
+            .cc-tabs .nav-link { padding: 11px 12px; }
+            .cc-user { width: 100%; }
         }
     </style>
 
@@ -234,22 +277,29 @@
 
         <a class="navbar-brand cc-brand d-flex align-items-center me-3"
            href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}">
-
             <span class="cc-mark">
                 <i class="fa-solid fa-heart-pulse"></i>
             </span>
-
             Care<span style="color: var(--cc-green)">Connect</span>
         </a>
 
         {% if user.is_authenticated %}
-        <span class="cc-location me-3">
-            <i class="fa-solid fa-location-dot me-1"
-               style="color: var(--cc-green)"></i>
-            Dhanmondhi, Dhaka
-            <i class="fa-solid fa-chevron-down ms-1"
-               style="font-size: 9px"></i>
-        </span>
+        <!-- Clickable Location Dropdown -->
+        <div class="dropdown d-none d-md-block me-3">
+            <button class="btn cc-location-btn dropdown-toggle border-0"
+                    type="button"
+                    id="locationMenu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                <i class="fa-solid fa-location-dot me-1" style="color: var(--cc-green)"></i>
+                Dhanmondhi, Dhaka
+            </button>
+            <ul class="dropdown-menu shadow-sm border-0 rounded-3 p-2" aria-labelledby="locationMenu">
+                <li><a class="dropdown-item rounded-2 small fw-bold text-success" href="#"><i class="fa-solid fa-location-crosshairs me-2"></i>Dhanmondhi, Dhaka</a></li>
+                <li><a class="dropdown-item rounded-2 small" href="#"><i class="fa-solid fa-location-dot me-2 text-muted"></i>Gulshan, Dhaka</a></li>
+                <li><a class="dropdown-item rounded-2 small" href="#"><i class="fa-solid fa-location-dot me-2 text-muted"></i>Banani, Dhaka</a></li>
+            </ul>
+        </div>
         {% endif %}
 
         <button class="navbar-toggler"
@@ -259,7 +309,6 @@
                 aria-controls="ccNav"
                 aria-expanded="false"
                 aria-label="Toggle navigation">
-
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -267,67 +316,120 @@
 
             {% if user.is_authenticated %}
 
-            <!-- Search -->
-            <form action="{% url 'doctor_list' %}"
-                  method="get"
-                  class="input-group cc-search ms-xl-2 me-auto">
+            <!-- Instant Live Search Wrapper -->
+            <div class="cc-search-wrapper ms-xl-2 me-auto">
+                <form action="{% url 'doctor_list' %}" method="get" class="input-group cc-search" id="searchForm">
+                    <input class="form-control"
+                           id="searchInput"
+                           name="q"
+                           value="{{ request.GET.q|default:'' }}"
+                           placeholder="Search doctors, hospitals, specialties (e.g. Labaid)..."
+                           autocomplete="off">
+                    <button class="btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
 
-                <input class="form-control"
-                       name="q"
-                       value="{{ request.GET.q|default:'' }}"
-                       placeholder="Search doctors, hospitals, specialties...">
-
-                <button class="btn" type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </form>
+                <!-- Dynamic Autocomplete Results -->
+                <div class="search-results-dropdown" id="searchResults"></div>
+            </div>
 
             <!-- User Actions -->
             <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
 
-                <span class="cc-action">
-                    <i class="fa-regular fa-bell"></i>
-                </span>
-
-                <span class="cc-action">
-                    <i class="fa-regular fa-comment-dots"></i>
-                </span>
-
+                <!-- Notifications Dropdown -->
                 <div class="dropdown">
+                    <button class="btn cc-action-btn border-0 dropdown-toggle p-0"
+                            type="button"
+                            id="notifyMenu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="pulse-badge"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-3" style="width: 310px;" aria-labelledby="notifyMenu">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-dark">Notifications</span>
+                            <span class="badge bg-success-subtle text-success small rounded-pill px-2">2 New</span>
+                        </div>
+                        <hr class="my-2">
+                        <li>
+                            <a class="dropdown-item rounded-3 p-2 small text-wrap mb-1" href="{% url 'my_appointments' %}">
+                                <div class="d-flex gap-2 align-items-center">
+                                    <div class="bg-success-subtle text-success rounded-circle p-2 d-flex align-items-center justify-content-center" style="width:32px;height:32px;"><i class="fa-solid fa-calendar-check"></i></div>
+                                    <div>
+                                        <strong class="text-dark d-block">Appointment Confirmed</strong>
+                                        <span class="text-muted" style="font-size: 11px;">Dr. Ahmed assigned your schedule slot.</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <button class="cc-user dropdown-toggle"
+                <!-- Interactive Messaging Drawer -->
+                <div class="dropdown">
+                    <button class="btn cc-action-btn border-0 dropdown-toggle p-0"
+                            type="button"
+                            id="msgMenu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            data-bs-auto-close="outside">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        <span class="pulse-badge" style="background-color: #3b82f6;"></span>
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end chat-dropdown-menu" aria-labelledby="msgMenu">
+                        <div class="d-flex justify-content-between align-items-center pb-2 mb-2 border-bottom">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 11px;">CS</div>
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size: 13px;">CareConnect Support</h6>
+                                    <span class="text-success" style="font-size: 10px;"><i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i>Online</span>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-muted rounded-pill" style="font-size: 10px;">Live Chat</span>
+                        </div>
+
+                        <div class="chat-messages-container mb-3" id="chatBox">
+                            <div class="chat-bubble chat-bubble-support">
+                                Hello <strong>{{ user.username }}</strong>! Welcome to CareConnect. How can we assist with your health appointment or prescription today?
+                            </div>
+                        </div>
+
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="chatInput" class="form-control rounded-start-pill ps-3" placeholder="Type your message..." style="font-size: 12px; height: 36px;">
+                            <button class="btn btn-cc rounded-end-pill px-3" type="button" id="sendChatBtn" style="height: 36px;">
+                                <i class="fa-solid fa-paper-plane" style="font-size: 11px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Menu Dropdown -->
+                <div class="dropdown">
+                    <button class="cc-user dropdown-toggle border-0"
                             data-bs-toggle="dropdown"
                             type="button">
-
-                        <i class="fa-regular fa-circle-user me-1"
-                           style="color: var(--cc-green)"></i>
-
+                        <i class="fa-regular fa-circle-user me-1" style="color: var(--cc-green)"></i>
                         Hi, {{ user.username }}
                     </button>
 
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
                         <li>
-                            <a class="dropdown-item"
-                               href="{% url 'my_appointments' %}">
+                            <a class="dropdown-item rounded-2" href="{% url 'my_appointments' %}">
                                 My Appointments
                             </a>
                         </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}
-                                <button class="dropdown-item text-danger"
-                                        type="submit">
+                                <button class="dropdown-item text-danger rounded-2" type="submit">
                                     Log out
                                 </button>
                             </form>
                         </li>
-
                     </ul>
                 </div>
             </div>
@@ -335,17 +437,8 @@
             {% else %}
 
             <div class="ms-auto d-flex gap-2">
-
-                <a class="btn btn-outline-cc rounded-3 px-3"
-                   href="{% url 'login' %}">
-                    Log in
-                </a>
-
-                <a class="btn btn-cc rounded-3 px-3"
-                   href="{% url 'signup' %}">
-                    Sign up
-                </a>
-
+                <a class="btn btn-outline-cc rounded-3 px-3" href="{% url 'login' %}">Log in</a>
+                <a class="btn btn-cc rounded-3 px-3" href="{% url 'signup' %}">Sign up</a>
             </div>
 
             {% endif %}
@@ -356,96 +449,56 @@
 
 <!-- Main Navigation Tabs -->
 {% if user.is_authenticated %}
-
 <div class="cc-tabs">
-
-
-
     <div class="container-fluid px-3 px-xl-4">
-
         <ul class="nav">
-
-            <!-- Home -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                   href="{% url 'home' %}">
-
-                    <i class="fa-solid fa-house me-1"></i>
-                    Home
+                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                    <i class="fa-solid fa-house me-1"></i> Home
                 </a>
             </li>
-
-            <!-- Doctors -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}"
-                   href="{% url 'doctor_list' %}">
-
-                    <i class="fa-solid fa-user-doctor me-1"></i>
-                    Doctors
+                <a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}" href="{% url 'doctor_list' %}">
+                    <i class="fa-solid fa-user-doctor me-1"></i> Doctors
                 </a>
             </li>
-
-            <!-- Appointments -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}"
-                   href="{% url 'my_appointments' %}">
-
-                    <i class="fa-regular fa-calendar-check me-1"></i>
-                    Appointments
+                <a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}" href="{% url 'my_appointments' %}">
+                    <i class="fa-regular fa-calendar-check me-1"></i> Appointments
                 </a>
             </li>
-
-            <!-- Pharmacies: NEW BUTTON -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}"
-                   href="{% url 'pharmacy_list' %}">
-
-                    <i class="fa-solid fa-prescription-bottle-medical me-1"></i>
-                    Pharmacies
+                <a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}" href="{% url 'pharmacy_list' %}">
+                    <i class="fa-solid fa-prescription-bottle-medical me-1"></i> Pharmacies
                 </a>
             </li>
-         <li class="nav-item"><a class="nav-link {% if 'hospital' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'hospital_list' %}"><i class="fa-solid fa-hospital me-1"></i> Hospitals</a></li>
-            <!-- Donors -->
             <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}"
-                   href="{% url 'nearby_donors' %}">
-
-                    <i class="fa-solid fa-hand-holding-heart me-1"></i>
-                    Donors
+                <a class="nav-link {% if 'hospital' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'hospital_list' %}">
+                    <i class="fa-solid fa-hospital me-1"></i> Hospitals
                 </a>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}" href="{% url 'nearby_donors' %}">
+                    <i class="fa-solid fa-hand-holding-heart me-1"></i> Donors
+                </a>
+            </li>
         </ul>
     </div>
-
 </div>
-
 {% endif %}
 
 
 <!-- Page Content -->
 <main class="cc-page">
-
     {% if messages %}
         {% for message in messages %}
-
-            <div class="alert
-                {% if message.tags == 'error' %}
-                    alert-danger
-                {% else %}
-                    alert-success
-                {% endif %}
-                border-0 shadow-sm">
-
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} border-0 shadow-sm">
                 {{ message }}
-
             </div>
-
         {% endfor %}
     {% endif %}
 
     {% block content %}{% endblock %}
-
 </main>
 
 
@@ -455,8 +508,108 @@
 </footer>
 
 
-<!-- Bootstrap JavaScript -->
+<!-- Bootstrap JavaScript & Autocomplete JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Autocomplete Search Database
+        const searchDatabase = [
+            { name: "Hospitals Page", type: "Page", icon: "fa-hospital", url: "{% url 'hospital_list' %}" },
+            { name: "Labaid Specialized Hospital", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=labaid" },
+            { name: "Square Hospital Dhaka", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=square" },
+            { name: "United Hospital Gulshan", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=united" },
+            { name: "Doctors Directory", type: "Page", icon: "fa-user-doctor", url: "{% url 'doctor_list' %}" },
+            { name: "Cardiology Specialists", type: "Specialty", icon: "fa-heart-pulse", url: "{% url 'doctor_list' %}?specialty=cardiology" },
+            { name: "Neurology Specialists", type: "Specialty", icon: "fa-brain", url: "{% url 'doctor_list' %}?specialty=neurology" },
+            { name: "Pharmacies", type: "Page", icon: "fa-prescription-bottle-medical", url: "{% url 'pharmacy_list' %}" },
+            { name: "Blood Donors Network", type: "Page", icon: "fa-hand-holding-heart", url: "{% url 'nearby_donors' %}" },
+            { name: "My Appointments", type: "Page", icon: "fa-calendar-check", url: "{% url 'my_appointments' %}" }
+        ];
+
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+
+        if (searchInput && searchResults) {
+            searchInput.addEventListener("input", function() {
+                const query = this.value.trim().toLowerCase();
+                searchResults.innerHTML = "";
+
+                if (query.length < 1) {
+                    searchResults.style.display = "none";
+                    return;
+                }
+
+                const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(query));
+
+                if (filtered.length > 0) {
+                    filtered.forEach(item => {
+                        const itemElem = document.createElement("a");
+                        itemElem.href = item.url;
+                        itemElem.className = "search-result-item text-decoration-none";
+                        itemElem.innerHTML = `
+                            <div class="search-item-icon">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-dark" style="font-size: 13px;">${item.name}</div>
+                                <span class="text-muted" style="font-size: 11px;">${item.type}</span>
+                            </div>
+                        `;
+                        searchResults.appendChild(itemElem);
+                    });
+                    searchResults.style.display = "block";
+                } else {
+                    searchResults.innerHTML = `
+                        <div class="p-3 text-center text-muted small">
+                            No direct matches found for "<strong>${query}</strong>". Press Enter to search doctors.
+                        </div>
+                    `;
+                    searchResults.style.display = "block";
+                }
+            });
+
+            document.addEventListener("click", function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = "none";
+                }
+            });
+        }
+
+        // Chatbot Messaging
+        const chatBox = document.getElementById("chatBox");
+        const chatInput = document.getElementById("chatInput");
+        const sendChatBtn = document.getElementById("sendChatBtn");
+
+        function sendUserMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const userBubble = document.createElement("div");
+            userBubble.className = "chat-bubble chat-bubble-user";
+            userBubble.textContent = text;
+            chatBox.appendChild(userBubble);
+
+            chatInput.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            setTimeout(() => {
+                const supportBubble = document.createElement("div");
+                supportBubble.className = "chat-bubble chat-bubble-support";
+                supportBubble.textContent = "Thanks for reaching out! Our medical team has received your inquiry regarding: \"" + text + "\". We will get back to you shortly.";
+                chatBox.appendChild(supportBubble);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 700);
+        }
+
+        if (sendChatBtn && chatInput) {
+            sendChatBtn.addEventListener("click", sendUserMessage);
+            chatInput.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") sendUserMessage();
+            });
+        }
+    });
+</script>
 
 {% block extra_js %}{% endblock %}
 

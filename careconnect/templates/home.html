@@ -1,80 +1,229 @@
 {% extends 'base.html' %}
 
+{% block title %}CareConnect — Healthcare Dashboard{% endblock %}
+
 {% block content %}
 <style>
-    .feature-card {
+    /* Executive Sage & Clinical Palette with Enhanced Micro-Interactions */
+    :root {
+        --cc-sage-canvas: #edf3f0;
+        --cc-emerald-dark: #1e3a2b;
+        --cc-emerald-primary: #138a63;
+        --cc-mint-light: #e6f4ee;
+        --cc-card-bg: #ffffff;
+        --cc-border-subtle: #e2ebe7;
+    }
+
+    /* Staggered Entrance Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-container {
+        background: #f4f8f6;
+        border-radius: 28px;
+        padding: 28px;
+        border: 1px solid var(--cc-border-subtle);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01), 0 10px 30px rgba(19, 138, 99, 0.04);
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* High-End Hero Banner Card with Dynamic Shimmer */
+    .hero-banner-card {
+        background: linear-gradient(135deg, #1e3a2b 0%, #138a63 100%);
+        border-radius: 24px;
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 16px 32px -6px rgba(19, 138, 99, 0.3);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    }
+
+    .hero-banner-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 40px -8px rgba(19, 138, 99, 0.4);
+    }
+
+    .hero-banner-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 380px;
+        height: 380px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: pulse-glow 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+        0% { transform: scale(0.95); opacity: 0.6; }
+        100% { transform: scale(1.25); opacity: 1; }
+    }
+
+    /* Glassmorphism Quick Counter Box with Hover Reactivity */
+    .glass-overview-pill {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.22);
         border-radius: 20px;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        border: 1px solid rgba(0,0,0,0.04);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .feature-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08) !important;
+
+    .glass-overview-pill:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: scale(1.02);
     }
-    .icon-box {
-        width: 64px;
-        height: 64px;
-        border-radius: 18px;
+
+    /* Staggered Load Sequences */
+    .anim-delay-1 { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+    .anim-delay-2 { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
+    .anim-delay-3 { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+
+    /* Pill-Shaped Feature Cards with High-End Spring Hover Physics */
+    .clinical-feature-card {
+        background: var(--cc-card-bg);
+        border-radius: 20px;
+        border: 1px solid var(--cc-border-subtle);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .clinical-feature-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: transparent;
+        transition: background 0.3s ease;
+    }
+
+    .clinical-feature-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        background-color: #ffffff;
+        border-color: var(--cc-emerald-primary) !important;
+        box-shadow: 0 24px 45px -10px rgba(19, 138, 99, 0.2) !important;
+    }
+
+    .card-doctors:hover::after { background: #138a63; }
+    .card-hospitals:hover::after { background: #2563eb; }
+    .card-pharmacy:hover::after { background: #0891b2; }
+    .card-appointments:hover::after { background: #d97706; }
+    .card-donors:hover::after { background: #dc2626; }
+
+    /* Icon Vessel with Smooth Rotation and Scale Micro-Interaction */
+    .icon-vessel {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        background: var(--cc-mint-light);
+        color: var(--cc-emerald-primary);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+        flex-shrink: 0;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .hero-banner {
-        background: linear-gradient(135deg, #f0fdf4 0%, #e6f4ea 100%);
-        border-radius: 24px;
-        border: 1px solid rgba(25, 135, 84, 0.12);
+
+    .clinical-feature-card:hover .icon-vessel {
+        background: var(--cc-emerald-primary);
+        color: #ffffff !important;
+        transform: scale(1.15) rotate(8deg);
+        box-shadow: 0 10px 22px rgba(19, 138, 99, 0.35);
     }
-    .quick-stat-pill {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(8px);
-        border-radius: 16px;
+
+    /* Live Pulsing Dot */
+    .pulse-live-dot {
+        width: 9px;
+        height: 9px;
+        background-color: #4ade80;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
+        animation: pulse-ring 2s infinite;
+    }
+
+    @keyframes pulse-ring {
+        0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
+        70% { box-shadow: 0 0 0 12px rgba(74, 222, 128, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    /* Button Micro-Interactions */
+    .btn-hover-lift {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-hover-lift:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
     }
 </style>
 
-<div class="container py-4">
-    <!-- Hero Banner with Live Quick Stats -->
-    <div class="hero-banner p-4 p-md-5 mb-5 shadow-sm position-relative overflow-hidden">
-        <div class="row align-items-center">
+<div class="dashboard-container">
+    <!-- Hero Banner with Live Overview -->
+    <div class="hero-banner-card p-4 p-md-5 mb-4">
+        <div class="row align-items-center position-relative" style="z-index: 2;">
             <div class="col-lg-7 mb-4 mb-lg-0">
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 mb-3 fw-bold small">
-                    <i class="bi bi-heart-pulse-fill me-1"></i> Healthcare Portal
+                <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 fw-bold small shadow-sm">
+                    <i class="fa-solid fa-heart-pulse text-success me-1"></i> CareConnect Portal
                 </span>
-                <h1 class="display-5 fw-bold text-dark mb-2">Find care. <span class="text-success">Share hope.</span> Save lives.</h1>
-                <p class="text-secondary fs-6 mb-4">Access accredited doctors, track hospital bed availability, find pharmacies, and manage appointments in one secure hub.</p>
+                <h1 class="display-5 fw-bold mb-2" style="letter-spacing: -0.8px;">
+                    Find care. <span style="color: #a7f3d0;">Share hope.</span> Save lives.
+                </h1>
+                <p class="text-white-50 fs-6 mb-4 pe-lg-3" style="line-height: 1.6;">
+                    Search accredited doctors and hospitals, manage appointments, and track real-time healthcare data seamlessly.
+                </p>
 
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'doctor_list' %}" class="btn btn-success fw-bold rounded-pill px-4 py-2 shadow-sm">
-                        <i class="bi bi-search me-1"></i> Find a Doctor
+                    <a href="{% url 'doctor_list' %}" class="btn btn-light text-dark fw-bold rounded-pill px-4 py-2.5 shadow-sm btn-hover-lift">
+                        <i class="fa-solid fa-magnifying-glass me-1 text-success"></i> Find a Doctor
                     </a>
-                    <a href="{% url 'hospital_list' %}" class="btn btn-outline-success fw-bold rounded-pill px-4 py-2">
-                        <i class="bi bi-hospital me-1"></i> Locate Hospitals
+                    <a href="{% url 'hospital_list' %}" class="btn btn-outline-light fw-bold rounded-pill px-4 py-2.5 btn-hover-lift">
+                        <i class="fa-solid fa-hospital me-1"></i> Locate Hospitals
                     </a>
                 </div>
             </div>
 
-            <!-- Welcome & Quick Metrics Widget -->
+            <!-- Glassmorphism Counter Widget -->
             <div class="col-lg-5">
-                <div class="quick-stat-pill p-4 shadow-sm border border-white">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-success text-white rounded-circle p-2 me-3 fs-5">
-                            <i class="bi bi-person-circle"></i>
+                <div class="glass-overview-pill p-4 text-white">
+                    <div class="d-flex align-items-center mb-3 pb-2 border-bottom border-white border-opacity-10">
+                        <div class="bg-white text-success rounded-circle me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; font-size: 1.2rem;">
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold mb-0 text-dark">Welcome back, rairai</h6>
-                            <span class="small text-muted">System Overview</span>
+                            <h6 class="fw-bold mb-0 text-white"><span class="pulse-live-dot me-2"></span>Welcome back, {{ user.username }}</h6>
+                            <span class="small text-white-50">System Live Overview</span>
                         </div>
                     </div>
-                    <div class="row g-2 text-center">
+
+                    <div class="row g-2 text-center text-dark">
                         <div class="col-6">
-                            <div class="bg-white p-3 rounded-4 border">
-                                <span class="small text-muted fw-bold text-uppercase d-block mb-1">Active Doctors</span>
+                            <div class="bg-white p-3 rounded-4 shadow-sm">
+                                <span class="small text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Active Doctors</span>
                                 <h3 class="fw-bold text-success mb-0">{{ total_doctors|default:"0" }}</h3>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="bg-white p-3 rounded-4 border">
-                                <span class="small text-muted fw-bold text-uppercase d-block mb-1">Hospitals</span>
+                            <div class="bg-white p-3 rounded-4 shadow-sm">
+                                <span class="small text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Hospitals</span>
                                 <h3 class="fw-bold text-primary mb-0">{{ total_hospitals|default:"0" }}</h3>
                             </div>
                         </div>
@@ -84,26 +233,28 @@
         </div>
     </div>
 
-    <!-- Core Hub Services -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Main Features Title Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-3 px-1">
         <div>
-            <h4 class="fw-bold text-dark mb-1"><i class="bi bi-grid-fill text-success me-2"></i>Main Features</h4>
+            <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-grip me-2" style="color: var(--cc-emerald-primary);"></i>Main Features</h5>
             <p class="text-muted small mb-0">Select a category to navigate directly</p>
         </div>
+        <span class="badge bg-white text-muted border rounded-pill px-3 py-1.5 small fw-semibold">Quick Navigation</span>
     </div>
 
-    <div class="row g-4 mb-5">
+    <!-- Feature Cards Grid with Staggered Animations -->
+    <div class="row g-3">
         <!-- 1. Doctors Card -->
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-4 col-sm-6 anim-delay-1">
             <a href="{% url 'doctor_list' %}" class="text-decoration-none">
-                <div class="card h-100 p-4 border-0 shadow-sm bg-white feature-card">
+                <div class="p-4 clinical-feature-card card-doctors">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="icon-box bg-success-subtle text-success">
-                            <i class="bi bi-person-badge-fill"></i>
+                        <div class="icon-vessel">
+                            <i class="fa-solid fa-user-doctor"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-1">Doctors</h5>
-                            <p class="text-muted small mb-0">Find qualified specialists & book appointments</p>
+                            <h6 class="fw-bold text-dark mb-1 fs-6">Doctors</h6>
+                            <p class="text-muted small mb-0">Find qualified specialists & book consultations</p>
                         </div>
                     </div>
                 </div>
@@ -111,16 +262,16 @@
         </div>
 
         <!-- 2. Hospital Directory Card -->
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-4 col-sm-6 anim-delay-1">
             <a href="{% url 'hospital_list' %}" class="text-decoration-none">
-                <div class="card h-100 p-4 border-0 shadow-sm bg-white feature-card">
+                <div class="p-4 clinical-feature-card card-hospitals">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="icon-box bg-primary-subtle text-primary">
-                            <i class="bi bi-buildings-fill"></i>
+                        <div class="icon-vessel" style="color: #2563eb; background: #eff6ff;">
+                            <i class="fa-solid fa-hospital"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-1">Hospitals</h5>
-                            <p class="text-muted small mb-0">Locate nearby ERs & view bed availability</p>
+                            <h6 class="fw-bold text-dark mb-1 fs-6">Hospitals</h6>
+                            <p class="text-muted small mb-0">Locate nearby ER units & track bed capacity</p>
                         </div>
                     </div>
                 </div>
@@ -128,16 +279,16 @@
         </div>
 
         <!-- 3. Pharmacy Card -->
-        <div class="col-md-4 col-sm-6">
-            <a href="#" class="text-decoration-none">
-                <div class="card h-100 p-4 border-0 shadow-sm bg-white feature-card">
+        <div class="col-md-4 col-sm-6 anim-delay-2">
+            <a href="{% url 'pharmacy_list' %}" class="text-decoration-none">
+                <div class="p-4 clinical-feature-card card-pharmacy">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="icon-box bg-info-subtle text-info">
-                            <i class="bi bi-capsule"></i>
+                        <div class="icon-vessel" style="color: #0891b2; background: #ecfeff;">
+                            <i class="fa-solid fa-prescription-bottle-medical"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-1">Pharmacy</h5>
-                            <p class="text-muted small mb-0">Find medical supplies & order medicines</p>
+                            <h6 class="fw-bold text-dark mb-1 fs-6">Pharmacy</h6>
+                            <p class="text-muted small mb-0">Order essential medicines & locate pharmacies</p>
                         </div>
                     </div>
                 </div>
@@ -145,16 +296,16 @@
         </div>
 
         <!-- 4. Appointments Card -->
-        <div class="col-md-6">
-            <a href="#" class="text-decoration-none">
-                <div class="card h-100 p-4 border-0 shadow-sm bg-white feature-card">
+        <div class="col-md-6 anim-delay-2">
+            <a href="{% url 'my_appointments' %}" class="text-decoration-none">
+                <div class="p-4 clinical-feature-card card-appointments">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="icon-box bg-warning-subtle text-warning-emphasis">
-                            <i class="bi bi-calendar2-check-fill"></i>
+                        <div class="icon-vessel" style="color: #d97706; background: #fffbeb;">
+                            <i class="fa-regular fa-calendar-check"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-1">Appointments</h5>
-                            <p class="text-muted small mb-0">Manage scheduled consultations & view history</p>
+                            <h6 class="fw-bold text-dark mb-1 fs-6">Appointments</h6>
+                            <p class="text-muted small mb-0">Track upcoming visits & review consultation history</p>
                         </div>
                     </div>
                 </div>
@@ -162,16 +313,16 @@
         </div>
 
         <!-- 5. Blood Donors Card -->
-        <div class="col-md-6">
-            <a href="#" class="text-decoration-none">
-                <div class="card h-100 p-4 border-0 shadow-sm bg-white feature-card">
+        <div class="col-md-6 anim-delay-3">
+            <a href="{% url 'nearby_donors' %}" class="text-decoration-none">
+                <div class="p-4 clinical-feature-card card-donors">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="icon-box bg-danger-subtle text-danger">
-                            <i class="bi bi-droplet-fill"></i>
+                        <div class="icon-vessel" style="color: #dc2626; background: #fef2f2;">
+                            <i class="fa-solid fa-hand-holding-heart"></i>
                         </div>
                         <div>
-                            <h5 class="fw-bold text-dark mb-1">Blood Donors</h5>
-                            <p class="text-muted small mb-0">Request emergency blood or register as a donor</p>
+                            <h6 class="fw-bold text-dark mb-1 fs-6">Blood Donors</h6>
+                            <p class="text-muted small mb-0">Request immediate blood units or register as a donor</p>
                         </div>
                     </div>
                 </div>
