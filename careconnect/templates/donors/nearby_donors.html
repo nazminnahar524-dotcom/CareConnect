@@ -3,16 +3,18 @@
 {% block title %}Nearby Donors - CareConnect{% endblock %}
 
 {% block extra_head %}
-<!-- Leaflet CSS & JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Pharmacies match: Leaflet CSS & JS loaded explicitly -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
     #map {
-        height: 180px !important;
+        height: 200px !important;
         width: 100% !important;
         border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        z-index: 1;
+        border: 1px solid #cbd5e1;
+        background-color: #e2e8f0;
+        z-index: 10;
+        display: block !important;
     }
     .location-card {
         background: #ffffff;
@@ -150,14 +152,15 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var userLat = {{ user_lat }};
-        var userLng = {{ user_lng }};
+    window.addEventListener('load', function () {
+        var userLat = {{ user_lat|default:23.7461 }};
+        var userLng = {{ user_lng|default:90.3742 }};
 
         var map = L.map('map', { zoomControl: true }).setView([userLat, userLng], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
         var marker = L.marker([userLat, userLng], { draggable: true }).addTo(map);
@@ -171,7 +174,7 @@
 
         setTimeout(function() {
             map.invalidateSize();
-        }, 300);
+        }, 500);
     });
 
     function updateRadiusText(val) {
