@@ -8,27 +8,37 @@
 <style>
     .hospital-card {
         transition: transform 0.25s ease, box-shadow 0.25s ease;
-        border-radius: 12px;
+        border-radius: 16px;
     }
     .hospital-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.08) !important;
+        transform: translateY(-5px);
+        box-shadow: 0 14px 28px rgba(25,135,84,0.1) !important;
     }
     .metric-card {
-        border-radius: 12px;
+        border-radius: 16px;
         transition: all 0.2s ease;
     }
     .metric-card:hover {
         transform: translateY(-2px);
     }
     #hospitalMap {
-        height: 320px;
+        height: 300px;
         border-radius: 12px;
         z-index: 1;
     }
-    .leaflet-popup-content-wrapper {
-        border-radius: 10px;
-        padding: 4px;
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #198754;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 rgba(25, 135, 84, 0.4);
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+        70% { box-shadow: 0 0 0 8px rgba(25, 135, 84, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
     }
 </style>
 
@@ -42,10 +52,10 @@
             <p class="text-muted mb-0">Browse accredited partner hospitals, locate nearby ER units, and track real-time bed capacity.</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{% url 'doctor_list' %}" class="btn btn-outline-success btn-sm fw-bold px-3 rounded-pill">
+            <a href="{% url 'doctor_list' %}" class="btn btn-outline-success btn-sm fw-bold px-3 rounded-pill shadow-sm">
                 <i class="bi bi-person-badge me-1"></i> Find Doctors
             </a>
-            <a href="{% url 'home' %}" class="btn btn-light btn-sm fw-bold text-secondary border px-3 rounded-pill">
+            <a href="{% url 'home' %}" class="btn btn-light btn-sm fw-bold text-secondary border px-3 rounded-pill shadow-sm">
                 <i class="bi bi-grid-1x2-fill me-1"></i> Dashboard
             </a>
         </div>
@@ -111,7 +121,7 @@
     <div class="row">
         <!-- Sidebar Filter Panel & Side Map -->
         <div class="col-lg-3 mb-4">
-            <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-3">
+            <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-4">
                 <h5 class="fw-bold text-success mb-3"><i class="bi bi-funnel-fill me-2"></i>Directory Filters</h5>
                 <form method="GET" action="{% url 'hospital_list' %}">
                     <!-- Text Search -->
@@ -162,34 +172,34 @@
                     <input type="hidden" name="sort" value="{{ sort_by }}">
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success btn-sm fw-bold py-2"><i class="bi bi-search me-1"></i> Apply Filters</button>
-                        <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm py-1"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters</a>
+                        <button type="submit" class="btn btn-success btn-sm fw-bold py-2 rounded-pill"><i class="bi bi-search me-1"></i> Apply Filters</button>
+                        <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm py-1 rounded-pill"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters</a>
                     </div>
                 </form>
             </div>
 
             <!-- Side Interactive Map Section -->
-            <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-3">
+            <div class="card border-0 shadow-sm bg-white p-3 mb-4 rounded-4">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h6 class="fw-bold text-dark mb-0"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Network Map</h6>
-                    <span class="badge bg-success-subtle text-success px-2 py-1" style="font-size: 0.65rem;"><i class="bi bi-broadcast me-1"></i> Live</span>
+                    <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill" style="font-size: 0.65rem;"><span class="pulse-dot me-1"></span> Live</span>
                 </div>
                 <div id="hospitalMap" class="shadow-inner"></div>
             </div>
 
             <!-- Emergency Hotline Card -->
-            <div class="card border-0 shadow-sm bg-danger text-white p-3 text-center rounded-3">
+            <div class="card border-0 shadow-sm bg-danger text-white p-3 text-center rounded-4">
                 <i class="bi bi-telephone-outbound-fill display-6 mb-2"></i>
                 <h6 class="fw-bold mb-1">Emergency Hotline</h6>
                 <p class="small text-white-50 mb-2">Instant dispatch & immediate ER assistance</p>
-                <a href="tel:999" class="btn btn-light text-danger fw-bold btn-sm rounded-pill"><i class="bi bi-telephone-fill me-1"></i> Call 999 / ER</a>
+                <a href="tel:999" class="btn btn-light text-danger fw-bold btn-sm rounded-pill shadow-sm"><i class="bi bi-telephone-fill me-1"></i> Call 999 / ER</a>
             </div>
         </div>
 
         <!-- Right Results Panel -->
         <div class="col-lg-9">
             <!-- Header & Sorting Bar -->
-            <div class="card border-0 shadow-sm bg-white p-3 mb-3 rounded-3">
+            <div class="card border-0 shadow-sm bg-white p-3 mb-3 rounded-4">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div>
                         <span class="text-muted small fw-bold">Found <span class="text-success fs-6 fw-bold">{{ results_count }}</span> accredited hospitals</span>
@@ -204,7 +214,7 @@
                             <input type="hidden" name="ambulance" value="{{ has_ambulance }}">
                             <input type="hidden" name="pharmacy" value="{{ has_pharmacy }}">
 
-                            <select name="sort" class="form-select form-select-sm bg-light" onchange="document.getElementById('sortForm').submit();">
+                            <select name="sort" class="form-select form-select-sm bg-light rounded-pill px-3" onchange="document.getElementById('sortForm').submit();">
                                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
                                 <option value="beds_desc" {% if sort_by == 'beds_desc' %}selected{% endif %}>Bed Capacity (High-Low)</option>
                                 <option value="doctors_desc" {% if sort_by == 'doctors_desc' %}selected{% endif %}>Doctor Count (High-Low)</option>
@@ -228,7 +238,7 @@
                                             <i class="bi bi-building-fill me-1"></i> {{ hospital.name }}
                                         </a>
                                     </h5>
-                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1 rounded-pill">
                                         <i class="bi bi-patch-check-fill me-1"></i> Verified
                                     </span>
                                 </div>
@@ -240,7 +250,7 @@
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between small text-muted mb-1">
                                         <span><strong>Bed Capacity:</strong> {{ hospital.total_beds|default:"0" }} Beds</span>
-                                        <span class="text-success fw-bold">Active</span>
+                                        <span class="text-success fw-bold"><span class="pulse-dot me-1"></span>Active</span>
                                     </div>
                                     <div class="progress" style="height: 6px;">
                                         <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
@@ -257,26 +267,26 @@
                                 <!-- Facility Badges -->
                                 <div class="d-flex flex-wrap gap-1 mb-3">
                                     {% if hospital.has_emergency %}
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 0.7rem;"><i class="bi bi-shield-plus me-1"></i>Emergency</span>
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2" style="font-size: 0.7rem;"><i class="bi bi-shield-plus me-1"></i>Emergency</span>
                                     {% endif %}
                                     {% if hospital.has_icu %}
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.7rem;"><i class="bi bi-activity me-1"></i>ICU</span>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2" style="font-size: 0.7rem;"><i class="bi bi-activity me-1"></i>ICU</span>
                                     {% endif %}
                                     {% if hospital.has_ambulance %}
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle text-dark" style="font-size: 0.7rem;"><i class="bi bi-truck me-1"></i>Ambulance</span>
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle text-dark rounded-pill px-2" style="font-size: 0.7rem;"><i class="bi bi-truck me-1"></i>Ambulance</span>
                                     {% endif %}
                                     {% if hospital.has_pharmacy %}
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.7rem;"><i class="bi bi-capsule me-1"></i>Pharmacy</span>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2" style="font-size: 0.7rem;"><i class="bi bi-capsule me-1"></i>Pharmacy</span>
                                     {% endif %}
                                 </div>
                             </div>
 
                             <div class="d-flex gap-2">
-                                <a href="{% url 'hospital_detail' hospital.pk %}" class="btn btn-sm btn-outline-success w-100 fw-bold rounded-2">
+                                <a href="{% url 'hospital_detail' hospital.pk %}" class="btn btn-sm btn-outline-success w-100 fw-bold rounded-pill shadow-sm">
                                     <i class="bi bi-info-circle me-1"></i> View Details
                                 </a>
                                 {% if hospital.helpline %}
-                                <a href="tel:{{ hospital.helpline }}" class="btn btn-sm btn-success rounded-2">
+                                <a href="tel:{{ hospital.helpline }}" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm">
                                     <i class="bi bi-telephone-fill"></i>
                                 </a>
                                 {% endif %}
@@ -306,10 +316,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         var hospitalData = {{ map_hospitals_json|safe }};
 
-        // Initialize map centered around Dhaka default coords
         var map = L.map('hospitalMap').setView([23.7461, 90.3742], 12);
 
-        // OpenStreetMap Tile Layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors'
@@ -317,16 +325,15 @@
 
         var bounds = [];
 
-        // Add pins for every hospital
         hospitalData.forEach(function (h) {
             if (h.lat && h.lng) {
                 var marker = L.marker([h.lat, h.lng]).addTo(map);
 
                 var popupContent = `
-                    <div style="min-width: 160px;">
+                    <div style="min-width: 160px; text-align: center;">
                         <h6 style="margin:0 0 4px 0; color:#198754; font-weight:bold; font-size:13px;">${h.name}</h6>
                         <p style="margin:0 0 6px 0; font-size:11px; color:#6c757d;"><i class="bi bi-geo-alt-fill text-danger"></i> ${h.location}</p>
-                        <a href="/hospitals/${h.id}/" class="btn btn-sm btn-success text-white w-100" style="font-size:11px; padding:2px 4px;">View Details</a>
+                        <a href="/hospitals/${h.id}/" class="btn btn-sm btn-success text-white w-100 rounded-pill" style="font-size:11px; padding:2px 4px;">View Details</a>
                     </div>
                 `;
 
