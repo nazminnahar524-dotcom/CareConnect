@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicines | CareConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 28px clamp(16px, 3vw, 48px);
+            background: #f5f7fb;
+            color: #263238;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #176b57;
+            font-size: clamp(26px, 2.2vw, 34px);
+            margin: 0 0 10px;
+        }
+
+        .page-description {
+            margin: 0 0 20px;
+            color: #52616b;
+            line-height: 1.6;
+        }
+
+        /* Medicine count section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #fff;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #edf0f3;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: #e0f2ec;
+            font-size: 27px;
+        }
+
+        .stat-label {
+            margin: 0 0 6px;
+            color: #52616b;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+
+        .stat-number {
+            margin: 0;
+            color: #176b57;
+            font-size: clamp(28px, 3vw, 36px);
+            line-height: 1.2;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .stat-description {
+            margin: 5px 0 0;
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns:
+                minmax(220px, 2fr)
+                minmax(180px, 1.2fr)
+                minmax(180px, 1.2fr)
+                auto
+                auto;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            min-width: 0;
+            min-height: 42px;
+            padding: 11px 12px;
+            border: 1px solid #ccd5d9;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input,
+        select {
+            background: #fff;
+            color: #263238;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid rgba(23, 107, 87, 0.2);
+            border-color: #176b57;
+        }
+
+        button {
+            width: auto;
+            white-space: nowrap;
+            background: #176b57;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: #105441;
+        }
+
+        .reset-link {
+            padding: 10px 4px;
+            white-space: nowrap;
+            text-align: center;
+            color: #176b57;
+            font-weight: 500;
+        }
+
+        .reset-link:hover,
+        .detail-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Results count */
+        .results-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 0 16px;
+            color: #52616b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .results-summary strong {
+            color: #176b57;
+        }
+
+        .medicine-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .medicine-card {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf0f3;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+        }
+
+        .medicine-card h2 {
+            margin: 0 0 12px;
+            color: #176b57;
+            font-size: 20px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .medicine-card p {
+            margin: 0 0 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-link {
+            display: inline-block;
+            align-self: flex-start;
+            margin-top: auto;
+            padding-top: 8px;
+            color: #176b57;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            background: #fff;
+            padding: 28px;
+            border-radius: 12px;
+            color: #52616b;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (min-width: 1600px) {
+            .medicine-grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .filters {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .filters input {
+                grid-column: 1 / -1;
+            }
+
+            .medicine-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 20px 16px;
+            }
+
+            .medicine-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 14px;
+            }
+
+            .medicine-card {
+                padding: 17px;
+            }
+
+            .medicine-card h2 {
+                font-size: 18px;
+            }
+
+            .stat-card {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+                padding: 14px;
+                gap: 10px;
+            }
+
+            .filters input {
+                grid-column: auto;
+            }
+
+            .filters button {
+                width: 100%;
+            }
+
+            .reset-link {
+                padding: 8px;
+            }
+
+            .medicine-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .medicine-card {
+                padding: 20px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>CareConnect Medicines</h1>
+
+    <p class="page-description">
+        Search and explore available medicine information.
+    </p>
+
+    <!-- Total medicine count -->
+    <section class="stats-grid" aria-label="Medicine statistics">
+        <div class="stat-card">
+            <div class="stat-icon" aria-hidden="true">💊</div>
+            <div>
+                <p class="stat-label">Total Medicines</p>
+                <p class="stat-number">{{ total_medicines }}</p>
+                <p class="stat-description">
+                    Active medicines in CareConnect
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <form method="get" class="filters">
+        <input
+            type="search"
+            name="q"
+            placeholder="Search medicine, brand, generic..."
+            value="{{ search_query }}"
+            aria-label="Search medicines"
+        >
+
+        <select name="category" aria-label="Filter by category">
+            <option value="">All Categories</option>
+
+            {% for value, label in categories %}
+                <option value="{{ value }}"
+                    {% if selected_category == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="prescription" aria-label="Filter by prescription">
+            <option value="">All Prescription Types</option>
+
+            <option value="required"
+                {% if selected_prescription == "required" %}selected{% endif %}>
+                Prescription Required
+            </option>
+
+            <option value="otc"
+                {% if selected_prescription == "otc" %}selected{% endif %}>
+                Over the Counter (OTC)
+            </option>
+        </select>
+
+        <button type="submit">Search / Filter</button>
+
+        <a class="reset-link"
+           href="{% url 'medicines:medicine_list' %}">
+            Reset
+        </a>
+    </form>
+
+    <!-- Count after applying search and filters -->
+    <div class="results-summary" aria-live="polite">
+        <span>
+            Showing <strong>{{ medicines_count }}</strong>
+            of <strong>{{ total_medicines }}</strong> medicines
+        </span>
+    </div>
+
+    {% if medicines %}
+        <div class="medicine-grid">
+            {% for medicine in medicines %}
+                <article class="medicine-card">
+
+                    <h2>{{ medicine.name }}</h2>
+
+                    {% if medicine.brand_name %}
+                        <p>
+                            <strong>Brand:</strong>
+                            {{ medicine.brand_name }}
+                        </p>
+                    {% endif %}
+
+                    {% if medicine.generic_name %}
+                        <p>
+                            <strong>Generic:</strong>
+                            {{ medicine.generic_name }}
+                        </p>
+                    {% endif %}
+
+                    {% if medicine.manufacturer %}
+                        <p>
+                            <strong>Manufacturer:</strong>
+                            {{ medicine.manufacturer }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <strong>Category:</strong>
+                        {{ medicine.get_category_display }}
+                    </p>
+
+                    {% if medicine.dosage_form %}
+                        <p>
+                            <strong>Dosage form:</strong>
+                            {{ medicine.dosage_form }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <strong>Prescription:</strong>
+                        {% if medicine.prescription_required %}
+                            Required
+                        {% else %}
+                            Not required (OTC)
+                        {% endif %}
+                    </p>
+
+                    <a
+                        class="detail-link"
+                        href="{% url 'medicines:medicine_detail' medicine.pk %}">
+                        View Details →
+                    </a>
+
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-message">
+            No medicines found. Try a different search or filter.
+        </p>
+    {% endif %}
+
+</div>
+</body>
+</html>

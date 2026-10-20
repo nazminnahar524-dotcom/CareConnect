@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'hospitals',
     'donors',
+    'medicines',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'

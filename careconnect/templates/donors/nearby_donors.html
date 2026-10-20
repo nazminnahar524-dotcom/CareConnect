@@ -1,191 +1,116 @@
 {% extends 'base.html' %}
 
-{% block title %}Nearby Donors - CareConnect{% endblock %}
-
-{% block extra_head %}
-<!-- Leaflet CSS & JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-    #map {
-        height: 180px !important;
-        width: 100% !important;
-        border-radius: 12px;
-        border: 1px solid #e0e0e0;
-        z-index: 1;
-    }
-    .location-card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Top Navigation & Summary -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary mb-2">← Back to Home</a>
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary mb-2">&larr; Back to Home</a>
             <h2 class="fw-bold text-success mb-0">Nearby Donors</h2>
-            <p class="text-muted small">Find blood donors near you and save lives</p>
+            <p class="text-muted">Find blood donors near you and save lives</p>
         </div>
-        <div>
-            <a href="{% url 'register_donor' %}" class="btn btn-danger font-weight-bold">+ Become a Donor</a>
+        <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'register_donor' %}" class="btn btn-danger fw-semibold px-3 py-2">+ Become a Donor</a>
+            <div class="bg-light p-3 rounded-3 text-center border">
+                <h3 class="fw-bold mb-0 text-danger">{{ available_donors_count }}+</h3>
+                <small class="text-muted">Available Donors</small>
+            </div>
+            <div class="bg-light p-3 rounded-3 text-center border">
+                <h3 class="fw-bold mb-0 text-success">8</h3>
+                <small class="text-muted">Blood Groups</small>
+            </div>
         </div>
     </div>
 
     <div class="row g-4">
-        <!-- Left Sidebar: Map & Filters -->
-        <div class="col-lg-4">
-            <!-- Map & Radius Widget -->
-            <div class="card location-card p-3 mb-3 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="fw-bold mb-0">Your Location</h6>
-                    <small class="text-success fw-bold" style="cursor: pointer;" onclick="locateUser()">Detect My Location</small>
-                </div>
-                
-                <!-- Map Container -->
-                <div id="map" class="mb-3"></div>
-
-                <div class="mb-2">
-                    <h6 class="fw-bold mb-0" id="location-name">Dhanmondi, Dhaka 1205</h6>
-                    <p class="text-muted small mb-2">Searching within <span id="radius-text" class="fw-bold text-dark">{{ radius }} km</span> radius</p>
-                </div>
-
-                <form method="GET" action="" id="filter-form">
-                    <input type="hidden" name="lat" id="lat-input" value="{{ user_lat }}">
-                    <input type="hidden" name="lng" id="lng-input" value="{{ user_lng }}">
-                    <input type="hidden" name="blood_group" value="{{ selected_blood_group }}">
-                    <input type="hidden" name="gender" value="{{ selected_gender }}">
-
-                    <div class="mb-2">
-                        <input type="range" class="form-range" min="1" max="10" step="1" id="radius-slider" name="radius" value="{{ radius }}" oninput="updateRadiusText(this.value)" onchange="this.form.submit()">
-                        <div class="d-flex justify-content-between text-muted" style="font-size: 12px;">
-                            <span>1 km</span>
-                            <span>5 km</span>
-                            <span>10 km</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Filter Card -->
-            <div class="card p-3 shadow-sm border-0 rounded-4">
+        <!-- Filter Sidebar -->
+        <div class="col-md-3">
+            <div class="card p-3 border-0 shadow-sm rounded-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold mb-0">Filter Donors</h5>
-                    <a href="{% url 'nearby_donors' %}" class="text-muted small text-decoration-none">Reset</a>
+                    <a href="{% url 'nearby_donors' %}" class="text-decoration-none text-muted small">Reset</a>
                 </div>
-
-                <form method="GET" action="">
-                    <input type="hidden" name="lat" value="{{ user_lat }}">
-                    <input type="hidden" name="lng" value="{{ user_lng }}">
-                    <input type="hidden" name="radius" value="{{ radius }}">
-
+                <form method="GET" action="{% url 'nearby_donors' %}">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Blood Group</label>
+                        <label class="form-label fw-semibold">Blood Group</label>
                         <select name="blood_group" class="form-select">
-                            <option value="All Groups" {% if selected_blood_group == 'All Groups' or not selected_blood_group %}selected{% endif %}>All Groups</option>
-                            <option value="A+" {% if selected_blood_group == 'A+' %}selected{% endif %}>A+</option>
-                            <option value="A-" {% if selected_blood_group == 'A-' %}selected{% endif %}>A-</option>
-                            <option value="B+" {% if selected_blood_group == 'B+' %}selected{% endif %}>B+</option>
-                            <option value="B-" {% if selected_blood_group == 'B-' %}selected{% endif %}>B-</option>
-                            <option value="AB+" {% if selected_blood_group == 'AB+' %}selected{% endif %}>AB+</option>
-                            <option value="AB-" {% if selected_blood_group == 'AB-' %}selected{% endif %}>AB-</option>
-                            <option value="O+" {% if selected_blood_group == 'O+' %}selected{% endif %}>O+</option>
-                            <option value="O-" {% if selected_blood_group == 'O-' %}selected{% endif %}>O-</option>
+                            <option value="">All Groups</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Gender</label>
+                        <label class="form-label fw-semibold">Gender</label>
                         <select name="gender" class="form-select">
-                            <option value="All" {% if selected_gender == 'All' or not selected_gender %}selected{% endif %}>All</option>
-                            <option value="Male" {% if selected_gender == 'Male' %}selected{% endif %}>Male</option>
-                            <option value="Female" {% if selected_gender == 'Female' %}selected{% endif %}>Female</option>
+                            <option value="All">All</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100 fw-bold">Apply Filters</button>
+                    <button type="submit" class="btn btn-success w-100 fw-semibold mt-2">Apply Filters</button>
                 </form>
+
+                <hr class="my-4">
+
+                <div class="p-3 bg-light rounded-3 text-center">
+                    <h6 class="fw-bold text-danger">Need Blood?</h6>
+                    <p class="small text-muted mb-2">Request blood from nearby donors in just a few clicks.</p>
+                    <a href="{% url 'register_donor' %}" class="btn btn-outline-danger btn-sm w-100 fw-semibold">Register as Donor</a>
+                </div>
             </div>
         </div>
 
-        <!-- Right Side: Donor Cards List -->
-        <div class="col-lg-8">
-            <h5 class="fw-bold mb-3"><span class="text-success">{{ total_donors }}</span> Donors Found</h5>
+        <!-- Donors List -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">{{ donors.count }} Donors Found</h5>
+                <span class="text-muted small">Sort by: <strong>Nearest</strong></span>
+            </div>
 
-            {% if donors %}
-                <div class="row g-3">
-                    {% for donor in donors %}
-                        <div class="col-md-12">
-                            <div class="card p-3 border-0 shadow-sm rounded-3">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h5 class="fw-bold mb-1 text-capitalize">{{ donor.full_name }}</h5>
-                                        <p class="text-muted small mb-1">{{ donor.gender }}{% if donor.age %}, {{ donor.age }} yrs{% endif %}</p>
-                                        <p class="text-muted small mb-2">
-                                            📍 {{ donor.area }}, {{ donor.district }} • <span class="fw-bold text-success">{{ donor.distance }} km away</span>
-                                        </p>
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle">Available Now</span>
-                                    </div>
-                                    <div>
-                                        <span class="badge bg-danger fs-6 px-3 py-2">{{ donor.blood_group }}</span>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <a href="{% url 'donor_detail' donor.id %}" class="btn btn-outline-success btn-sm w-100">View Details</a>
-                                </div>
+            <div class="row g-3">
+                {% for donor in donors %}
+                <div class="col-md-6">
+                    <div class="card p-3 border-0 shadow-sm rounded-3 h-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark">{{ donor.full_name }}</h5>
+                                <small class="text-muted">{{ donor.gender }}, {{ donor.age }} yrs</small>
                             </div>
+                            <span class="badge bg-danger fs-6 px-3 py-2">{{ donor.blood_group }}</span>
                         </div>
-                    {% endfor %}
+
+                        <p class="text-muted small mb-2">
+                            📍 {{ donor.area }} • <strong>{{ donor.distance_km }} km away</strong>
+                        </p>
+
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            {% if donor.is_available %}
+                            <span class="badge bg-success-subtle text-success border border-success">Available Now</span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary">Not Available</span>
+                            {% endif %}
+                            <small class="text-muted">Last donated: {{ donor.last_donated_date|default:"N/A" }}</small>
+                        </div>
+
+                        <a href="{% url 'donor_detail' donor.id %}" class="btn btn-outline-success btn-sm w-100 mt-auto fw-semibold">View Details</a>
+                    </div>
                 </div>
-            {% else %}
-                <div class="alert alert-info rounded-3">
-                    No donors found within <strong>{{ radius }} km</strong> radius. Try increasing the radius slider or changing filters.
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <h5 class="text-muted">No donors found matching your search criteria.</h5>
+                    <a href="{% url 'register_donor' %}" class="btn btn-success mt-2">Be the first to register as a donor!</a>
                 </div>
-            {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var userLat = {{ user_lat }};
-        var userLng = {{ user_lng }};
-
-        var map = L.map('map', { zoomControl: true }).setView([userLat, userLng], 13);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
-
-        var marker = L.marker([userLat, userLng], { draggable: true }).addTo(map);
-
-        marker.on('dragend', function (e) {
-            var coord = e.target.getLatLng();
-            document.getElementById('lat-input').value = coord.lat;
-            document.getElementById('lng-input').value = coord.lng;
-            document.getElementById('filter-form').submit();
-        });
-
-        setTimeout(function() {
-            map.invalidateSize();
-        }, 300);
-    });
-
-    function updateRadiusText(val) {
-        document.getElementById('radius-text').innerText = val + ' km';
-    }
-
-    function locateUser() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                document.getElementById('lat-input').value = position.coords.latitude;
-                document.getElementById('lng-input').value = position.coords.longitude;
-                document.getElementById('filter-form').submit();
-            });
-        }
-    }
-</script>
 {% endblock %}

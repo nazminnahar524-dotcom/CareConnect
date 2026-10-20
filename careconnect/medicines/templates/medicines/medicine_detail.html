@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ medicine.name }} | CareConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 28px clamp(16px, 3vw, 48px);
+            background: #f5f7fb;
+            color: #263238;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #176b57;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .medicine-detail {
+            background: #fff;
+            padding: clamp(22px, 3vw, 40px);
+            border: 1px solid #edf0f3;
+            border-radius: 14px;
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 28px;
+            padding-bottom: 26px;
+            border-bottom: 1px solid #edf0f2;
+        }
+
+        .medicine-image {
+            width: 180px;
+            height: 180px;
+            flex-shrink: 0;
+            object-fit: contain;
+            padding: 12px;
+            border: 1px solid #edf0f2;
+            border-radius: 12px;
+            background: #fafcfd;
+        }
+
+        .medicine-heading {
+            min-width: 0;
+            flex: 1;
+        }
+
+        h1 {
+            color: #176b57;
+            font-size: clamp(28px, 3vw, 38px);
+            margin: 0 0 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .subtitle {
+            color: #64727a;
+            line-height: 1.7;
+            margin: 0 0 16px;
+        }
+
+        .prescription {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 7px;
+            background: #eef5f2;
+            color: #176b57;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .prescription.required {
+            background: #fff3e8;
+            color: #9a4b08;
+        }
+
+        .section-title {
+            color: #176b57;
+            font-size: 21px;
+            margin: 30px 0 14px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 32px;
+            margin-top: 10px;
+        }
+
+        .info-row {
+            min-width: 0;
+            padding: 16px 0;
+            border-bottom: 1px solid #edf0f2;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 4px;
+            color: #63717a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .value {
+            font-size: 15px;
+            color: #263238;
+        }
+
+        .text-section {
+            padding: 18px 20px;
+            background: #f8fafb;
+            border-radius: 10px;
+            border: 1px solid #edf0f2;
+            line-height: 1.8;
+        }
+
+        .text-content {
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+
+        .footer-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding-top: 18px;
+            border-top: 1px solid #edf0f2;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .medicine-detail {
+                padding: 20px;
+            }
+
+            .detail-header {
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .medicine-image {
+                width: 140px;
+                height: 140px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <a class="back-link"
+       href="{% url 'medicines:medicine_list' %}">
+        ← Back to Medicines
+    </a>
+
+    <main class="medicine-detail">
+
+        <div class="detail-header">
+
+            {% if medicine.image %}
+                <img
+                    class="medicine-image"
+                    src="{{ medicine.image.url }}"
+                    alt="{{ medicine.name }}"
+                >
+            {% endif %}
+
+            <div class="medicine-heading">
+                <h1>{{ medicine.name }}</h1>
+
+                {% if medicine.generic_name %}
+                    <p class="subtitle">
+                        Generic name: {{ medicine.generic_name }}
+                    </p>
+                {% endif %}
+
+                <span class="prescription
+                    {% if medicine.prescription_required %}required{% endif %}">
+                    {% if medicine.prescription_required %}
+                        Prescription Required
+                    {% else %}
+                        Over the Counter (OTC)
+                    {% endif %}
+                </span>
+            </div>
+
+        </div>
+
+        <h2 class="section-title">Medicine Information</h2>
+
+        <div class="info-grid">
+
+            <div class="info-row">
+                <span class="label">Category</span>
+                <div class="value">{{ medicine.get_category_display }}</div>
+            </div>
+
+            {% if medicine.sub_category %}
+                <div class="info-row">
+                    <span class="label">Subcategory</span>
+                    <div class="value">{{ medicine.sub_category }}</div>
+                </div>
+            {% endif %}
+
+            {% if medicine.brand_name %}
+                <div class="info-row">
+                    <span class="label">Brand Name</span>
+                    <div class="value">{{ medicine.brand_name }}</div>
+                </div>
+            {% endif %}
+
+            {% if medicine.generic_name %}
+                <div class="info-row">
+                    <span class="label">Generic Name</span>
+                    <div class="value">{{ medicine.generic_name }}</div>
+                </div>
+            {% endif %}
+
+            {% if medicine.manufacturer %}
+                <div class="info-row">
+                    <span class="label">Manufacturer</span>
+                    <div class="value">{{ medicine.manufacturer }}</div>
+                </div>
+            {% endif %}
+
+            {% if medicine.dosage_form %}
+                <div class="info-row">
+                    <span class="label">Dosage Form</span>
+                    <div class="value">{{ medicine.dosage_form }}</div>
+                </div>
+            {% endif %}
+
+            {% if medicine.pack_size %}
+                <div class="info-row">
+                    <span class="label">Pack Size</span>
+                    <div class="value">{{ medicine.pack_size }}</div>
+                </div>
+            {% endif %}
+
+            {% if medicine.registration_number %}
+                <div class="info-row">
+                    <span class="label">Registration Number</span>
+                    <div class="value">{{ medicine.registration_number }}</div>
+                </div>
+            {% endif %}
+
+            <div class="info-row">
+                <span class="label">Prescription Status</span>
+                <div class="value">
+                    {% if medicine.prescription_required %}
+                        Prescription required
+                    {% else %}
+                        Not required (OTC)
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        {% if medicine.description %}
+            <h2 class="section-title">Description</h2>
+            <div class="text-section text-content">
+                {{ medicine.description }}
+            </div>
+        {% endif %}
+
+        {% if medicine.indication %}
+            <h2 class="section-title">Indication</h2>
+            <div class="text-section text-content">
+                {{ medicine.indication }}
+            </div>
+        {% endif %}
+
+        <a class="footer-link"
+           href="{% url 'medicines:medicine_list' %}">
+            ← Back to all medicines
+        </a>
+
+    </main>
+</div>
+</body>
+</html>
