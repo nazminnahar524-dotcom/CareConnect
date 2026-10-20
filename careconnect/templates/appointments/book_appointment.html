@@ -1,27 +1,142 @@
+
 {% extends 'base.html' %}
-{% block title %}Book appointment · CareConnect{% endblock %}
+{% block title %}Book Appointment · CareConnect{% endblock %}
+
 {% block content %}
-<div class="container py-2 py-lg-4">
+<style>
+.booking-page {
+    --bp-green: #16845b;
+    --bp-dark: #123d31;
+    --bp-soft: #e8f6ef;
+    --bp-border: #dce9e2;
+    color: #203b30;
+}
+.booking-page .bp-card {
+    background: #fff; border: 1px solid var(--bp-border);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 8px 30px rgba(18,61,49,.06);
+}
+.booking-page .bp-muted { color: #6b7f76; }
+.booking-page .bp-heading { color: var(--bp-dark); font-weight: 800; }
+.booking-page .bp-icon {
+    width: 58px; height: 58px; border-radius: 16px;
+    background: var(--bp-soft); color: var(--bp-green);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 23px; flex-shrink: 0;
+}
+.booking-page .bp-input {
+    width: 100%; padding: 12px 13px;
+    border: 1px solid var(--bp-border); border-radius: 11px;
+    background: white; color: #203b30;
+}
+.booking-page .bp-input:focus {
+    outline: none; border-color: var(--bp-green);
+    box-shadow: 0 0 0 3px rgba(22,132,91,.1);
+}
+.booking-page .bp-btn {
+    display: flex; justify-content: center; align-items: center;
+    gap: 8px; width: 100%; padding: 13px;
+    background: var(--bp-green); color: white;
+    border: 1px solid var(--bp-green); border-radius: 12px;
+    font-weight: 700; text-decoration: none;
+}
+.booking-page .bp-btn:hover { background: var(--bp-dark); color: white; }
+</style>
+
+<div class="booking-page py-2 py-lg-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="mb-4"><a href="{% url 'doctor_detail' doctor.pk %}" class="small fw-semibold" style="color:var(--cc-green);"><i class="fa-solid fa-arrow-left me-1"></i> Back to doctor profile</a></div>
-            <div class="cc-card overflow-hidden">
-                <div class="p-4 p-lg-5 border-bottom" style="background:linear-gradient(135deg,#fff,#effaf5);">
-                    <div class="d-flex align-items-center gap-3"><span class="cc-icon" style="width:58px;height:58px;"><i class="fa-solid fa-calendar-plus"></i></span><div><div class="small fw-semibold" style="color:var(--cc-green);">APPOINTMENT REQUEST</div><h2 class="fw-bold mb-1">Book with Dr. {{ doctor.name }}</h2><div class="cc-muted">{{ doctor.specialty }} · {{ doctor.hospital_name }}</div></div></div>
-                </div>
+        <div class="col-lg-9 col-xl-8">
+            <div class="mb-4">
+                <a href="{% url 'doctor_detail' doctor.pk %}"
+                   class="text-decoration-none fw-semibold small"
+                   style="color:#16845b;">
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Back to doctor profile
+                </a>
+            </div>
+
+            <section class="bp-card">
+                <header class="p-4 p-lg-5"
+                        style="background:linear-gradient(135deg,#fff,#e8f6ef);border-bottom:1px solid #dce9e2;">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="bp-icon">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </span>
+                        <div>
+                            <div class="small fw-bold mb-2" style="color:#16845b;letter-spacing:1px;">
+                                APPOINTMENT REQUEST
+                            </div>
+                            <h2 class="bp-heading mb-2">
+                                Book with Dr. {{ doctor.name }}
+                            </h2>
+                            <p class="bp-muted mb-0">
+                                {{ doctor.specialty }} · {{ doctor.hospital_name }}
+                            </p>
+                        </div>
+                    </div>
+                </header>
+
                 <div class="p-4 p-lg-5">
+                    <div class="mb-4">
+                        <h5 class="bp-heading">Appointment details</h5>
+                        <p class="bp-muted small mb-0">
+                            Select a suitable date and available time slot.
+                        </p>
+                    </div>
+
                     <form method="post">
                         {% csrf_token %}
+
                         <div class="row g-4">
-                            <div class="col-md-6"><label class="form-label fw-semibold">Appointment date</label><input type="date" name="appointment_date" min="{{ today }}" class="form-control" required><div class="form-text">Past dates are not allowed.</div></div>
-                            <div class="col-md-6"><label class="form-label fw-semibold">Time slot</label><select name="time_slot" class="form-select" required><option value="">Choose a slot</option><option>5:00 PM - 5:30 PM</option><option>5:30 PM - 6:00 PM</option><option>6:00 PM - 6:30 PM</option><option>7:00 PM - 7:30 PM</option></select></div>
+                            <div class="col-md-6">
+                                <label for="bp-date" class="form-label fw-semibold">
+                                    <i class="fa-regular fa-calendar me-2" style="color:#16845b;"></i>
+                                    Appointment date
+                                </label>
+                                <input id="bp-date" type="date" name="appointment_date"
+                                       min="{{ today }}" class="bp-input" required>
+                                <div class="form-text">Past dates are not allowed.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="bp-time" class="form-label fw-semibold">
+                                    <i class="fa-regular fa-clock me-2" style="color:#16845b;"></i>
+                                    Time slot
+                                </label>
+                                <select id="bp-time" name="time_slot" class="bp-input" required>
+                                    <option value="">Choose a slot</option>
+                                    <option>5:00 PM - 5:30 PM</option>
+                                    <option>5:30 PM - 6:00 PM</option>
+                                    <option>6:00 PM - 6:30 PM</option>
+                                    <option>7:00 PM - 7:30 PM</option>
+                                </select>
+                                <div class="form-text">Choose your preferred time.</div>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 my-4" style="background:#f8fbf9;"><span class="cc-muted">Consultation fee</span><strong style="color:var(--cc-green);font-size:1.25rem;">৳{{ doctor.consultation_fee }}</strong></div>
-                        <button class="btn btn-cc w-100 rounded-pill py-2" type="submit"><i class="fa-solid fa-calendar-check me-2"></i>Confirm appointment</button>
-                        <p class="text-center cc-muted small mt-3 mb-0"><i class="fa-solid fa-lock me-1"></i>Your booking is linked to your CareConnect account.</p>
+
+                        <div class="d-flex justify-content-between align-items-center gap-3 p-3 p-md-4 rounded-3 my-4"
+                             style="background:#f3faf6;border:1px solid #e1efe7;">
+                            <div>
+                                <div class="bp-muted small">Consultation fee</div>
+                                <div class="fw-semibold">Payment information</div>
+                            </div>
+                            <strong class="fs-4" style="color:#16845b;">
+                                ৳{{ doctor.consultation_fee }}
+                            </strong>
+                        </div>
+
+                        <button type="submit" class="bp-btn">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            Confirm appointment
+                        </button>
+
+                        <p class="bp-muted small text-center mt-3 mb-0">
+                            <i class="fa-solid fa-lock me-1"></i>
+                            Your booking is linked to your CareConnect account.
+                        </p>
                     </form>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>
