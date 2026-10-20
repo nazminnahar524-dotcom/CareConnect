@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% block title %}Doctors · CareConnect{% endblock %}
 
@@ -11,161 +10,374 @@
     --dp-border: #dce9e2;
     color: #203b30;
 }
-.doctor-page * { box-sizing: border-box; }
+
+/* Page layout */
+.doctor-page {
+    height: calc(100vh - 110px);
+    height: calc(100dvh - 110px);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.doctor-page * {
+    box-sizing: border-box;
+}
+
 .doctor-page .dp-card {
     background: #fff;
     border: 1px solid var(--dp-border);
     border-radius: 18px;
-    box-shadow: 0 6px 24px rgba(18,61,49,.055);
+    box-shadow: 0 6px 24px rgba(18, 61, 49, .055);
 }
-.doctor-page .dp-heading { color: var(--dp-dark); font-weight: 800; }
-.doctor-page .dp-muted { color: #6b7f76; }
+
+.doctor-page .dp-heading {
+    color: var(--dp-dark);
+    font-weight: 800;
+}
+
+.doctor-page .dp-muted {
+    color: #6b7f76;
+}
+
 .doctor-page .dp-label {
-    font-size: 11px; font-weight: 800; letter-spacing: 1px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
     color: #71847a;
 }
-.doctor-page .dp-stat { padding: 19px; height: 100%; }
+
+.doctor-page .dp-stat {
+    padding: 19px;
+    height: 100%;
+}
+
 .doctor-page .dp-stat-value {
-    font-size: 25px; font-weight: 800; color: var(--dp-dark);
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--dp-dark);
 }
+
 .doctor-page .dp-icon {
-    width: 43px; height: 43px; display: inline-flex;
-    align-items: center; justify-content: center;
-    border-radius: 13px; background: var(--dp-soft);
-    color: var(--dp-green); flex-shrink: 0;
+    width: 43px;
+    height: 43px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    background: var(--dp-soft);
+    color: var(--dp-green);
+    flex-shrink: 0;
 }
+
 .doctor-page .dp-input {
-    width: 100%; border: 1px solid var(--dp-border);
-    border-radius: 10px; padding: 11px 12px;
-    background: #fff; color: #243b31;
+    width: 100%;
+    border: 1px solid var(--dp-border);
+    border-radius: 10px;
+    padding: 11px 12px;
+    background: #fff;
+    color: #243b31;
 }
+
 .doctor-page .dp-input:focus {
-    outline: none; border-color: var(--dp-green);
-    box-shadow: 0 0 0 3px rgba(22,132,91,.1);
+    outline: none;
+    border-color: var(--dp-green);
+    box-shadow: 0 0 0 3px rgba(22, 132, 91, .1);
 }
+
 .doctor-page .dp-btn {
-    display: inline-flex; justify-content: center; align-items: center;
-    gap: 7px; padding: 10px 15px; border-radius: 10px;
-    background: var(--dp-green); border: 1px solid var(--dp-green);
-    color: white; text-decoration: none; font-weight: 700;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background: var(--dp-green);
+    border: 1px solid var(--dp-green);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
 }
-.doctor-page .dp-btn:hover { background: var(--dp-dark); color: white; }
+
+.doctor-page .dp-btn:hover {
+    background: var(--dp-dark);
+    color: white;
+}
+
 .doctor-page .dp-btn-outline {
-    background: white; color: var(--dp-green);
+    background: white;
+    color: var(--dp-green);
 }
-.doctor-page .dp-btn-outline:hover { background: var(--dp-soft); color: var(--dp-dark); }
+
+.doctor-page .dp-btn-outline:hover {
+    background: var(--dp-soft);
+    color: var(--dp-dark);
+}
+
 .doctor-page .dp-chip {
-    display: inline-block; padding: 5px 10px; border-radius: 20px;
-    background: var(--dp-soft); color: var(--dp-green);
-    font-size: 12px; font-weight: 700;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: var(--dp-soft);
+    color: var(--dp-green);
+    font-size: 12px;
+    font-weight: 700;
 }
+
 .doctor-page .dp-doctor {
-    padding: 20px; transition: transform .2s, box-shadow .2s;
+    padding: 20px;
+    transition: transform .2s, box-shadow .2s;
+    flex-shrink: 0;
 }
+
 .doctor-page .dp-doctor:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(18,61,49,.09);
+    box-shadow: 0 12px 28px rgba(18, 61, 49, .09);
 }
+
 .doctor-page .dp-avatar {
-    width: 56px; height: 56px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--dp-soft); color: var(--dp-green);
-    border-radius: 16px; font-size: 22px;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dp-soft);
+    color: var(--dp-green);
+    border-radius: 16px;
+    font-size: 22px;
 }
-.doctor-page .dp-fee { color: var(--dp-green); font-size: 19px; font-weight: 800; }
-.doctor-page .dp-info { font-size: 13px; color: #687d72; overflow-wrap: anywhere; }
-.doctor-page .dp-filter-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+
+.doctor-page .dp-fee {
+    color: var(--dp-green);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.doctor-page .dp-info {
+    font-size: 13px;
+    color: #687d72;
+    overflow-wrap: anywhere;
+}
+
+.doctor-page .dp-filter-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* Heading and statistics remain stationary */
+.doctor-page > .d-flex:first-child,
+.doctor-page > .row.g-3 {
+    flex: 0 0 auto;
+}
+
+/* Main columns take the remaining height */
+.doctor-page > .row.g-4 {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Side panels stay in place */
+.doctor-page > .row.g-4 > aside {
+    min-height: 0;
+}
+
+/* Doctor column */
+.doctor-page > .row.g-4 > section.col-lg-8 {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Available Doctors heading does not scroll */
+.doctor-page > .row.g-4 > section > .d-flex:first-child {
+    flex: 0 0 auto;
+}
+
+/* The entire list of doctors scrolls */
+.doctor-page .dp-doctor-scroll {
+    display: block;
+    flex: 1 1 0;
+    height: 0;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    scrollbar-gutter: stable;
+    padding: 2px 8px 8px 2px;
+}
+
+/* Mobile layout */
+@media (max-width: 991px) {
+    .doctor-page {
+        height: auto;
+        min-height: 0;
+        display: block;
+    }
+
+    .doctor-page > .row.g-4 {
+        overflow: visible;
+    }
+
+    .doctor-page > .row.g-4 > section.col-lg-8 {
+        display: block;
+        overflow: visible;
+    }
+
+    .doctor-page .dp-doctor-scroll {
+        height: auto;
+        overflow: visible;
+        padding-right: 2px;
+    }
+}
+
 @media (max-width: 575px) {
-    .doctor-page .dp-doctor { padding: 14px; }
-    .doctor-page .dp-avatar { width: 45px; height: 45px; }
-    .doctor-page .dp-stat { padding: 13px; }
-    .doctor-page .dp-stat-value { font-size: 21px; }
+    .doctor-page .dp-doctor {
+        padding: 14px;
+    }
+
+    .doctor-page .dp-avatar {
+        width: 45px;
+        height: 45px;
+    }
+
+    .doctor-page .dp-stat {
+        padding: 13px;
+    }
+
+    .doctor-page .dp-stat-value {
+        font-size: 21px;
+    }
 }
 </style>
 
 <div class="doctor-page">
+
+    <!-- Page heading -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
         <div>
             <div class="dp-label mb-2">CARE DIRECTORY</div>
             <h2 class="dp-heading mb-2">Find Your Doctor</h2>
-            <p class="dp-muted mb-0">Find a specialist and plan your next visit.</p>
+            <p class="dp-muted mb-0">
+                Find a specialist and plan your next visit.
+            </p>
         </div>
+
         <a href="{% url 'my_appointments' %}" class="dp-btn dp-btn-outline">
-            <i class="fa-regular fa-calendar-check"></i> My Appointments
+            <i class="fa-regular fa-calendar-check"></i>
+            My Appointments
         </a>
     </div>
 
+    <!-- Statistics -->
     <div class="row g-3 mb-4">
         <div class="col-6 col-xl-3">
             <div class="dp-card dp-stat">
                 <div class="dp-label mb-2">DOCTORS FOUND</div>
                 <div class="d-flex align-items-center justify-content-between gap-2">
                     <span class="dp-stat-value">{{ doctors|length }}</span>
-                    <span class="dp-icon"><i class="fa-solid fa-user-doctor"></i></span>
+                    <span class="dp-icon">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </span>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-xl-3">
             <div class="dp-card dp-stat">
                 <div class="dp-label mb-2">SPECIALTIES</div>
                 <div class="d-flex align-items-center justify-content-between gap-2">
                     <span class="dp-stat-value">{{ specialties|length }}</span>
-                    <span class="dp-icon"><i class="fa-solid fa-stethoscope"></i></span>
+                    <span class="dp-icon">
+                        <i class="fa-solid fa-stethoscope"></i>
+                    </span>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-xl-3">
             <div class="dp-card dp-stat">
                 <div class="dp-label mb-2">CARE SUPPORT</div>
                 <div class="d-flex align-items-center justify-content-between gap-2">
                     <span class="dp-stat-value">24/7</span>
-                    <span class="dp-icon"><i class="fa-solid fa-headset"></i></span>
+                    <span class="dp-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </span>
                 </div>
             </div>
         </div>
+
         <div class="col-6 col-xl-3">
             <div class="dp-card dp-stat">
                 <div class="dp-label mb-2">BOOKING</div>
                 <div class="d-flex align-items-center justify-content-between gap-2">
                     <span class="dp-stat-value">Secure</span>
-                    <span class="dp-icon"><i class="fa-solid fa-shield-heart"></i></span>
+                    <span class="dp-icon">
+                        <i class="fa-solid fa-shield-heart"></i>
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Main layout -->
     <div class="row g-4">
+
+        <!-- Left: Filters -->
         <aside class="col-lg-4 col-xl-3">
             <div class="dp-card p-3 p-lg-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="dp-heading mb-0">Filter Doctors</h5>
+
                     {% if query or selected_specialty %}
-                    <a href="{% url 'doctor_list' %}" style="color:#16845b;font-size:13px;">Clear</a>
+                    <a href="{% url 'doctor_list' %}"
+                       style="color:#16845b;font-size:13px;">
+                        Clear
+                    </a>
                     {% endif %}
                 </div>
 
                 <form method="get">
-                    <label class="dp-filter-title d-block" for="doctor-search">Search doctor</label>
-                    <input id="doctor-search" class="dp-input mb-3"
-                           type="search" name="q" value="{{ query }}"
+                    <label class="dp-filter-title d-block" for="doctor-search">
+                        Search doctor
+                    </label>
+
+                    <input id="doctor-search"
+                           class="dp-input mb-3"
+                           type="search"
+                           name="q"
+                           value="{{ query }}"
                            placeholder="Name or hospital">
 
-                    <label class="dp-filter-title d-block" for="doctor-specialty">Specialty</label>
-                    <select id="doctor-specialty" class="dp-input mb-4" name="specialty">
+                    <label class="dp-filter-title d-block" for="doctor-specialty">
+                        Specialty
+                    </label>
+
+                    <select id="doctor-specialty"
+                            class="dp-input mb-4"
+                            name="specialty">
                         <option value="">All specialties</option>
+
                         {% for item in specialties %}
-                        <option value="{{ item }}" {% if selected_specialty == item %}selected{% endif %}>
+                        <option value="{{ item }}"
+                            {% if selected_specialty == item %}selected{% endif %}>
                             {{ item }}
                         </option>
                         {% endfor %}
                     </select>
 
                     <button type="submit" class="dp-btn w-100">
-                        <i class="fa-solid fa-filter"></i> Apply Filters
+                        <i class="fa-solid fa-filter"></i>
+                        Apply Filters
                     </button>
                 </form>
 
                 <hr>
+
                 <p class="dp-muted small mb-0">
                     <i class="fa-solid fa-lock me-1"></i>
                     Sign in to book an appointment.
@@ -173,7 +385,9 @@
             </div>
         </aside>
 
+        <!-- Centre: All doctors inside one scroll container -->
         <section class="col-lg-8 col-xl-6">
+
             <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
                 <h5 class="dp-heading mb-0">Available Doctors</h5>
                 <span class="dp-muted small">
@@ -181,73 +395,107 @@
                 </span>
             </div>
 
-            {% for doctor in doctors %}
-            <article class="dp-card dp-doctor mb-3">
-                <div class="d-flex gap-3">
-                    <div class="dp-avatar">
-                        <i class="fa-solid fa-user-doctor"></i>
-                    </div>
+            <div class="dp-doctor-scroll">
 
-                    <div class="flex-grow-1" style="min-width:0;">
-                        <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
-                            <div>
-                                <h5 class="dp-heading mb-2">Dr. {{ doctor.name }}</h5>
-                                <span class="dp-chip">{{ doctor.specialty }}</span>
+                {% for doctor in doctors %}
+                <article class="dp-card dp-doctor mb-3">
+                    <div class="d-flex gap-3">
+
+                        <div class="dp-avatar">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+
+                        <div class="flex-grow-1" style="min-width:0;">
+                            <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                                <div>
+                                    <h5 class="dp-heading mb-2">
+                                        Dr. {{ doctor.name }}
+                                    </h5>
+                                    <span class="dp-chip">
+                                        {{ doctor.specialty }}
+                                    </span>
+                                </div>
+
+                                <div class="text-end">
+                                    <div class="dp-muted small">
+                                        Consultation fee
+                                    </div>
+                                    <div class="dp-fee">
+                                        ৳{{ doctor.consultation_fee }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-end">
-                                <div class="dp-muted small">Consultation fee</div>
-                                <div class="dp-fee">৳{{ doctor.consultation_fee }}</div>
+
+                            <div class="dp-info mt-3">
+                                <p class="mb-2">
+                                    <i class="fa-solid fa-hospital me-2"></i>
+                                    {{ doctor.hospital_name }}
+                                </p>
+
+                                <p class="mb-2">
+                                    <i class="fa-solid fa-graduation-cap me-2"></i>
+                                    {{ doctor.qualification }}
+                                </p>
+
+                                <p class="mb-2">
+                                    <i class="fa-regular fa-clock me-2"></i>
+                                    {{ doctor.visiting_hours }}
+                                </p>
+
+                                <p class="mb-0">
+                                    <i class="fa-regular fa-calendar me-2"></i>
+                                    {{ doctor.available_days }}
+                                </p>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-3 pt-3 border-top">
+                                <a href="{% url 'doctor_detail' doctor.pk %}"
+                                   class="dp-btn dp-btn-outline">
+                                    View Details
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
-
-                        <div class="dp-info mt-3">
-                            <p class="mb-2">
-                                <i class="fa-solid fa-hospital me-2"></i>
-                                {{ doctor.hospital_name }}
-                            </p>
-                            <p class="mb-2">
-                                <i class="fa-solid fa-graduation-cap me-2"></i>
-                                {{ doctor.qualification }}
-                            </p>
-                            <p class="mb-2">
-                                <i class="fa-regular fa-clock me-2"></i>
-                                {{ doctor.visiting_hours }}
-                            </p>
-                            <p class="mb-0">
-                                <i class="fa-regular fa-calendar me-2"></i>
-                                {{ doctor.available_days }}
-                            </p>
-                        </div>
-
-                        <div class="d-flex justify-content-end mt-3 pt-3 border-top">
-                            <a href="{% url 'doctor_detail' doctor.pk %}" class="dp-btn dp-btn-outline">
-                                View Details <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
                     </div>
+                </article>
+
+                {% empty %}
+                <div class="dp-card text-center p-5">
+                    <span class="dp-icon mb-3">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <h5 class="dp-heading">No doctors found</h5>
+                    <p class="dp-muted mb-3">
+                        Try another name or specialty.
+                    </p>
+                    <a href="{% url 'doctor_list' %}" class="dp-btn">
+                        Show all doctors
+                    </a>
                 </div>
-            </article>
-            {% empty %}
-            <div class="dp-card text-center p-5">
-                <span class="dp-icon mb-3">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
-                <h5 class="dp-heading">No doctors found</h5>
-                <p class="dp-muted mb-3">Try another name or specialty.</p>
-                <a href="{% url 'doctor_list' %}" class="dp-btn">Show all doctors</a>
+                {% endfor %}
+
             </div>
-            {% endfor %}
         </section>
 
+        <!-- Right: Appointment information -->
         <aside class="col-xl-3">
             <div class="dp-card p-3 mb-3">
-                <span class="dp-icon mb-3"><i class="fa-solid fa-calendar-check"></i></span>
+                <span class="dp-icon mb-3">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </span>
+
                 <h5 class="dp-heading">Need an appointment?</h5>
-                <p class="dp-muted small">Open a doctor's profile to view information and booking options.</p>
-                <a href="{% url 'my_appointments' %}" class="dp-btn dp-btn-outline w-100">
+
+                <p class="dp-muted small">
+                    Open a doctor's profile to view information and booking options.
+                </p>
+
+                <a href="{% url 'my_appointments' %}"
+                   class="dp-btn dp-btn-outline w-100">
                     My Appointments
                 </a>
             </div>
+
             <div class="dp-card p-3">
                 <h6 class="dp-heading">Before booking</h6>
                 <p class="dp-muted small mb-0">
@@ -255,6 +503,8 @@
                 </p>
             </div>
         </aside>
+
     </div>
 </div>
+
 {% endblock %}
