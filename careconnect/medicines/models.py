@@ -1,5 +1,5 @@
 
-from django.db import models
+from django.db import models # This is package
 
 
 class Medicine(models.Model):
