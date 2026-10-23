@@ -4,25 +4,29 @@
 
 {% block content %}
 <div class="container py-4">
-    <a href="{% url 'nearby_donors' %}" class="btn btn-sm btn-outline-secondary mb-3">← Back to Nearby Donors</a>
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a href="{% url 'nearby_donors' %}" class="btn btn-sm btn-outline-secondary">← Back to Nearby Donors</a>
+    </div>
 
+    <!-- Messages Display -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
     {% endif %}
 
     <div class="row g-4">
-        <!-- Left: Donor Profile Details -->
+        <!-- Left Side: Profile Details -->
         <div class="col-lg-7">
-            <div class="card p-4 shadow-sm border-0 rounded-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+                <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
                     <div>
-                        <h3 class="fw-bold mb-1">{{ donor.full_name }}</h3>
-                        <p class="text-muted mb-1">📍 {{ donor.area }}, {{ donor.district }}</p>
+                        <h2 class="fw-bold mb-1 text-capitalize">{{ donor.full_name }}</h2>
+                        <p class="text-muted mb-2">📍 {{ donor.area }}, {{ donor.district }}</p>
                         <span class="badge bg-success-subtle text-success border border-success-subtle">Available Now</span>
                     </div>
                     <div>
@@ -30,111 +34,62 @@
                     </div>
                 </div>
 
-                <hr>
-
                 <h5 class="fw-bold mb-3">About Donor</h5>
-                <div class="row g-3 small">
-                    <div class="col-6"><strong>Age:</strong> {{ donor.age|default:"N/A" }} yrs</div>
-                    <div class="col-6"><strong>Gender:</strong> {{ donor.gender }}</div>
-                    <div class="col-6"><strong>Phone:</strong> {{ donor.phone_number }}</div>
-                    <div class="col-6"><strong>WhatsApp:</strong> {{ donor.whatsapp_number|default:donor.phone_number }}</div>
-                    <div class="col-6"><strong>Email:</strong> {{ donor.email|default:"N/A" }}</div>
-                    <div class="col-6"><strong>Occupation:</strong> {{ donor.occupation|default:"N/A" }}</div>
-                    <div class="col-6"><strong>Languages:</strong> {{ donor.languages|default:"Bangla, English" }}</div>
-                    <div class="col-6"><strong>Last Donated:</strong> {{ donor.last_donated|default:"Not specified" }}</div>
+                <div class="row g-3 text-muted small">
+                    <div class="col-6">
+                        <strong>Age:</strong> {% if donor.age %}{{ donor.age }} yrs{% else %}Not specified{% endif %}
+                    </div>
+                    <div class="col-6">
+                        <strong>Gender:</strong> {{ donor.gender|default:"Not specified" }}
+                    </div>
+                    <div class="col-6">
+                        <strong>Phone:</strong> {{ donor.phone_number }}
+                    </div>
+                    <div class="col-6">
+                        <strong>WhatsApp:</strong> {% if donor.whatsapp_number %}{{ donor.whatsapp_number }}{% else %}{{ donor.phone_number }}{% endif %}
+                    </div>
+                    <div class="col-6">
+                        <strong>Email:</strong> {{ donor.email|default:"Not specified" }}
+                    </div>
+                    <div class="col-6">
+                        <strong>Occupation:</strong> {{ donor.occupation|default:"Not specified" }}
+                    </div>
+                    <div class="col-6">
+                        <strong>Languages:</strong> {{ donor.languages|default:"Bangla, English" }}
+                    </div>
+                    <div class="col-6">
+                        <strong>Last Donated:</strong> {{ donor.last_donation_date|default:"Not specified" }}
+                    </div>
                 </div>
 
-                {% if donor.about_me %}
-                    <div class="mt-3 bg-light p-3 rounded-3">
-                        <small class="fw-bold d-block text-muted">Note:</small>
-                        <small>{{ donor.about_me }}</small>
-                    </div>
-                {% endif %}
+                <div class="mt-4 p-3 bg-light rounded-3">
+                    <p class="mb-0 text-secondary small">
+                        <strong>Note:</strong> {{ donor.note|default:"I am happy to help save lives. Feel free to contact me." }}
+                    </p>
+                </div>
             </div>
 
             <!-- Donation History -->
-            <div class="card p-4 shadow-sm border-0 rounded-4">
+            <div class="card p-4 border-0 shadow-sm rounded-4">
                 <h5 class="fw-bold mb-3">Donation History</h5>
-                {% if donation_history %}
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle small">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Blood Group</th>
-                                    <th>Location</th>
-                                    <th>Organization</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for history in donation_history %}
-                                    <tr>
-                                        <td>{{ history.date }}</td>
-                                        <td><span class="badge bg-danger">{{ history.blood_group }}</span></td>
-                                        <td>{{ history.location }}</td>
-                                        <td>{{ history.organization|default:"-" }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <p class="text-muted small mb-0">No past donation history recorded yet.</p>
-                {% endif %}
+                <p class="text-muted small mb-0">No past donation history recorded yet.</p>
             </div>
         </div>
 
-        <!-- Right: Blood Request Form & Direct Message (PDF Page 27 Match) -->
+        <!-- Right Side: Direct Contact Only -->
         <div class="col-lg-5">
-            <!-- Request Blood Form -->
-            <div class="card p-4 shadow-sm border-0 rounded-4 mb-4 bg-white">
-                <h5 class="fw-bold text-danger mb-1">Request Blood</h5>
-                <p class="text-muted small mb-3">Send a blood request to this donor. They will be notified.</p>
-
-                <form method="POST" action="">
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Required Blood Group</label>
-                        <input type="text" name="blood_group" class="form-control" value="{{ donor.blood_group }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Units Needed</label>
-                        <select name="units_needed" class="form-select">
-                            <option value="1">1 Unit</option>
-                            <option value="2">2 Units</option>
-                            <option value="3">3 Units</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Hospital / Location</label>
-                        <input type="text" name="hospital_location" class="form-control" placeholder="e.g. Square Hospital, Dhaka" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Needed By Date</label>
-                        <input type="date" name="required_date" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Message (Optional)</label>
-                        <textarea name="message" class="form-control" rows="3" placeholder="Explain patient condition..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-danger w-100 fw-bold py-2">Send Request</button>
-                </form>
-            </div>
-
-            <!-- Direct Contact Box -->
-            <div class="card p-4 shadow-sm border-0 rounded-4 bg-light">
-                <h6 class="fw-bold mb-2">Direct Contact</h6>
+            <div class="card p-4 border-0 shadow-sm rounded-4 bg-light">
+                <h5 class="fw-bold mb-1">Direct Contact</h5>
                 <p class="text-muted small mb-3">Contact donor directly for emergency blood urgent needs.</p>
-                <a href="tel:{{ donor.phone_number }}" class="btn btn-success w-100 fw-bold mb-2">📞 Call {{ donor.phone_number }}</a>
-                {% if donor.whatsapp_number %}
-                    <a href="https://wa.me/{{ donor.whatsapp_number }}" target="_blank" class="btn btn-outline-success w-100 fw-bold">💬 Chat on WhatsApp</a>
-                {% endif %}
+
+                <div class="d-grid gap-2">
+                    <a href="tel:{{ donor.phone_number }}" class="btn btn-success fw-bold py-2">
+                        📞 Call {{ donor.phone_number }}
+                    </a>
+                    <a href="https://wa.me/{{ donor.whatsapp_number|default:donor.phone_number|slugify }}" target="_blank" class="btn btn-outline-success fw-bold py-2">
+                        💬 Chat on WhatsApp
+                    </a>
+                </div>
             </div>
         </div>
     </div>
