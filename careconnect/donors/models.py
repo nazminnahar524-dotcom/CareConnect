@@ -36,6 +36,7 @@ class Donor(models.Model):
     # Location coordinates for Map integration (Pharmacies app pattern)
     latitude = models.FloatField(default=23.7461)  # Default: Dhanmondi, Dhaka
     longitude = models.FloatField(default=90.3742)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.full_name} ({self.blood_group})"

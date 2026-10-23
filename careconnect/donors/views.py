@@ -24,7 +24,7 @@ def nearby_donors(request):
     try:
         user_lat = float(request.GET.get('lat', 23.7461))
         user_lng = float(request.GET.get('lng', 90.3742))
-        radius = float(request.GET.get('radius', 10.0))
+        radius = float(request.GET.get('radius', 20050.0))
     except ValueError:
         user_lat, user_lng, radius = 23.7461, 90.3742, 10.0
 
@@ -71,7 +71,10 @@ def register_donor(request):
         form = DonorRegistrationForm(request.POST)
         if form.is_valid():
             donor = form.save(commit=False)
-            if request.user.is_authenticated:
+            if (
+                request.user.is_authenticated
+                and not Donor.objects.filter(user=request.user).exists()
+            ):
                 donor.user = request.user
             donor.save()
             messages.success(request, 'Thank you for registering as a blood donor!')
@@ -83,7 +86,7 @@ def register_donor(request):
 
 
 def donor_detail(request, donor_id):
-    donor = get_object_or_404(Donor, id=donor_id)
+    donor = get_object_or_404(Donor, id=donor_id, is_available=True)
     donation_history = donor.donation_history.all()
     context = {
         'donor': donor,

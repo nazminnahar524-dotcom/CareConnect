@@ -95,7 +95,7 @@
         <!-- Donors List -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0">{{ donors.count }} Donors Found</h5>
+                <h5 class="fw-bold mb-0">{{ total_donors }} Donors Found</h5>
                 <span class="text-muted small">Sort by: <strong>Nearest</strong></span>
             </div>
 
@@ -112,7 +112,7 @@
                         </div>
 
                         <p class="text-muted small mb-2">
-                            📍 {{ donor.area }} • <strong>{{ donor.distance_km }} km away</strong>
+                            📍 {{ donor.area }} • <strong>{{ donor.distance }} km away</strong>
                         </p>
 
                         <div class="d-flex align-items-center gap-2 mb-3">
