@@ -11,21 +11,34 @@
             box-sizing: border-box;
         }
 
+        html {
+            min-height: 100%;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+
         body {
+            min-height: 100vh;
+            height: auto !important;
             margin: 0;
             padding: 24px clamp(16px, 3.2vw, 52px);
             font-family: Arial, sans-serif;
             background: #f4f9f7;
             color: #173f35;
+            overflow-y: auto !important;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1600px;
             width: 100%;
+            max-width: 1600px;
+            min-height: 100vh;
+            height: auto !important;
             margin: 0 auto;
+            overflow: visible !important;
         }
 
-        /* Page heading */
+        /* PAGE HEADER */
 
         .page-top {
             display: flex;
@@ -41,6 +54,7 @@
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         h1 {
@@ -57,7 +71,7 @@
             line-height: 1.6;
         }
 
-        /* Statistics */
+        /* STATISTICS */
 
         .stats-grid {
             display: grid;
@@ -109,29 +123,37 @@
             font-size: 22px;
         }
 
-        /* Three-column layout */
+        /* MAIN THREE-COLUMN LAYOUT */
 
         .content-grid {
             display: grid;
-            grid-template-columns: minmax(230px, 0.95fr)
-                                   minmax(0, 1.85fr)
-                                   minmax(245px, 0.95fr);
+            grid-template-columns:
+                minmax(220px, 0.95fr)
+                minmax(0, 1.85fr)
+                minmax(220px, 0.95fr);
             gap: 20px;
             align-items: start;
+            width: 100%;
         }
-
-        /* Common cards */
 
         .filter-card,
         .info-card,
-        .before-card {
+        .before-card,
+        .medicine-card {
             background: #fff;
             border: 1px solid #d8e9e1;
             border-radius: 19px;
-            box-shadow: 0 8px 24px rgba(27, 70, 56, 0.045);
+            box-shadow: 0 8px 24px rgba(27, 70, 56, 0.04);
         }
 
-        /* Filter sidebar */
+        .filter-card,
+        .list-column,
+        .right-sidebar {
+            min-width: 0;
+            width: 100%;
+        }
+
+        /* FILTER SIDEBAR */
 
         .filter-card {
             padding: 24px;
@@ -141,6 +163,7 @@
             margin: 0 0 26px;
             color: #123f33;
             font-size: 19px;
+            font-weight: 800;
         }
 
         .filter-group {
@@ -219,18 +242,14 @@
             line-height: 1.7;
         }
 
-        /* Medicine list heading */
-
-        .list-column {
-            min-width: 0;
-        }
+        /* MEDICINE LIST HEADING */
 
         .list-heading {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
+            margin: 0 0 16px;
             padding: 2px 0;
         }
 
@@ -238,6 +257,7 @@
             margin: 0;
             color: #073f32;
             font-size: 20px;
+            font-weight: 800;
         }
 
         .result-count {
@@ -246,9 +266,20 @@
             white-space: nowrap;
         }
 
-        /* Independently scrollable list */
+        .results-summary {
+            margin: 0 0 12px;
+            color: #72867e;
+            font-size: 12px;
+        }
+
+        .results-summary strong {
+            color: #07845e;
+        }
+
+        /* MEDICINE LIST SCROLLBAR */
 
         .list-section {
+            width: 100%;
             height: 495px;
             min-height: 300px;
             overflow-y: auto;
@@ -277,24 +308,11 @@
             background: #16845f;
         }
 
-        .results-summary {
-            margin: 0 0 12px;
-            color: #72867e;
-            font-size: 12px;
-        }
-
-        .results-summary strong {
-            color: #07845e;
-        }
-
-        /* Individual medicine cards */
+        /* MEDICINE CARDS */
 
         .medicine-card {
             margin-bottom: 16px;
             padding: 21px;
-            background: #fff;
-            border: 1px solid #d8e9e1;
-            border-radius: 19px;
             box-shadow: 0 5px 17px rgba(27, 70, 56, 0.035);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -338,6 +356,7 @@
             margin: 2px 0 9px;
             color: #083f32;
             font-size: 19px;
+            font-weight: 800;
             line-height: 1.4;
             overflow-wrap: anywhere;
         }
@@ -442,13 +461,12 @@
             line-height: 1.7;
         }
 
-        /* Right information column */
+        /* RIGHT INFORMATION SIDEBAR */
 
         .right-sidebar {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            min-width: 0;
         }
 
         .info-card {
@@ -518,12 +536,20 @@
             line-height: 1.9;
         }
 
-        /* Tablet */
+        /* FULL PAGE SCROLLING */
+
+        body,
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* TABLET */
 
         @media (max-width: 1100px) {
             .content-grid {
-                grid-template-columns: minmax(210px, 0.8fr)
-                                       minmax(0, 1.6fr);
+                grid-template-columns:
+                    minmax(200px, 0.8fr)
+                    minmax(0, 1.6fr);
             }
 
             .right-sidebar {
@@ -537,7 +563,7 @@
             }
         }
 
-        /* Mobile */
+        /* MOBILE */
 
         @media (max-width: 650px) {
             body {
@@ -558,7 +584,8 @@
 
             .list-section {
                 height: 480px;
-                min-height: 280px;
+                max-height: 65vh;
+                min-height: 260px;
             }
 
             .medicine-card {
@@ -616,320 +643,17 @@
                 font-size: 9px;
             }
         }
-
-/* Enable scrolling for the entire Medicine page */
-
-html {
-    height: auto !important;
-    min-height: 100%;
-    overflow-y: auto !important;
-    overflow-x: hidden;
-}
-
-body {
-    height: auto !important;
-    min-height: 100vh;
-    overflow-y: auto !important;
-    overflow-x: hidden;
-}
-
-.container {
-    height: auto !important;
-    min-height: 100vh;
-    overflow: visible !important;
-}
-
-.content-grid {
-    overflow: visible !important;
-}
-
-/* Keep the medicine list independently scrollable too */
-
-.list-section {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-/* ===== Match the Doctors page visual style ===== */
-
-html {
-    min-height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-body {
-    min-height: 100vh;
-    margin: 0;
-    padding: 24px clamp(16px, 3.2vw, 52px);
-    background: #f4f9f7;
-    color: #123f33;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-}
-
-/* Heading */
-
-.page-top {
-    margin-bottom: 24px;
-}
-
-.eyebrow {
-    color: #648078;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-h1,
-.list-heading h2 {
-    color: #073f32;
-    font-weight: 800;
-}
-
-/* Four statistic cards */
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.stat-card {
-    min-height: 106px;
-    padding: 18px;
-    background: #fff;
-    border: 1px solid #d8e9e1;
-    border-radius: 18px;
-    box-shadow: 0 8px 22px rgba(27, 70, 56, 0.04);
-}
-
-/* Three-column page layout */
-
-.content-grid {
-    display: grid;
-    grid-template-columns:
-        minmax(220px, 0.95fr)
-        minmax(0, 1.85fr)
-        minmax(220px, 0.95fr);
-    gap: 20px;
-    align-items: start;
-    width: 100%;
-}
-
-.filter-card,
-.info-card,
-.before-card,
-.medicine-card {
-    background: #fff;
-    border: 1px solid #d8e9e1;
-    border-radius: 19px;
-    box-shadow: 0 8px 24px rgba(27, 70, 56, 0.04);
-}
-
-.filter-card {
-    padding: 24px;
-}
-
-.filter-card h2 {
-    color: #123f33;
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.filter-input,
-.filter-select {
-    width: 100%;
-    min-height: 45px;
-    border: 1px solid #d7e6df;
-    border-radius: 11px;
-    background: #fff;
-}
-
-.filter-submit {
-    width: 100%;
-    min-height: 44px;
-    border-radius: 10px;
-    background: #16845f;
-    font-weight: 700;
-}
-
-.filter-submit:hover {
-    background: #106b4c;
-}
-
-/* Medicine list: same compact height as Doctors page */
-
-.list-column {
-    min-width: 0;
-}
-
-.list-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 16px;
-}
-
-.list-heading h2 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.list-section {
-    width: 100%;
-    height: 495px;
-    min-height: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 0 7px 12px 0;
-    scrollbar-width: thin;
-    scrollbar-color: #a8bdb4 #eaf1ed;
-    overscroll-behavior: contain;
-}
-
-.list-section::-webkit-scrollbar {
-    width: 7px;
-}
-
-.list-section::-webkit-scrollbar-track {
-    background: #eaf1ed;
-    border-radius: 10px;
-}
-
-.list-section::-webkit-scrollbar-thumb {
-    background: #a8bdb4;
-    border-radius: 10px;
-}
-
-.list-section::-webkit-scrollbar-thumb:hover {
-    background: #16845f;
-}
-
-/* Medicine cards */
-
-.medicine-card {
-    margin-bottom: 16px;
-    padding: 21px;
-    box-shadow: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.medicine-card:hover {
-    border-color: #a8d7c3;
-    box-shadow: 0 8px 22px rgba(27, 70, 56, 0.07);
-}
-
-.medicine-name {
-    color: #083f32;
-    font-size: 19px;
-    font-weight: 800;
-}
-
-.category-badge,
-.medicine-icon,
-.stat-icon,
-.info-icon {
-    background: #e7f5ef;
-    color: #07845e;
-}
-
-.medicine-bottom {
-    border-top: 1px solid #e0eae5;
-}
-
-.detail-link {
-    padding: 11px 15px;
-    border: 1px solid #16845f;
-    border-radius: 10px;
-    background: #fff;
-    color: #07845e;
-    font-weight: 700;
-}
-
-.detail-link:hover {
-    background: #16845f;
-    color: #fff;
-}
-
-/* Right-side information cards */
-
-.right-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-width: 0;
-}
-
-.info-card,
-.before-card {
-    padding: 20px;
-}
-
-/* Tablet layout */
-
-@media (max-width: 1100px) {
-    .content-grid {
-        grid-template-columns:
-            minmax(200px, 0.8fr)
-            minmax(0, 1.6fr);
-    }
-
-    .right-sidebar {
-        grid-column: 1 / -1;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-/* Mobile layout */
-
-@media (max-width: 650px) {
-    body {
-        padding: 20px 14px;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-    }
-
-    .content-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .right-sidebar {
-        grid-column: auto;
-        display: flex;
-    }
-
-    .list-section {
-        height: 480px;
-    }
-
-    .medicine-card {
-        padding: 16px;
-    }
-}
-
     </style>
 </head>
 
 <body>
 <div class="container">
 
-    <!-- Page heading -->
+    <!-- PAGE HEADER -->
 
     <header class="page-top">
         <div>
-            <p class="eyebrow">CARE DIRECTORY</p>
+            <p class="eyebrow">CARECONNECT</p>
             <h1>Find Your Medicines</h1>
             <p class="page-description">
                 Explore medicine information and available categories.
@@ -937,7 +661,7 @@ h1,
         </div>
     </header>
 
-    <!-- Statistics cards -->
+    <!-- STATISTICS -->
 
     <section class="stats-grid" aria-label="Medicine statistics">
 
@@ -975,11 +699,11 @@ h1,
 
     </section>
 
-    <!-- Main three-column layout -->
+    <!-- MAIN CONTENT -->
 
     <main class="content-grid">
 
-        <!-- LEFT: Filters -->
+        <!-- LEFT: MEDICINE FILTERS -->
 
         <aside class="filter-card">
             <h2>Filter Medicines</h2>
@@ -987,7 +711,10 @@ h1,
             <form method="get">
 
                 <div class="filter-group">
-                    <label for="medicine-search">Search medicine</label>
+                    <label for="medicine-search">
+                        Search medicine
+                    </label>
+
                     <input
                         id="medicine-search"
                         type="search"
@@ -1066,12 +793,13 @@ h1,
             </div>
         </aside>
 
-        <!-- CENTER: Scrollable medicine list -->
+        <!-- CENTER: AVAILABLE MEDICINES -->
 
         <section class="list-column">
 
             <div class="list-heading">
                 <h2>Available Medicines</h2>
+
                 <span class="result-count">
                     {{ medicines_count }} results
                 </span>
@@ -1097,8 +825,10 @@ h1,
 
                                 <div class="medicine-main">
 
-                                    <div class="medicine-icon"
-                                         aria-hidden="true">
+                                    <div
+                                        class="medicine-icon"
+                                        aria-hidden="true"
+                                    >
                                         💊
                                     </div>
 
@@ -1184,7 +914,7 @@ h1,
             </div>
         </section>
 
-        <!-- RIGHT: Medicine information -->
+        <!-- RIGHT: INFORMATION SIDEBAR -->
 
         <aside class="right-sidebar">
 
@@ -1194,15 +924,12 @@ h1,
                 <h2>Medicine Information</h2>
 
                 <p>
-                    Open a medicine's details page to review the available
-                    information about that medicine.
+                    Select a medicine from the list to open its details page
+                    and review its available information, brand and generic name.
                 </p>
 
-                <a
-                    class="info-link"
-                    href="{% url 'medicines:medicine_list' %}"
-                >
-                    Browse Medicines
+                <a class="info-link" href="#medicine-search">
+                    Search Medicines
                 </a>
             </section>
 
