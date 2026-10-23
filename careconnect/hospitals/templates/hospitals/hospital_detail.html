@@ -110,7 +110,7 @@
         transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Cute Pop & Slide Button Animation */
+    /* Cute Pop Button Animation */
     @keyframes cutePop {
         0% { transform: scale(1); }
         40% { transform: scale(0.92) translateX(4px); }
@@ -367,9 +367,8 @@
             </div>
         </div>
 
-        <!-- Sidebar Column: Interactive Occupancy Console & Features -->
+        <!-- Sidebar Column: DYNAMIC LIVE CONSOLE FROM DJANGO ADMIN -->
         <div class="col-lg-4">
-            <!-- UNIQUE FEATURE: Interactive Live Occupancy & Quick Bed Reservation Widget -->
             <div class="occupancy-console p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-bold small shadow-sm">
@@ -379,31 +378,46 @@
                 </div>
 
                 <h6 class="fw-bold mb-1"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Instant Bed Reservation</h6>
-                <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Simulate real-time emergency bed allocation before dispatching.</p>
+                <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Select an available ward unit below to reserve space.</p>
 
-                <!-- General Ward Meter -->
+                <!-- DYNAMIC AVAILABILITIES FROM DJANGO ADMIN -->
                 <div class="mb-3">
+                    <label class="form-label small fw-bold text-white-50 mb-2">Select Target Unit:</label>
+                    <select id="unitSelect" class="form-select form-select-sm bg-white text-dark fw-bold rounded-pill border-0 shadow-sm px-3 py-2">
+                        <!-- Always Available Default Ward -->
+                        <option value="ward" data-count="15">General Ward Bed (15 Open)</option>
+
+                        <!-- Conditionally rendered based on Django Admin Flags -->
+                        {% if hospital.has_icu %}
+                        <option value="icu" data-count="10">ICU Unit (10 Open)</option>
+                        {% endif %}
+
+                        {% if hospital.has_ccu %}
+                        <option value="ccu" data-count="7">CCU Unit (7 Open)</option>
+                        {% endif %}
+
+                        {% if hospital.has_nicu %}
+                        <option value="nicu" data-count="5">NICU Unit (5 Open)</option>
+                        {% endif %}
+
+                        {% if hospital.has_emergency %}
+                        <option value="er" data-count="8">Emergency ER Bed (8 Open)</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <!-- Live Unit Capacity Meter Display -->
+                <div class="p-3 rounded-3 bg-black bg-opacity-20 mb-3 border border-white border-opacity-10">
                     <div class="d-flex justify-content-between small mb-1">
-                        <span>General Ward Free</span>
-                        <strong class="text-success-emphasis" id="wardFreeText">68% Available</strong>
+                        <span id="selectedUnitLabel" class="fw-semibold">General Ward Bed</span>
+                        <strong class="text-warning" id="selectedUnitCount">15 Open</strong>
                     </div>
                     <div class="custom-progress">
-                        <div class="custom-progress-bar" id="wardProgressBar" style="width: 68%;"></div>
+                        <div class="custom-progress-bar" id="selectedProgressBar" style="width: 75%;"></div>
                     </div>
                 </div>
 
-                <!-- ICU Unit Meter -->
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span>ICU Units Open</span>
-                        <strong class="text-warning" id="icuUnitsText">4 Units</strong>
-                    </div>
-                    <div class="custom-progress">
-                        <div class="custom-progress-bar bg-warning" id="icuProgressBar" style="width: 40%;"></div>
-                    </div>
-                </div>
-
-                <!-- Cute Pop Button & Cancel Button -->
+                <!-- Reservation and Cancel Action Bar -->
                 <div class="d-flex flex-column gap-2 mt-2">
                     <button type="button" class="btn-reserve-live w-100" id="simReserveBtn">
                         <i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed
@@ -474,7 +488,7 @@
     </div>
 </div>
 
-<!-- JavaScript for Interactive Map & Reservation/Cancel Simulator -->
+<!-- JavaScript for Interactive Map & Dynamic Unit Reservation/Cancel Logic -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Initialize Map
@@ -491,33 +505,47 @@
         var marker = L.marker([lat, lng]).addTo(map);
         marker.bindPopup("<b>{{ hospital.name|escapejs }}</b><br>{{ hospital.location|escapejs }}").openPopup();
 
-        // Reservation & Cancel Simulator JS
+        // Dynamic Unit Selection & Reservation JS
+        const unitSelect = document.getElementById('unitSelect');
+        const label = document.getElementById('selectedUnitLabel');
+        const countDisplay = document.getElementById('selectedUnitCount');
+        const progressBar = document.getElementById('selectedProgressBar');
         const reserveBtn = document.getElementById('simReserveBtn');
         const cancelBtn = document.getElementById('simCancelBtn');
-        const wardText = document.getElementById('wardFreeText');
-        const wardBar = document.getElementById('wardProgressBar');
-        const icuText = document.getElementById('icuUnitsText');
-        const icuBar = document.getElementById('icuProgressBar');
 
-        let reserved = false;
+        let originalCount = 15;
+        let activeReserved = false;
+
+        function updateDisplay() {
+            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+            originalCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
+
+            label.innerText = selectedOpt.text.split('(')[0].trim();
+
+            if (activeReserved) {
+                countDisplay.innerText = (originalCount - 1) + " Open";
+                progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
+            } else {
+                countDisplay.innerText = originalCount + " Open";
+                progressBar.style.width = Math.max(10, originalCount * 6) + "%";
+            }
+        }
+
+        unitSelect.addEventListener('change', updateDisplay);
+        updateDisplay(); // Initialize
 
         reserveBtn.addEventListener('click', function() {
-            if (!reserved) {
-                reserved = true;
+            if (!activeReserved) {
+                activeReserved = true;
 
-                // Pop animation & success state
                 reserveBtn.classList.add('popped');
                 reserveBtn.innerHTML = '<i class="bi bi-stars"></i> Bed Secured ✔️';
                 reserveBtn.style.background = "#4ade80";
                 reserveBtn.style.color = "#0b3b2d";
 
-                // Show clean updated amounts (without minus sign)
-                wardText.innerText = "67% Available";
-                wardBar.style.width = "67%";
-                icuText.innerText = "3 Units";
-                icuBar.style.width = "30%";
+                countDisplay.innerText = (originalCount - 1) + " Open";
+                progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
 
-                // Display cancel button smoothly
                 cancelBtn.style.display = "inline-flex";
 
                 setTimeout(() => {
@@ -527,21 +555,16 @@
         });
 
         cancelBtn.addEventListener('click', function() {
-            if (reserved) {
-                reserved = false;
+            if (activeReserved) {
+                activeReserved = false;
 
-                // Reset reserve button state
                 reserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
                 reserveBtn.style.background = "#ffffff";
                 reserveBtn.style.color = "#138a63";
 
-                // Reset metrics to original values
-                wardText.innerText = "68% Available";
-                wardBar.style.width = "68%";
-                icuText.innerText = "4 Units";
-                icuBar.style.width = "40%";
+                countDisplay.innerText = originalCount + " Open";
+                progressBar.style.width = Math.max(10, originalCount * 6) + "%";
 
-                // Hide cancel button
                 cancelBtn.style.display = "none";
             }
         });
