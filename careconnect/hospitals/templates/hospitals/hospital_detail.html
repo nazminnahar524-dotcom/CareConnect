@@ -269,11 +269,10 @@
 
         var map = L.map('detailMap').setView([lat, lng], 15);
 
-        // CartoDB Voyager Tile Layer (Reliable, fast, and no 403 blocks)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        // Clean, free OpenStreetMap tiles with custom subdomains & standard referrer policy
+        L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            subdomains: 'abcd',
-            attribution: '© OpenStreetMap contributors, © CARTO'
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         var marker = L.marker([lat, lng]).addTo(map);
