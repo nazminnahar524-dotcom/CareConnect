@@ -65,52 +65,64 @@
         border: 1px solid #e2ebe7;
     }
 
-    /* High-End Live Occupancy & Quick Action Console */
+    /* Ultra-Stylish Eye-Catching Live ER Console */
     .occupancy-console {
-        background: linear-gradient(135deg, #0f4c3a 0%, #138a63 70%, #059669 100%);
-        color: #fff;
-        border-radius: 24px;
+        background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.25) 0%, transparent 50%),
+                    linear-gradient(135deg, #022c22 0%, #064e3b 50%, #047857 100%);
+        color: #ffffff;
+        border-radius: 28px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 16px 36px -8px rgba(19, 138, 99, 0.35);
-        transition: transform 0.35s ease, box-shadow 0.35s ease;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 40px -10px rgba(4, 120, 87, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
     }
 
     .occupancy-console:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 22px 45px -8px rgba(19, 138, 99, 0.45);
+        transform: translateY(-5px);
+        box-shadow: 0 28px 50px -10px rgba(4, 120, 87, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.3);
     }
 
     .pulse-dot-live {
-        width: 9px;
-        height: 9px;
-        background-color: #4ade80;
+        width: 10px;
+        height: 10px;
+        background-color: #34d399;
         border-radius: 50%;
         display: inline-block;
-        box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
+        box-shadow: 0 0 10px #34d399;
         animation: pulseRing 2s infinite;
     }
 
     @keyframes pulseRing {
-        0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
-        70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+        70% { box-shadow: 0 0 0 12px rgba(52, 211, 153, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+
+    /* Vibrant Glass Display Box */
+    .glass-meter-box {
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(12px);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .custom-progress {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.12);
         border-radius: 10px;
-        height: 8px;
+        height: 9px;
         overflow: hidden;
     }
 
     .custom-progress-bar {
-        background: #4ade80;
+        background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
         border-radius: 10px;
+        box-shadow: 0 0 12px rgba(52, 211, 153, 0.6);
         transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Cute Pop Button Animation */
+    /* Cute Pop Button Animation & Vivid Styling */
     @keyframes cutePop {
         0% { transform: scale(1); }
         40% { transform: scale(0.92) translateX(4px); }
@@ -120,52 +132,56 @@
 
     .btn-reserve-live {
         background: #ffffff;
-        color: #138a63;
-        font-weight: 700;
+        color: #047857;
+        font-weight: 800;
         border-radius: 50rem;
         border: none;
-        padding: 12px 20px;
+        padding: 13px 22px;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        letter-spacing: -0.2px;
     }
 
     .btn-reserve-live:hover {
-        background: #eaf8f2;
-        color: #0b3b2d;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        background: #ecfdf5;
+        color: #064e3b;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.28);
     }
 
     .btn-reserve-live.popped {
         animation: cutePop 0.5s ease;
-        background: #4ade80 !important;
-        color: #0b3b2d !important;
+        background: #34d399 !important;
+        color: #022c22 !important;
+        box-shadow: 0 0 20px rgba(52, 211, 153, 0.8) !important;
     }
 
     /* Cancel Button Styling */
     .btn-cancel-live {
-        background: rgba(255, 255, 255, 0.15);
-        color: #ffffff;
-        font-weight: 600;
+        background: rgba(239, 68, 68, 0.18);
+        color: #fca5a5;
+        font-weight: 700;
         border-radius: 50rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 8px 16px;
-        font-size: 0.85rem;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        padding: 9px 18px;
+        font-size: 0.88rem;
         transition: all 0.25s ease;
         display: none;
         align-items: center;
         justify-content: center;
         gap: 6px;
+        backdrop-filter: blur(8px);
     }
 
     .btn-cancel-live:hover {
         background: rgba(239, 68, 68, 0.9);
         border-color: #ef4444;
         color: #ffffff;
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
     }
 
     /* Custom Navigation Tabs */
@@ -367,17 +383,17 @@
             </div>
         </div>
 
-        <!-- Sidebar Column: DYNAMIC LIVE CONSOLE FROM DJANGO ADMIN -->
+        <!-- Sidebar Column: STYLISH VIBRANT LIVE CONSOLE -->
         <div class="col-lg-4">
             <div class="occupancy-console p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-bold small shadow-sm">
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-1.5 fw-bold small shadow-sm d-flex align-items-center gap-1.5">
                         <span class="pulse-dot-live me-1"></span> Live ER Console
                     </span>
-                    <span class="small text-white-50" style="font-size: 11px;">Active Sync</span>
+                    <span class="small text-emerald-200 fw-semibold" style="font-size: 11px; color: #a7f3d0; letter-spacing: 0.5px;">ACTIVE SYNC</span>
                 </div>
 
-                <h6 class="fw-bold mb-1"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Instant Bed Reservation</h6>
+                <h5 class="fw-bold mb-1 text-white"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Instant Bed Reservation</h5>
                 <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Select an available ward unit below to reserve space.</p>
 
                 <!-- DYNAMIC AVAILABILITIES FROM DJANGO ADMIN -->
@@ -406,11 +422,11 @@
                     </select>
                 </div>
 
-                <!-- Live Unit Capacity Meter Display -->
-                <div class="p-3 rounded-3 bg-black bg-opacity-20 mb-3 border border-white border-opacity-10">
-                    <div class="d-flex justify-content-between small mb-1">
-                        <span id="selectedUnitLabel" class="fw-semibold">General Ward Bed</span>
-                        <strong class="text-warning" id="selectedUnitCount">15 Open</strong>
+                <!-- Live Unit Capacity Glass Box -->
+                <div class="p-3 glass-meter-box mb-3">
+                    <div class="d-flex justify-content-between small mb-1.5">
+                        <span id="selectedUnitLabel" class="fw-semibold text-white">General Ward Bed</span>
+                        <strong class="text-warning fw-bold" id="selectedUnitCount" style="color: #fde047 !important;">15 Open</strong>
                     </div>
                     <div class="custom-progress">
                         <div class="custom-progress-bar" id="selectedProgressBar" style="width: 75%;"></div>
@@ -539,9 +555,7 @@
                 activeReserved = true;
 
                 reserveBtn.classList.add('popped');
-                reserveBtn.innerHTML = '<i class="bi bi-stars"></i> Bed Secured ✔️';
-                reserveBtn.style.background = "#4ade80";
-                reserveBtn.style.color = "#0b3b2d";
+                reserveBtn.innerHTML = '<i class="bi bi-stars"></i> Yay! Bed Secured 🎉';
 
                 countDisplay.innerText = (originalCount - 1) + " Open";
                 progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
@@ -559,8 +573,6 @@
                 activeReserved = false;
 
                 reserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
-                reserveBtn.style.background = "#ffffff";
-                reserveBtn.style.color = "#138a63";
 
                 countDisplay.innerText = originalCount + " Open";
                 progressBar.style.width = Math.max(10, originalCount * 6) + "%";
