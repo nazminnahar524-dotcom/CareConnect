@@ -20,113 +20,208 @@
         100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
     }
 
-    /* Metric Cards Physics */
-    .metric-card {
-        border-radius: 20px;
-        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        background: #ffffff;
+    @keyframes radarSweep {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 
-    .metric-card:hover {
+    .animate-fade-in {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Vibrant 3D Metric Cards */
+    .metric-card-modern {
+        border-radius: 20px;
+        background: #ffffff;
+        border: 1px solid #eef2f0;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-card-modern:hover {
         transform: translateY(-6px) scale(1.02);
-        box-shadow: 0 16px 32px rgba(19, 138, 99, 0.12) !important;
+        box-shadow: 0 16px 32px -8px rgba(19, 138, 99, 0.15) !important;
+    }
+
+    .metric-card-modern .icon-box {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .metric-card-modern:hover .icon-box {
+        transform: scale(1.12) rotate(6deg);
+    }
+
+    /* Redesigned Colorful Filter Sidebar */
+    .filter-panel-styled {
+        background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f7fee7 100%);
+        border: 1px solid #bbf7d0;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
     }
 
     /* Hospital Cards Elevate Physics */
-    .hospital-card {
+    .hospital-card-modern {
         border-radius: 22px;
         transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        border: 1px solid #e2ebe7;
+        border: 1px solid #d1fae5;
+        background: #ffffff;
         position: relative;
         overflow: hidden;
-        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        box-shadow: 0 4px 18px rgba(16, 185, 129, 0.04);
     }
 
-    .hospital-card::before {
+    .hospital-card-modern::before {
         content: "";
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 4px;
-        background: linear-gradient(90deg, #138a63 0%, #2563eb 100%);
+        background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
 
-    .hospital-card:hover {
+    .hospital-card-modern:hover {
         transform: translateY(-8px) scale(1.015);
-        border-color: #138a63 !important;
-        box-shadow: 0 22px 42px -10px rgba(19, 138, 99, 0.18) !important;
+        border-color: #10b981 !important;
+        box-shadow: 0 22px 42px -10px rgba(16, 185, 129, 0.18) !important;
     }
 
-    .hospital-card:hover::before {
+    .hospital-card-modern:hover::before {
         opacity: 1;
     }
 
     /* Interactive Live Capacity Widget */
     .live-status-widget {
-        background: linear-gradient(135deg, #124d3a 0%, #138a63 100%);
+        background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.25) 0%, transparent 50%),
+                    linear-gradient(135deg, #022c22 0%, #064e3b 50%, #047857 100%);
         color: #ffffff;
-        border-radius: 22px;
+        border-radius: 24px;
         padding: 20px;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 14px 28px -6px rgba(19, 138, 99, 0.3);
-    }
-
-    .live-status-widget::after {
-        content: "";
-        position: absolute;
-        top: -30%;
-        right: -20%;
-        width: 200px;
-        height: 200px;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
-        border-radius: 50%;
-        pointer-events: none;
+        box-shadow: 0 20px 40px -10px rgba(4, 120, 87, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .quick-action-pill {
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
         border-radius: 14px;
-        border: 1px solid #e2ebe7;
+        border: 1px solid rgba(255, 255, 255, 0.15);
         padding: 12px;
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        color: #1b2924;
+        color: #ffffff;
     }
 
     .quick-action-pill:hover {
-        background: #eaf8f2;
-        border-color: #138a63;
+        background: #ffffff;
+        border-color: #34d399;
         transform: translateX(6px);
-        color: #12664d;
+        color: #064e3b;
+    }
+
+    .quick-action-pill:hover .text-muted {
+        color: #064e3b !important;
     }
 
     /* Pulsing Status Dot */
     .pulse-live-dot {
         width: 9px;
         height: 9px;
-        background-color: #4ade80;
+        background-color: #34d399;
         border-radius: 50%;
         display: inline-block;
+        box-shadow: 0 0 10px #34d399;
         animation: pulseGlow 2s infinite;
     }
 
     /* Animated Capacity Bar */
     .capacity-bar-fill {
-        height: 7px;
+        height: 8px;
         border-radius: 10px;
-        background: linear-gradient(90deg, #138a63, #34d399);
+        background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+        box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
         transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Colorful Facility Badge Styles */
+    .facility-badge-item {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 50rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: transform 0.25s ease;
+    }
+
+    .facility-badge-item:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Cute Ambulance Radar Dispatch Button */
+    .btn-dispatch-radar {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: #ffffff;
+        font-weight: 800;
+        border-radius: 50rem;
+        border: none;
+        padding: 12px 20px;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-dispatch-radar:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 26px rgba(220, 38, 38, 0.5);
+        background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+        color: #ffffff;
+    }
+
+    /* Radar Scanning Modal Graphic */
+    .radar-circle-container {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #a7f3d0;
+        position: relative;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .radar-sweep-hand {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 50%;
+        background: linear-gradient(45deg, rgba(16, 185, 129, 0.6), transparent);
+        transform-origin: 100% 100%;
+        animation: radarSweep 2.5s linear infinite;
+        border-radius: 100% 0 0 0;
     }
 </style>
 
-<div class="container py-4">
+<div class="container py-4 animate-fade-in">
     <!-- Top Header Banner -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
@@ -145,56 +240,56 @@
         </div>
     </div>
 
-    <!-- 4 Metric Cards -->
+    <!-- 4 Colorful Metric Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm p-3 border-start border-success border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-success border-4 metric-card-modern border-success-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-success-subtle text-success p-3 rounded-4 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-success-subtle text-success fs-3 me-3">
                         <i class="bi bi-buildings-fill"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold" style="font-size: 0.68rem; letter-spacing: 0.5px;">Partner Centers</h6>
-                        <h3 class="fw-bold mb-0 text-success counter-val">{{ total_hospitals|default:"1" }}</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Partner Centers</h6>
+                        <h3 class="fw-bold mb-0 text-success counter-val" style="font-size: 1.6rem;">{{ total_hospitals|default:"1" }}</h3>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm p-3 border-start border-primary border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-primary border-4 metric-card-modern border-primary-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-primary-subtle text-primary p-3 rounded-4 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-primary-subtle text-primary fs-3 me-3">
                         <i class="bi bi-door-open-fill"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold" style="font-size: 0.68rem; letter-spacing: 0.5px;">Network Beds</h6>
-                        <h3 class="fw-bold mb-0 text-primary counter-val">{{ total_beds|default:"300" }}</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Network Beds</h6>
+                        <h3 class="fw-bold mb-0 text-primary counter-val" style="font-size: 1.6rem;">{{ total_beds|default:"300" }}</h3>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm p-3 border-start border-danger border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-danger border-4 metric-card-modern border-danger-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-danger-subtle text-danger p-3 rounded-4 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-danger-subtle text-danger fs-3 me-3">
                         <i class="bi bi-shield-exclamation"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold" style="font-size: 0.68rem; letter-spacing: 0.5px;">24/7 ER Units</h6>
-                        <h3 class="fw-bold mb-0 text-danger counter-val">{{ emergency_centers|default:"1" }}</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">24/7 ER Units</h6>
+                        <h3 class="fw-bold mb-0 text-danger counter-val" style="font-size: 1.6rem;">{{ emergency_centers|default:"1" }}</h3>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm p-3 border-start border-info border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-info border-4 metric-card-modern border-info-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-info-subtle text-info p-3 rounded-4 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-info-subtle text-info fs-3 me-3">
                         <i class="bi bi-person-workspace"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold" style="font-size: 0.68rem; letter-spacing: 0.5px;">Active Doctors</h6>
-                        <h3 class="fw-bold mb-0 text-info counter-val">{{ total_doctors|default:"24" }}</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Active Doctors</h6>
+                        <h3 class="fw-bold mb-0 text-info counter-val" style="font-size: 1.6rem;">{{ total_doctors|default:"24" }}</h3>
                     </div>
                 </div>
             </div>
@@ -203,25 +298,27 @@
 
     <!-- Main Directory Layout -->
     <div class="row">
-        <!-- Sidebar Filter Panel & Replacement Live Console Widget -->
+        <!-- Sidebar Filter Panel & Live Console Widget -->
         <div class="col-lg-3 mb-4">
             <!-- Directory Filters -->
-            <div class="card border-0 shadow-sm bg-white p-3.5 mb-4 rounded-4">
-                <h5 class="fw-bold text-success mb-3"><i class="bi bi-funnel-fill me-2"></i>Directory Filters</h5>
+            <div class="card border-0 filter-panel-styled p-4 mb-4">
+                <h5 class="fw-bold text-success mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-funnel-fill"></i> Directory Filters
+                </h5>
                 <form method="GET" action="{% url 'hospital_list' %}">
                     <!-- Text Search -->
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Search Name / Address</label>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" name="q" value="{{ query }}" class="form-control bg-light border-start-0 py-2" placeholder="e.g. Labaid, Square...">
+                            <span class="input-group-text bg-white border-end-0 text-success"><i class="bi bi-search"></i></span>
+                            <input type="text" name="q" value="{{ query }}" class="form-control bg-white border-start-0 py-2" placeholder="e.g. Labaid, Square...">
                         </div>
                     </div>
 
                     <!-- Location Select -->
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Location / Region</label>
-                        <select name="location" class="form-select form-select-sm bg-light py-2">
+                        <select name="location" class="form-select form-select-sm bg-white py-2 fw-semibold">
                             <option value="">All Locations</option>
                             {% for loc in locations %}
                             <option value="{{ loc }}" {% if location_filter == loc %}selected{% endif %}>{{ loc }}</option>
@@ -229,44 +326,44 @@
                         </select>
                     </div>
 
-                    <hr class="text-muted opacity-25">
+                    <hr class="text-success opacity-25">
 
                     <!-- Facility Checkboxes -->
                     <label class="form-label small fw-bold text-secondary mb-2">Required Facilities</label>
 
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" name="emergency" value="true" id="chkEmergency" {% if has_emergency == 'true' %}checked{% endif %}>
-                        <label class="form-check-label small" for="chkEmergency"><i class="bi bi-shield-plus text-danger me-1"></i> Emergency Care</label>
+                        <input class="form-check-input border-success" type="checkbox" name="emergency" value="true" id="chkEmergency" {% if has_emergency == 'true' %}checked{% endif %}>
+                        <label class="form-check-label small fw-medium text-dark" for="chkEmergency"><i class="bi bi-shield-plus text-danger me-1"></i> Emergency Care</label>
                     </div>
 
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" name="icu" value="true" id="chkICU" {% if has_icu == 'true' %}checked{% endif %}>
-                        <label class="form-check-label small" for="chkICU"><i class="bi bi-activity text-primary me-1"></i> ICU Unit</label>
+                        <input class="form-check-input border-success" type="checkbox" name="icu" value="true" id="chkICU" {% if has_icu == 'true' %}checked{% endif %}>
+                        <label class="form-check-label small fw-medium text-dark" for="chkICU"><i class="bi bi-activity text-primary me-1"></i> ICU Unit</label>
                     </div>
 
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" name="ambulance" value="true" id="chkAmbulance" {% if has_ambulance == 'true' %}checked{% endif %}>
-                        <label class="form-check-label small" for="chkAmbulance"><i class="bi bi-truck text-warning me-1"></i> 24/7 Ambulance</label>
+                        <input class="form-check-input border-success" type="checkbox" name="ambulance" value="true" id="chkAmbulance" {% if has_ambulance == 'true' %}checked{% endif %}>
+                        <label class="form-check-label small fw-medium text-dark" for="chkAmbulance"><i class="bi bi-truck text-warning me-1"></i> 24/7 Ambulance</label>
                     </div>
 
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="pharmacy" value="true" id="chkPharmacy" {% if has_pharmacy == 'true' %}checked{% endif %}>
-                        <label class="form-check-label small" for="chkPharmacy"><i class="bi bi-capsule text-success me-1"></i> In-house Pharmacy</label>
+                        <input class="form-check-input border-success" type="checkbox" name="pharmacy" value="true" id="chkPharmacy" {% if has_pharmacy == 'true' %}checked{% endif %}>
+                        <label class="form-check-label small fw-medium text-dark" for="chkPharmacy"><i class="bi bi-capsule text-success me-1"></i> In-house Pharmacy</label>
                     </div>
 
                     <input type="hidden" name="sort" value="{{ sort_by }}">
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success btn-sm fw-bold py-2 rounded-pill"><i class="bi bi-search me-1"></i> Apply Filters</button>
-                        <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm py-1.5 rounded-pill"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters</a>
+                        <button type="submit" class="btn btn-success btn-sm fw-bold py-2.5 rounded-pill shadow-sm"><i class="bi bi-search me-1"></i> Apply Filters</button>
+                        <a href="{% url 'hospital_list' %}" class="btn btn-outline-success btn-sm py-2 rounded-pill fw-bold"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters</a>
                     </div>
                 </form>
             </div>
 
-            <!-- New Replacement Feature Widget: Live Bed Tracker & Quick Dispatch -->
+            <!-- Live Bed Tracker & Quick Dispatch Widget -->
             <div class="live-status-widget mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-white text-dark rounded-pill px-2.5 py-1 fw-bold small">
+                    <span class="badge bg-white text-dark rounded-pill px-2.5 py-1 fw-bold small shadow-sm">
                         <span class="pulse-live-dot me-1"></span> ER Live Dispatch
                     </span>
                     <span class="small text-white-50" style="font-size: 11px;">Real-Time</span>
@@ -275,41 +372,46 @@
                 <h6 class="fw-bold mb-1 text-white"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Bed Availability Monitor</h6>
                 <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Instant status for critical bed allocation across accredited Dhaka branches.</p>
 
-                <div class="d-flex flex-column gap-2 mb-3">
+                <!-- NEW SPECIAL FEATURE: Interactive Ambulance Dispatch Radar Button -->
+                <button type="button" class="btn-dispatch-radar w-100 mb-3" data-bs-toggle="modal" data-bs-target="#ambulanceRadarModal">
+                    <i class="bi bi-truck-front-fill me-1"></i> Dispatch Nearby Ambulance
+                </button>
+
+                <div class="d-flex flex-column gap-2 mb-2">
                     <a href="{% url 'doctor_list' %}" class="quick-action-pill text-decoration-none">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="bg-success-subtle text-success rounded-circle p-1.5 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
+                            <div class="bg-success text-white rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px;">
                                 <i class="bi bi-telephone-plus-fill" style="font-size: 12px;"></i>
                             </div>
                             <span class="fw-bold small">Instant Consultation</span>
                         </div>
-                        <i class="bi bi-arrow-right-short text-muted fs-5"></i>
+                        <i class="bi bi-arrow-right-short fs-5 text-white-50"></i>
                     </a>
 
                     <a href="{% url 'pharmacy_list' %}" class="quick-action-pill text-decoration-none">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="bg-primary-subtle text-primary rounded-circle p-1.5 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
+                            <div class="bg-primary text-white rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px;">
                                 <i class="bi bi-capsule" style="font-size: 12px;"></i>
                             </div>
                             <span class="fw-bold small">Order Medicines</span>
                         </div>
-                        <i class="bi bi-arrow-right-short text-muted fs-5"></i>
+                        <i class="bi bi-arrow-right-short fs-5 text-white-50"></i>
                     </a>
 
                     <a href="{% url 'nearby_donors' %}" class="quick-action-pill text-decoration-none">
                         <div class="d-flex align-items-center gap-2">
-                            <div class="bg-danger-subtle text-danger rounded-circle p-1.5 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;">
+                            <div class="bg-danger text-white rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px;">
                                 <i class="bi bi-heart-pulse-fill" style="font-size: 12px;"></i>
                             </div>
                             <span class="fw-bold small">Blood Donors Radar</span>
                         </div>
-                        <i class="bi bi-arrow-right-short text-muted fs-5"></i>
+                        <i class="bi bi-arrow-right-short fs-5 text-white-50"></i>
                     </a>
                 </div>
             </div>
 
             <!-- Emergency Hotline Card -->
-            <div class="card border-0 shadow-sm bg-danger text-white p-3.5 text-center rounded-4">
+            <div class="card border-0 shadow-sm bg-danger text-white p-4 text-center rounded-4">
                 <i class="bi bi-telephone-outbound-fill display-6 mb-2"></i>
                 <h6 class="fw-bold mb-1">Emergency Hotline</h6>
                 <p class="small text-white-50 mb-3">Instant dispatch & immediate ER assistance</p>
@@ -320,7 +422,7 @@
         <!-- Right Results Panel -->
         <div class="col-lg-9">
             <!-- Header & Sorting Bar -->
-            <div class="card border-0 shadow-sm bg-white p-3 mb-3 rounded-4">
+            <div class="card border-0 shadow-sm bg-white p-3.5 mb-4 rounded-4" style="border: 1px solid #e2ebe7 !important;">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <div>
                         <span class="text-muted small fw-bold">Found <span class="text-success fs-6 fw-bold">{{ results_count }}</span> accredited hospitals</span>
@@ -335,7 +437,7 @@
                             <input type="hidden" name="ambulance" value="{{ has_ambulance }}">
                             <input type="hidden" name="pharmacy" value="{{ has_pharmacy }}">
 
-                            <select name="sort" class="form-select form-select-sm bg-light rounded-pill px-3 py-1.5" onchange="document.getElementById('sortForm').submit();">
+                            <select name="sort" class="form-select form-select-sm bg-light rounded-pill px-3 py-1.5 fw-semibold border-0 shadow-sm" onchange="document.getElementById('sortForm').submit();">
                                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
                                 <option value="beds_desc" {% if sort_by == 'beds_desc' %}selected{% endif %}>Bed Capacity (High-Low)</option>
                                 <option value="doctors_desc" {% if sort_by == 'doctors_desc' %}selected{% endif %}>Doctor Count (High-Low)</option>
@@ -350,7 +452,7 @@
             <div class="row">
                 {% for hospital in hospitals %}
                 <div class="col-md-6 mb-4">
-                    <div class="card h-100 shadow-sm bg-white hospital-card p-3">
+                    <div class="card h-100 hospital-card-modern p-4">
                         <div class="card-body d-flex flex-column justify-content-between p-0">
                             <div>
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -359,21 +461,21 @@
                                             <i class="bi bi-building-fill me-1"></i> {{ hospital.name }}
                                         </a>
                                     </h5>
-                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1 rounded-pill" style="font-size: 0.7rem;">
+                                    <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill" style="font-size: 0.72rem;">
                                         <i class="bi bi-patch-check-fill me-1"></i> Verified
                                     </span>
                                 </div>
-                                <p class="small text-muted mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ hospital.location }} {% if hospital.address %}({{ hospital.address }}){% endif %}</p>
+                                <p class="small text-muted mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ hospital.location }} {% if hospital.address %}({{ hospital.address }}){% endif %}</p>
 
                                 <hr class="text-muted opacity-25 my-2">
 
                                 <!-- Animated Bed Capacity Progress -->
                                 <div class="mb-3">
-                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                    <div class="d-flex justify-content-between small text-muted mb-1.5">
                                         <span><strong>Bed Capacity:</strong> {{ hospital.total_beds|default:"300" }} Beds</span>
                                         <span class="text-success fw-bold"><span class="pulse-live-dot me-1"></span>Active</span>
                                     </div>
-                                    <div class="progress bg-light" style="height: 7px; border-radius: 10px;">
+                                    <div class="progress bg-light" style="height: 8px; border-radius: 10px;">
                                         <div class="capacity-bar-fill" style="width: 82%;"></div>
                                     </div>
                                 </div>
@@ -385,19 +487,19 @@
                                     <i class="bi bi-person-badge-fill text-info me-1"></i> <strong>Available Doctors:</strong> <span class="fw-bold text-dark">{{ hospital.total_doctors|default:"24" }}</span>
                                 </p>
 
-                                <!-- Facility Badges -->
-                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                <!-- Colorful Facility Badges -->
+                                <div class="d-flex flex-wrap gap-1.5 mb-4">
                                     {% if hospital.has_emergency %}
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2 py-1" style="font-size: 0.7rem;"><i class="bi bi-shield-plus me-1"></i>Emergency</span>
+                                    <span class="facility-badge-item bg-danger-subtle text-danger border border-danger-subtle"><i class="bi bi-shield-plus me-1"></i>Emergency</span>
                                     {% endif %}
                                     {% if hospital.has_icu %}
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1" style="font-size: 0.7rem;"><i class="bi bi-activity me-1"></i>ICU</span>
+                                    <span class="facility-badge-item bg-primary-subtle text-primary border border-primary-subtle"><i class="bi bi-activity me-1"></i>ICU</span>
                                     {% endif %}
                                     {% if hospital.has_ambulance %}
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle text-dark rounded-pill px-2 py-1" style="font-size: 0.7rem;"><i class="bi bi-truck me-1"></i>Ambulance</span>
+                                    <span class="facility-badge-item bg-warning-subtle text-warning border border-warning-subtle"><i class="bi bi-truck me-1"></i>Ambulance</span>
                                     {% endif %}
                                     {% if hospital.has_pharmacy %}
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1" style="font-size: 0.7rem;"><i class="bi bi-capsule me-1"></i>Pharmacy</span>
+                                    <span class="facility-badge-item bg-success-subtle text-success border border-success-subtle"><i class="bi bi-capsule me-1"></i>Pharmacy</span>
                                     {% endif %}
                                 </div>
                             </div>
@@ -407,7 +509,7 @@
                                     <i class="bi bi-info-circle me-1"></i> View Details
                                 </a>
                                 {% if hospital.helpline %}
-                                <a href="tel:{{ hospital.helpline }}" class="btn btn-sm btn-success rounded-pill px-3 shadow-sm d-flex align-items-center justify-content-center">
+                                <a href="tel:{{ hospital.helpline }}" class="btn btn-sm btn-success rounded-pill px-3.5 shadow-sm d-flex align-items-center justify-content-center">
                                     <i class="bi bi-telephone-fill"></i>
                                 </a>
                                 {% endif %}
@@ -422,11 +524,49 @@
                             <i class="bi bi-search display-4 text-muted mb-3 d-block"></i>
                             <h5 class="fw-bold text-dark">No partner hospitals match your criteria</h5>
                             <p class="text-muted small">Try selecting a different location or resetting required facility filters.</p>
-                            <a href="{% url 'hospital_list' %}" class="btn btn-sm btn-outline-secondary mt-2 rounded-pill px-4">Reset All Filters</a>
+                            <a href="{% url 'hospital_list' %}" class="btn btn-sm btn-outline-success mt-2 rounded-pill px-4 fw-bold">Reset All Filters</a>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NEW SPECIAL FEATURE: Interactive Ambulance Dispatch Radar Modal -->
+<div class="modal fade" id="ambulanceRadarModal" tabindex="-1" aria-labelledby="ambulanceRadarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border: 1px solid #bbf7d0 !important;">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <h5 class="modal-header-title fw-bold mb-0 d-flex align-items-center gap-2" id="ambulanceRadarModalLabel">
+                    <i class="bi bi-truck-front-fill fs-4 text-warning"></i> Emergency Ambulance Dispatch Radar
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <!-- Animated Radar Scanner Graphic -->
+                <div class="radar-circle-container mb-3 d-flex align-items-center justify-content-center">
+                    <div class="radar-sweep-hand"></div>
+                    <i class="bi bi-hospital-fill display-6 text-success z-3"></i>
+                </div>
+
+                <h6 class="fw-bold text-dark mb-1">Scanning Nearest Mobile Fleet...</h6>
+                <p class="small text-muted mb-4">Connecting to CareConnect Emergency Dispatch Network in Dhanmondi & surrounding areas.</p>
+
+                <!-- Simulated ETA Card -->
+                <div class="p-3 bg-white rounded-4 border border-success border-opacity-25 shadow-sm text-start mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-2.5 py-1 fw-bold">Unit #A-402 Assigned</span>
+                        <strong class="text-success fw-bold"><i class="bi bi-clock-fill me-1"></i> ETA: 8 Mins</strong>
+                    </div>
+                    <div class="small text-dark fw-bold mb-1"><i class="bi bi-person-circle text-primary me-1"></i> Paramedic Lead: Md. Rahman</div>
+                    <div class="small text-muted"><i class="bi bi-shield-check text-success me-1"></i> Equipped with ICU Life Support & Oxygen</div>
+                </div>
+
+                <a href="tel:999" class="btn btn-danger w-100 fw-bold py-2.5 rounded-pill shadow-sm">
+                    <i class="bi bi-telephone-fill me-1"></i> Confirm Dispatch & Call Driver Now
+                </a>
             </div>
         </div>
     </div>
