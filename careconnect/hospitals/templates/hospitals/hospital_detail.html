@@ -360,6 +360,14 @@
                     <!-- Tab 1: REDESIGNED OVERVIEW TAB -->
                     <div class="tab-pane fade show active" id="overview" role="tabpanel">
                         <div class="overview-card-styled p-4 mb-4">
+
+                            <!-- HOSPITAL PHOTO DISPLAY -->
+                            {% if hospital.image %}
+                            <div class="mb-4 text-center">
+                                <img src="{{ hospital.image.url }}" alt="{{ hospital.name }}" class="img-fluid rounded-4 shadow-sm border border-success border-opacity-25" style="max-height: 320px; width: 100%; object-fit: cover;">
+                            </div>
+                            {% endif %}
+
                             <h5 class="fw-bold text-success mb-2"><i class="bi bi-building-fill-check me-2"></i>About {{ hospital.name }}</h5>
                             <p class="text-dark leading-relaxed mb-4" style="line-height: 1.7; font-size: 0.95rem;">
                                 {{ hospital.description|default:"Providing exceptional medical care, emergency response, and comprehensive healthcare services. Our facility is equipped with modern medical technology and staffed by dedicated healthcare professionals available round the clock." }}
@@ -573,7 +581,7 @@
 <!-- JavaScript for Map & Reservation Logic -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Initialize Map (Unchanged structure)
+        // Initialize Map
         var lat = {{ hospital.latitude|default:23.7461 }};
         var lng = {{ hospital.longitude|default:90.3742 }};
 
