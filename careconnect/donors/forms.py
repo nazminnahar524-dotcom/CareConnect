@@ -17,7 +17,7 @@ class DonorRegistrationForm(forms.ModelForm):
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}),
             'district': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'District'}),
             'upazila': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Upazila'}),
-            'area': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Dhanmondi, Dhaka'}),
+            'area': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your area or full address'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+880 17...'}),
             'whatsapp_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+880 17...'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'email@example.com'}),
