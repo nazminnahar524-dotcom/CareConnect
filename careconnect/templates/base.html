@@ -735,8 +735,12 @@
                    href="{% url 'my_appointments' %}">
                     <i class="fa-regular fa-calendar-check me-1"></i> Appointments
                 </a>
+                        </li>
+                        <li class="nav-item">
+                <a class="nav-link" href="/appointments/history/">
+                    Appointment History
+                </a>
             </li>
-
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}"
                    href="{% url 'pharmacy_list' %}">

@@ -401,15 +401,23 @@
                 <article class="dp-card dp-doctor mb-3">
                     <div class="d-flex gap-3">
 
-                        <div class="dp-avatar">
+
+                    <div class="dp-avatar" style="overflow:hidden;">
+                        {% if doctor.photo %}
+                            <img src="{{ doctor.photo.url }}"
+                                 alt=" {{ doctor.name }}"
+                                 style="width:100%; height:100%; object-fit:cover;">
+                        {% else %}
                             <i class="fa-solid fa-user-doctor"></i>
-                        </div>
+                        {% endif %}
+                    </div>
+
 
                         <div class="flex-grow-1" style="min-width:0;">
                             <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
                                 <div>
                                     <h5 class="dp-heading mb-2">
-                                        Dr. {{ doctor.name }}
+                                         {{ doctor.name }}
                                     </h5>
                                     <span class="dp-chip">
                                         {{ doctor.specialty }}
