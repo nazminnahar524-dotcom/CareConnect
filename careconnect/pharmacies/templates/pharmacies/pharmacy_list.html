@@ -1,9 +1,8 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Pharmacies | CareConnect</title>
 
     <style>
@@ -13,31 +12,38 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
+        html {
+            min-height: 100%;
+            overflow-x: hidden;
         }
 
-        /* =========================
-           HEADER
-        ========================== */
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: "Nunito Sans", "Segoe UI", Arial, sans-serif;
+            background: #f4f9f6;
+            color: #123f35;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ================= HEADER ================= */
 
         .top-header {
-            background: #ffffff;
-            min-height: 72px;
-            border-bottom: 1px solid #e5e7eb;
+            background: #fff;
+            min-height: 62px;
+            border-bottom: 1px solid #dcebe3;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 35px;
-            gap: 20px;
+            padding: 10px 24px;
+            gap: 16px;
         }
 
         .logo {
-            font-size: 25px;
-            font-weight: 700;
-            color: #2563eb;
+            font-size: 22px;
+            font-weight: 900;
+            color: #16845b;
             white-space: nowrap;
         }
 
@@ -50,96 +56,107 @@
         }
 
         .location-box {
-            border: 1px solid #2563eb;
-            background: #eff6ff;
-            color: #2563eb;
+            border: 1px solid #dcebe3;
+            background: #f3faf6;
+            color: #12664d;
             border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
+            padding: 10px 12px;
+            font-size: 12px;
             cursor: pointer;
             white-space: nowrap;
         }
 
-        .location-box:hover {
-            background: #dbeafe;
-        }
-
-        .nearby-trigger {
+        .nearby-trigger,
+        .location-btn,
+        .filter-submit {
             border: none;
-            background: #2563eb;
-            color: white;
+            background: #16845b;
+            color: #fff;
             border-radius: 8px;
-            padding: 11px 16px;
+            padding: 11px 14px;
+            font: inherit;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
-            white-space: nowrap;
+            transition: background .2s ease;
         }
 
-        .nearby-trigger:hover {
-            background: #1d4ed8;
+        .nearby-trigger:hover,
+        .location-btn:hover,
+        .filter-submit:hover {
+            background: #12664d;
         }
 
         .header-search {
-            width: 250px;
-            height: 40px;
-            border: 1px solid #dbe2ea;
+            width: 230px;
+            max-width: 100%;
+            height: 39px;
+            border: 1px solid #d5e4dc;
             border-radius: 8px;
-            padding: 0 14px;
+            padding: 0 12px;
             outline: none;
-        }
-
-        .header-search:focus {
-            border-color: #2563eb;
         }
 
         .header-icons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .header-icon {
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            background: #f1f5f9;
+            background: #eef6f1;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* =========================
-           MAIN
-        ========================== */
+        /* ================= PAGE WIDTH ================= */
+
+        /*
+           IMPORTANT:
+           Keep the page at a similar width to the Doctors page.
+           Do not stretch the pharmacy cards across the whole screen.
+        */
 
         .container {
-            width: 94%;
-            max-width: 1450px;
-            margin: 25px auto 50px;
+            width: calc(100% - 40px);
+            max-width: 1360px;
+            margin: 22px auto 40px;
         }
 
         .back-btn {
             display: inline-block;
             text-decoration: none;
-            color: #475569;
-            font-size: 14px;
-            margin-bottom: 18px;
+            color: #39705a;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 14px;
         }
 
-        .back-btn:hover {
-            color: #2563eb;
+        .back-btn:hover,
+        .filter-reset:hover {
+            color: #16845b;
         }
 
-        /* =========================
-           PAGE HEADER
-        ========================== */
+        .page-header,
+        .nearby-panel,
+        .filter-card,
+        .list-header,
+        .pharmacy-card,
+        .side-card {
+            background: #fff;
+            border: 1px solid #dcebe3;
+            border-radius: 16px;
+            box-shadow: 0 7px 22px rgba(24, 74, 54, .04);
+        }
+
+        /* ================= PAGE TITLE ================= */
 
         .page-header {
-            background: white;
-            border-radius: 14px;
-            padding: 25px;
-            border: 1px solid #e5e7eb;
-            margin-bottom: 20px;
+            padding: 22px;
+            margin-bottom: 18px;
         }
 
         .page-title-row {
@@ -149,162 +166,178 @@
             gap: 20px;
         }
 
-        .page-title h1 {
-            font-size: 28px;
+        .eyebrow {
+            color: #648174;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1px;
             margin-bottom: 7px;
-            color: #111827;
+            text-transform: uppercase;
+        }
+
+        .page-title h1 {
+            color: #103f34;
+            font-size: 29px;
+            font-weight: 900;
+            letter-spacing: -.7px;
+            line-height: 1.25;
+            margin-bottom: 6px;
         }
 
         .page-title p {
-            color: #64748b;
-            font-size: 14px;
+            color: #698176;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         .stats {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
         .stat-box {
             min-width: 105px;
-            padding: 13px 18px;
-            background: #f8fafc;
+            padding: 11px 16px;
+            background: #eff8f3;
             border-radius: 10px;
             text-align: center;
         }
 
         .stat-box strong {
             display: block;
-            font-size: 20px;
-            color: #2563eb;
+            color: #123f35;
+            font-size: 22px;
+            font-weight: 900;
         }
 
         .stat-box span {
-            font-size: 12px;
-            color: #64748b;
+            color: #648174;
+            font-size: 11px;
         }
 
-        /* =========================
-           NEARBY PANEL
-        ========================== */
+        /* ================= NEARBY LOCATION PANEL ================= */
 
         .nearby-panel {
-            display: block;
-            background: white;
-            border: 1px solid #dbeafe;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 17px 19px;
+            margin-bottom: 18px;
         }
 
         .nearby-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
         }
 
         .nearby-info h3 {
-            font-size: 18px;
-            margin-bottom: 6px;
+            color: #123f35;
+            font-size: 16px;
+            font-weight: 900;
+            margin-bottom: 5px;
         }
 
         .nearby-info p {
-            font-size: 13px;
-            color: #64748b;
+            color: #698176;
+            font-size: 12px;
+            line-height: 1.6;
         }
 
         .nearby-actions {
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 9px;
+            flex-shrink: 0;
         }
 
         .radius-select {
-            border: 1px solid #dbe2ea;
-            padding: 10px 13px;
+            border: 1px solid #d5e4dc;
+            padding: 10px;
             border-radius: 8px;
-            background: white;
+            background: #fff;
             outline: none;
-        }
-
-        .location-btn {
-            border: none;
-            background: #2563eb;
-            color: white;
-            padding: 11px 17px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .location-btn:hover {
-            background: #1d4ed8;
+            color: #234c40;
         }
 
         .location-status {
-            margin-top: 15px;
-            padding: 12px 14px;
+            margin-top: 12px;
+            padding: 10px 12px;
             border-radius: 8px;
-            background: #f8fafc;
-            color: #64748b;
-            font-size: 13px;
+            background: #eff8f3;
+            color: #47715e;
+            font-size: 12px;
             line-height: 1.6;
+            overflow-wrap: anywhere;
         }
 
-        /* =========================
-           CONTENT GRID
-        ========================== */
+        /* ================= THREE-COLUMN LAYOUT ================= */
+
+        /*
+           This is the main fix.
+
+           Left: filters
+           Centre: fixed-height scrollable pharmacy results
+           Right: information cards
+
+           The overall page itself is NOT locked.
+        */
 
         .content-grid {
             display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
+            grid-template-columns: 250px minmax(0, 1fr) 260px;
             align-items: start;
+            gap: 16px;
+            width: 100%;
         }
 
-        /* =========================
-           FILTERS
-        ========================== */
-
         .filter-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 20px;
+            padding: 19px;
+            min-width: 0;
+        }
+
+        .filter-card h3,
+        .list-header h2 {
+            color: #123f35;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1.4;
         }
 
         .filter-card h3 {
-            font-size: 17px;
             margin-bottom: 18px;
         }
 
         .filter-group {
-            margin-bottom: 20px;
+            margin-bottom: 17px;
         }
 
-        .filter-group label {
+        .filter-group > label:not(.check-row) {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 800;
             margin-bottom: 7px;
-            color: #475569;
+            color: #234c40;
         }
 
         .filter-input,
         .filter-select {
             width: 100%;
             height: 40px;
-            border: 1px solid #dbe2ea;
+            border: 1px solid #d5e4dc;
             border-radius: 7px;
-            padding: 0 11px;
+            padding: 0 10px;
             outline: none;
-            background: white;
+            background: #fff;
+            color: #263c32;
+            font: inherit;
+            font-size: 12px;
         }
 
+        .header-search:focus,
         .filter-input:focus,
-        .filter-select:focus {
-            border-color: #2563eb;
+        .filter-select:focus,
+        .radius-select:focus {
+            border-color: #16845b;
+            box-shadow: 0 0 0 3px rgba(22, 132, 91, .10);
         }
 
         .check-row {
@@ -312,210 +345,360 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 10px;
-            font-size: 13px !important;
-            color: #475569;
-            font-weight: normal !important;
+            font-size: 12px !important;
+            color: #47705d !important;
+            font-weight: 400 !important;
         }
 
         .check-row input {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
+            accent-color: #16845b;
+            flex-shrink: 0;
         }
 
         .filter-submit {
             width: 100%;
-            border: none;
-            background: #2563eb;
-            color: white;
-            height: 42px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .filter-submit:hover {
-            background: #1d4ed8;
+            height: 40px;
+            padding: 8px;
         }
 
         .filter-reset {
-            width: 100%;
             display: block;
+            width: 100%;
             text-align: center;
-            margin-top: 10px;
-            padding: 10px;
-            color: #64748b;
+            margin-top: 8px;
+            padding: 9px;
+            color: #648174;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        /* =========================
-           PHARMACY LIST
-        ========================== */
+        /* ================= PHARMACY RESULTS ================= */
 
         .list-section {
             min-width: 0;
+            width: 100%;
+        }
+
+        .list-heading-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin: 2px 0 11px;
+        }
+
+        .list-heading-row h2 {
+            color: #123f35;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .result-count {
+            color: #698176;
+            font-size: 11px;
+            white-space: nowrap;
         }
 
         .list-header {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-bottom: 14px;
+            padding: 13px 15px;
+            margin-bottom: 11px;
         }
 
         .list-header h2 {
-            font-size: 17px;
+            font-size: 16px;
+        }
+
+        /*
+           Independent scrolling:
+           both normal and nearby results use the same dimensions.
+           The browser page can still scroll normally.
+        */
+
+        #careconnectList,
+        #nearbyList {
+            display: block;
+            width: 100%;
+            height: 460px;
+            max-height: 460px;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior-y: contain;
+            scrollbar-gutter: stable;
+            padding: 1px 6px 8px 1px;
+        }
+
+        #nearbyList {
+            display: none;
+        }
+
+        #careconnectList::-webkit-scrollbar,
+        #nearbyList::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        #careconnectList::-webkit-scrollbar-track,
+        #nearbyList::-webkit-scrollbar-track {
+            background: #edf4ef;
+            border-radius: 10px;
+        }
+
+        #careconnectList::-webkit-scrollbar-thumb,
+        #nearbyList::-webkit-scrollbar-thumb {
+            background: #b5c8bc;
+            border-radius: 10px;
+        }
+
+        #careconnectList::-webkit-scrollbar-thumb:hover,
+        #nearbyList::-webkit-scrollbar-thumb:hover {
+            background: #8ba998;
         }
 
         .pharmacy-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 19px;
-            margin-bottom: 14px;
-            transition: 0.2s;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 11px;
+            transition: border-color .2s ease, box-shadow .2s ease;
+            overflow-wrap: anywhere;
         }
 
         .pharmacy-card:hover {
-            border-color: #bfdbfe;
-            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+            border-color: #9bd2b5;
+            box-shadow: 0 5px 16px rgba(22, 80, 55, .07);
         }
 
         .pharmacy-top {
             display: flex;
             justify-content: space-between;
-            gap: 15px;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .pharmacy-top > div:first-child {
+            min-width: 0;
         }
 
         .pharmacy-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 6px;
+            color: #123f35;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: -.2px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+            overflow-wrap: anywhere;
         }
 
         .pharmacy-address {
-            color: #64748b;
-            font-size: 13px;
-            line-height: 1.5;
+            color: #698176;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .verified,
+        .unverified {
+            display: inline-block;
+            padding: 5px 7px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .verified {
-            background: #ecfdf5;
-            color: #047857;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
+            background: #e6f7ed;
+            color: #147447;
         }
 
         .unverified {
-            background: #f1f5f9;
-            color: #64748b;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            white-space: nowrap;
+            background: #f1f5f2;
+            color: #687b70;
         }
 
         .pharmacy-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 13px;
+            gap: 5px;
+            margin-top: 9px;
         }
 
         .tag {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 5px 9px;
+            background: #f0f5f2;
+            color: #47705d;
+            padding: 5px 7px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.35;
         }
 
         .tag.green {
-            background: #ecfdf5;
-            color: #047857;
+            background: #e6f7ed;
+            color: #147447;
         }
 
         .tag.blue {
-            background: #eff6ff;
-            color: #1d4ed8;
+            background: #e8f6ef;
+            color: #12664d;
         }
 
         .pharmacy-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 17px;
-            padding-top: 14px;
-            border-top: 1px solid #f1f5f9;
+            gap: 8px;
+            margin-top: 11px;
+            padding-top: 10px;
+            border-top: 1px solid #edf3ef;
         }
 
         .phone {
-            font-size: 13px;
-            color: #475569;
+            color: #47705d;
+            font-size: 11px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
         }
 
         .details-btn,
         .save-btn {
-            padding: 9px 14px;
+            display: inline-block;
+            padding: 8px 10px;
             border-radius: 7px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 12px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .details-btn {
-            background: #eff6ff;
-            color: #2563eb;
+            background: #e8f6ef;
+            color: #12664d;
             border: none;
         }
 
         .details-btn:hover {
-            background: #dbeafe;
+            background: #d5eee1;
         }
 
         .save-btn {
-            background: white;
-            color: #475569;
-            border: 1px solid #dbe2ea;
-            margin-right: 6px;
+            background: #fff;
+            color: #47705d;
+            border: 1px solid #d5e4dc;
+            margin-right: 4px;
         }
 
         .save-btn:hover {
-            border-color: #2563eb;
-            color: #2563eb;
+            border-color: #16845b;
+            color: #16845b;
         }
 
-        /* =========================
-           EMPTY STATE
-        ========================== */
-
         .empty-state {
-            background: white;
-            border: 1px dashed #cbd5e1;
+            background: #fff;
+            border: 1px dashed #b8d8c6;
             border-radius: 12px;
-            padding: 50px 20px;
+            padding: 30px 14px;
             text-align: center;
-            color: #64748b;
+            color: #648174;
+            overflow-wrap: anywhere;
         }
 
         .empty-state h3 {
             margin-bottom: 8px;
-            color: #334155;
+            color: #174f3d;
+            font-size: 15px;
         }
 
-        /* =========================
-           RESPONSIVE
-        ========================== */
+        .empty-state p {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* ================= RIGHT INFORMATION COLUMN ================= */
+
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .side-card {
+            padding: 17px;
+        }
+
+        .side-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #e6f7ed;
+            color: #16845b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .side-card h3 {
+            color: #123f35;
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 7px;
+        }
+
+        .side-card p {
+            color: #698176;
+            font-size: 12px;
+            line-height: 1.65;
+        }
+
+        .side-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 13px;
+            text-align: center;
+            text-decoration: none;
+            color: #16845b;
+            background: #fff;
+            border: 1px solid #16845b;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .side-button:hover {
+            background: #eff8f3;
+        }
+
+        .side-divider {
+            border: 0;
+            border-top: 1px solid #edf3ef;
+            margin: 12px 0;
+        }
+
+        /* ================= RESPONSIVE ================= */
 
         @media (max-width: 1100px) {
+            .container {
+                max-width: 960px;
+                width: calc(100% - 32px);
+            }
 
             .content-grid {
-                grid-template-columns: 220px 1fr;
+                grid-template-columns: 220px minmax(0, 1fr);
+                gap: 14px;
+            }
+
+            .right-sidebar {
+                display: none;
             }
 
             .header-center {
@@ -524,18 +707,32 @@
         }
 
         @media (max-width: 750px) {
-
             .top-header {
-                padding: 12px 15px;
+                padding: 11px 14px;
+            }
+
+            .logo {
+                font-size: 20px;
             }
 
             .container {
-                width: 95%;
+                width: calc(100% - 24px);
+                margin-top: 16px;
+                margin-bottom: 28px;
+            }
+
+            .page-header {
+                padding: 17px;
             }
 
             .page-title-row {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 14px;
+            }
+
+            .page-title h1 {
+                font-size: 25px;
             }
 
             .stats {
@@ -546,18 +743,19 @@
                 flex: 1;
             }
 
-            .content-grid {
-                grid-template-columns: 1fr;
+            .nearby-panel {
+                padding: 15px;
             }
 
             .nearby-top {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
             }
 
             .nearby-actions {
                 width: 100%;
                 flex-direction: column;
+                align-items: stretch;
             }
 
             .location-btn,
@@ -565,473 +763,253 @@
                 width: 100%;
             }
 
+            .content-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 14px;
+            }
+
+            .filter-card {
+                padding: 16px;
+            }
+
+            #careconnectList,
+            #nearbyList {
+                height: 380px;
+                max-height: 380px;
+            }
+
+            .pharmacy-name {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pharmacy-card {
+                padding: 12px;
+            }
+
+            .pharmacy-top {
+                gap: 7px;
+            }
+
+            .verified,
+            .unverified {
+                font-size: 9px;
+                padding: 4px 6px;
+            }
+
             .pharmacy-bottom {
-                flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
+                flex-direction: column;
+            }
+
+            .pharmacy-bottom > div:last-child {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .save-btn {
+                margin-right: 0;
+            }
+
+            .page-title p,
+            .nearby-info p {
+                font-size: 12px;
             }
         }
     </style>
 </head>
 
-
 <body>
 
-<!-- =====================================================
-     HEADER
-====================================================== -->
-
 <header class="top-header">
-
-    <div class="logo">
-        CareConnect
-    </div>
+    <div class="logo">CareConnect</div>
 
     <div class="header-center">
-
-        <button
-            type="button"
-            class="location-box"
-            id="topLocation"
-            onclick="getMyLocation()"
-        >
+        <button type="button" class="location-box" id="topLocation"
+                onclick="getMyLocation()">
             📍 Use My Live Location
         </button>
 
-        <button
-            type="button"
-            class="nearby-trigger"
-            onclick="getMyLocation()"
-        >
+        <button type="button" class="nearby-trigger"
+                onclick="getMyLocation()">
             Nearby Pharmacies
         </button>
 
-        <input
-            type="text"
-            class="header-search"
-            placeholder="Search CareConnect..."
-        >
-
+        <input type="text" class="header-search"
+               placeholder="Search CareConnect...">
     </div>
 
     <div class="header-icons">
-
-        <div class="header-icon">
-            🔔
-        </div>
-
-        <div class="header-icon">
-            💬
-        </div>
-
-        <div class="header-icon">
-            👤
-        </div>
-
+        <div class="header-icon">🔔</div>
+        <div class="header-icon">💬</div>
+        <div class="header-icon">👤</div>
     </div>
-
 </header>
-
-
-<!-- =====================================================
-     MAIN
-====================================================== -->
 
 <main class="container">
 
-    <a
-        href="/"
-        class="back-btn"
-    >
-        ← Back to Home
-    </a>
-
-
-    <!-- =================================================
-         PAGE HEADER
-    ================================================== -->
+    <a href="/" class="back-btn">← Back to Home</a>
 
     <section class="page-header">
-
         <div class="page-title-row">
-
             <div class="page-title">
-
-                <h1>
-                    Pharmacies
-                </h1>
-
-                <p>
-                    Find pharmacies near your live location
-                    from the CareConnect database.
-                </p>
-
+                <div class="eyebrow">Care Directory</div>
+                <h1>Find Your Pharmacy</h1>
+                <p>Search pharmacies, check available services and find one near you.</p>
             </div>
-
 
             <div class="stats">
-
                 <div class="stat-box">
-
-                    <strong>
-                        {{ pharmacies|length }}
-                    </strong>
-
-                    <span>
-                        CareConnect
-                    </span>
-
+                    <strong>{{ pharmacies|length }}</strong>
+                    <span>Pharmacies Found</span>
                 </div>
 
-
                 <div class="stat-box">
-
-                    <strong>
-                        24/7
-                    </strong>
-
-                    <span>
-                        Support
-                    </span>
-
+                    <strong>24/7</strong>
+                    <span>Care Support</span>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
-
-    <!-- =================================================
-         NEARBY PHARMACY SEARCH
-    ================================================== -->
-
-    <section
-        class="nearby-panel"
-        id="nearbyPanel"
-    >
-
+    <section class="nearby-panel" id="nearbyPanel">
         <div class="nearby-top">
-
             <div class="nearby-info">
-
-                <h3>
-                    Find Pharmacies Near You
-                </h3>
-
+                <h3>Find Pharmacies Near You</h3>
                 <p>
-                    Allow location access and choose a radius
-                    to find pharmacies from your CareConnect
-                    database near your live location.
+                    Allow location access and choose a radius to find pharmacies
+                    from your CareConnect database near your live location.
                 </p>
-
             </div>
-
 
             <div class="nearby-actions">
-
-                <select
-                    class="radius-select"
-                    id="radiusSelect"
-                >
-
-                    <option value="1000">
-                        Within 1 km
-                    </option>
-
-                    <option
-                        value="2000"
-                        selected
-                    >
-                        Within 2 km
-                    </option>
-
-                    <option value="5000">
-                        Within 5 km
-                    </option>
-
-                    <option value="10000">
-                        Within 10 km
-                    </option>
-
-                    <option value="20000">
-                        Within 20 km
-                    </option>
-
+                <select class="radius-select" id="radiusSelect">
+                    <option value="1000">Within 1 km</option>
+                    <option value="2000" selected>Within 2 km</option>
+                    <option value="5000">Within 5 km</option>
+                    <option value="10000">Within 10 km</option>
+                    <option value="20000">Within 20 km</option>
                 </select>
 
-
-                <button
-                    type="button"
-                    class="location-btn"
-                    onclick="getMyLocation()"
-                >
+                <button type="button" class="location-btn"
+                        onclick="getMyLocation()">
                     📍 Nearby Pharmacies
                 </button>
-
             </div>
-
         </div>
 
-
-        <!-- CSRF TOKEN -->
-
-        <div
-            id="csrfTokenContainer"
-            style="display:none;"
-        >
+        <div id="csrfTokenContainer" style="display:none;">
             {% csrf_token %}
         </div>
 
-
-        <!-- LOCATION STATUS -->
-
-        <div
-            class="location-status"
-            id="locationStatus"
-        >
+        <div class="location-status" id="locationStatus">
             Click "Nearby Pharmacies" to share your live location.
         </div>
-
     </section>
-
-
-    <!-- =================================================
-         MAIN CONTENT
-    ================================================== -->
 
     <div class="content-grid">
 
-
-        <!-- =================================================
-             FILTER SIDEBAR
-        ================================================== -->
+        <!-- LEFT COLUMN: FILTERS -->
 
         <aside class="filter-card">
+            <h3>Filter Pharmacies</h3>
 
-            <h3>
-                Filters
-            </h3>
-
-
-            <form
-                method="GET"
-                action="{% url 'pharmacy_list' %}"
-            >
-
-
-                <!-- SEARCH -->
-
+            <form method="GET" action="{% url 'pharmacy_list' %}">
                 <div class="filter-group">
-
-                    <label>
-                        Search Pharmacy
-                    </label>
-
-                    <input
-                        type="text"
-                        name="search"
-                        class="filter-input"
-                        placeholder="Pharmacy name or area"
-                        value="{{ search }}"
-                    >
-
+                    <label for="pharmacySearch">Search Pharmacy</label>
+                    <input id="pharmacySearch" type="text" name="search"
+                           class="filter-input"
+                           placeholder="Pharmacy name or area"
+                           value="{{ search }}">
                 </div>
 
-
-                <!-- DISTRICT -->
-
                 <div class="filter-group">
-
-                    <label>
-                        District
-                    </label>
-
-                    <select
-                        name="district"
-                        class="filter-select"
-                    >
-
-                        <option value="">
-                            All Districts
-                        </option>
-
+                    <label for="districtSelect">District</label>
+                    <select id="districtSelect" name="district"
+                            class="filter-select">
+                        <option value="">All Districts</option>
                         {% for district_name in districts %}
-
-                            <option
-                                value="{{ district_name }}"
-                                {% if selected_district == district_name %}
-                                    selected
-                                {% endif %}
-                            >
+                            <option value="{{ district_name }}"
+                                {% if selected_district == district_name %}selected{% endif %}>
                                 {{ district_name }}
                             </option>
-
                         {% endfor %}
-
                     </select>
-
                 </div>
 
-
-                <!-- AVAILABILITY -->
-
                 <div class="filter-group">
-
-                    <label>
-                        Availability
-                    </label>
-
-                    <select
-                        class="filter-select"
-                        name="availability"
-                    >
-
-                        <option value="">
-                            All
-                        </option>
-
-                        <option value="open">
+                    <label for="availabilitySelect">Availability</label>
+                    <select id="availabilitySelect" class="filter-select"
+                            name="availability">
+                        <option value="">All</option>
+                        <option value="open"
+                            {% if request.GET.availability == "open" %}selected{% endif %}>
                             Open Now
                         </option>
-
-                        <option value="24_7">
+                        <option value="24_7"
+                            {% if request.GET.availability == "24_7" %}selected{% endif %}>
                             24/7 Pharmacy
                         </option>
-
                     </select>
-
                 </div>
-
-
-                <!-- SERVICES -->
 
                 <div class="filter-group">
-
-                    <label>
-                        Services
-                    </label>
-
+                    <label>Services</label>
 
                     <label class="check-row">
-
-                        <input
-                            type="checkbox"
-                            name="verified"
-                            value="1"
-                            {% if verified == "1" %}
-                                checked
-                            {% endif %}
-                        >
-
+                        <input type="checkbox" name="verified" value="1"
+                            {% if verified == "1" %}checked{% endif %}>
                         Verified Pharmacy
-
                     </label>
 
-
                     <label class="check-row">
-
-                        <input
-                            type="checkbox"
-                            name="emergency"
-                            value="1"
-                            {% if emergency == "1" %}
-                                checked
-                            {% endif %}
-                        >
-
+                        <input type="checkbox" name="emergency" value="1"
+                            {% if emergency == "1" %}checked{% endif %}>
                         Emergency Service
-
                     </label>
 
-
                     <label class="check-row">
-
-                        <input
-                            type="checkbox"
-                            name="home_delivery"
-                            value="1"
-                            {% if home_delivery == "1" %}
-                                checked
-                            {% endif %}
-                        >
-
+                        <input type="checkbox" name="home_delivery" value="1"
+                            {% if home_delivery == "1" %}checked{% endif %}>
                         Home Delivery
-
                     </label>
-
 
                     <label class="check-row">
-
-                        <input
-                            type="checkbox"
-                            name="online_order"
-                            value="1"
-                            {% if online_order == "1" %}
-                                checked
-                            {% endif %}
-                        >
-
+                        <input type="checkbox" name="online_order" value="1"
+                            {% if online_order == "1" %}checked{% endif %}>
                         Online Order
-
                     </label>
-
                 </div>
 
-
-                <button
-                    type="submit"
-                    class="filter-submit"
-                >
+                <button type="submit" class="filter-submit">
                     Apply Filters
                 </button>
 
-
-                <a
-                    href="{% url 'pharmacy_list' %}"
-                    class="filter-reset"
-                >
+                <a href="{% url 'pharmacy_list' %}" class="filter-reset">
                     Reset Filters
                 </a>
-
             </form>
-
         </aside>
 
-
-        <!-- =================================================
-             PHARMACY LIST
-        ================================================== -->
+        <!-- CENTRE COLUMN: SCROLLABLE PHARMACY LIST -->
 
         <section class="list-section">
 
-            <div class="list-header">
-
-                <h2 id="listTitle">
-                    Pharmacies
-                </h2>
-
+            <div class="list-heading-row">
+                <h2 id="listTitle">Available Pharmacies</h2>
+                <span class="result-count">
+                    {{ pharmacies|length }} results
+                </span>
             </div>
 
-
-            <!-- =================================================
-                 NORMAL DATABASE PHARMACIES
-            ================================================== -->
-
-            <div
-                id="careconnectList"
-                style="display:block;"
-            >
-
+            <div id="careconnectList">
                 {% for pharmacy in pharmacies %}
-
                     <article class="pharmacy-card">
 
                         <div class="pharmacy-top">
-
                             <div>
-
                                 <div class="pharmacy-name">
                                     {{ pharmacy.name }}
                                 </div>
@@ -1039,955 +1017,395 @@
                                 <div class="pharmacy-address">
                                     {{ pharmacy.address }}
                                 </div>
-
                             </div>
-
 
                             {% if pharmacy.verified %}
-
-                                <span class="verified">
-                                    ✓ Verified
-                                </span>
-
+                                <span class="verified">✓ Verified</span>
                             {% else %}
-
-                                <span class="unverified">
-                                    Unverified
-                                </span>
-
+                                <span class="unverified">Unverified</span>
                             {% endif %}
-
                         </div>
-
 
                         <div class="pharmacy-meta">
-
                             {% if pharmacy.is_24_7 %}
-
-                                <span class="tag green">
-                                    24/7
-                                </span>
-
+                                <span class="tag green">24/7</span>
                             {% endif %}
-
 
                             {% if pharmacy.emergency %}
-
-                                <span class="tag">
-                                    Emergency
-                                </span>
-
+                                <span class="tag">Emergency</span>
                             {% endif %}
-
 
                             {% if pharmacy.home_delivery %}
-
-                                <span class="tag blue">
-                                    Home Delivery
-                                </span>
-
+                                <span class="tag blue">Home Delivery</span>
                             {% endif %}
-
 
                             {% if pharmacy.online_order %}
-
-                                <span class="tag blue">
-                                    Online Order
-                                </span>
-
+                                <span class="tag blue">Online Order</span>
                             {% endif %}
-
 
                             {% if pharmacy.medicine_available %}
-
-                                <span class="tag green">
-                                    Medicine Available
-                                </span>
-
+                                <span class="tag green">Medicine Available</span>
                             {% endif %}
-
                         </div>
 
-
                         <div class="pharmacy-bottom">
-
                             <div class="phone">
-
                                 {% if pharmacy.phone %}
-
                                     ☎ {{ pharmacy.phone }}
-
                                 {% else %}
-
                                     Phone not available
-
                                 {% endif %}
-
                             </div>
 
-
                             <div>
-
-                                <button
-                                    type="button"
-                                    class="save-btn"
-                                    onclick="savePharmacy('{{ pharmacy.id }}')"
-                                >
+                                <button type="button" class="save-btn"
+                                        onclick="savePharmacy('{{ pharmacy.id }}')">
                                     ♡ Save
                                 </button>
 
-
-                                <a
-                                    href="{% url 'pharmacy_detail' pharmacy.id %}"
-                                    class="details-btn"
-                                    style="text-decoration: none; display: inline-block;"
-                                >
+                                <a href="{% url 'pharmacy_detail' pharmacy.id %}"
+                                   class="details-btn">
                                     View Details →
                                 </a>
-
                             </div>
-
                         </div>
 
                     </article>
-
                 {% empty %}
-
                     <div class="empty-state">
-
-                        <h3>
-                            No pharmacies found
-                        </h3>
-
-                        <p>
-                            Try changing your search or filters.
-                        </p>
-
+                        <h3>No pharmacies found</h3>
+                        <p>Try changing your search or filters.</p>
                     </div>
-
                 {% endfor %}
-
             </div>
 
-
-            <!-- =================================================
-                 NEARBY RESULTS
-            ================================================== -->
-
-            <div
-                id="nearbyList"
-                style="display:none;"
-            >
-            </div>
-
+            <div id="nearbyList"></div>
         </section>
 
-    </div>
+        <!-- RIGHT COLUMN: INFORMATION CARDS -->
 
+        <aside class="right-sidebar">
+
+            <div class="side-card">
+                <div class="side-icon">✚</div>
+                <h3>Need a Pharmacy?</h3>
+                <p>
+                    Search the available pharmacies and open a pharmacy profile
+                    to view its contact details and services.
+                </p>
+                <a href="#pharmacySearch" class="side-button"
+                   onclick="document.getElementById('pharmacySearch').focus();">
+                    Search Pharmacies
+                </a>
+            </div>
+
+            <div class="side-card">
+                <div class="side-icon">📍</div>
+                <h3>Find Nearby</h3>
+                <p>
+                    Use your live location to find pharmacies within your
+                    selected distance.
+                </p>
+                <button type="button" class="side-button"
+                        onclick="getMyLocation()">
+                    Find Nearby Pharmacies
+                </button>
+            </div>
+
+            <div class="side-card">
+                <h3>Before You Visit</h3>
+                <p>
+                    Check the pharmacy's address, phone number and available
+                    services before visiting.
+                </p>
+                <hr class="side-divider">
+                <p>
+                    Availability information may need confirmation directly
+                    with the pharmacy.
+                </p>
+            </div>
+
+        </aside>
+
+    </div>
 </main>
 
-
-<!-- =====================================================
-     JAVASCRIPT
-====================================================== -->
-
 <script>
-
-    /*
-     * =====================================================
-     * MAIN LOCATION FUNCTION
-     * =====================================================
-     *
-     * User clicks:
-     * Nearby Pharmacies
-     *
-     * Browser asks location permission
-     *
-     * latitude + longitude
-     *
-     * fetch()
-     *
-     * Django /pharmacies/nearby/
-     *
-     * Database
-     *
-     * Haversine distance
-     *
-     * Nearby pharmacy cards
-     */
-
     function getMyLocation() {
+        const status = document.getElementById("locationStatus");
+        const nearbyList = document.getElementById("nearbyList");
+        const normalList = document.getElementById("careconnectList");
+        const radiusElement = document.getElementById("radiusSelect");
+        const topLocation = document.getElementById("topLocation");
+        const listTitle = document.getElementById("listTitle");
 
-        const status =
-            document.getElementById("locationStatus");
-
-        const nearbyList =
-            document.getElementById("nearbyList");
-
-        const normalList =
-            document.getElementById("careconnectList");
-
-        const radiusElement =
-            document.getElementById("radiusSelect");
-
-        const topLocation =
-            document.getElementById("topLocation");
-
-
-        if (
-            !status ||
-            !nearbyList ||
-            !radiusElement
-        ) {
-
-            console.error(
-                "Nearby pharmacy elements are missing."
-            );
-
+        if (!status || !nearbyList || !normalList || !radiusElement) {
+            console.error("Nearby pharmacy elements are missing.");
             return;
         }
 
-
-        const radius =
-            radiusElement.value;
-
-
-        /*
-         * Get Django CSRF token.
-         */
-
-        const csrfInput =
-            document.querySelector(
-                "#csrfTokenContainer input[name='csrfmiddlewaretoken']"
-            );
-
-
-        const csrfToken =
-            csrfInput
-                ? csrfInput.value
-                : "";
-
-
-        /*
-         * Check browser geolocation support.
-         */
+        const radius = radiusElement.value;
+        const csrfInput = document.querySelector(
+            "#csrfTokenContainer input[name='csrfmiddlewaretoken']"
+        );
+        const csrfToken = csrfInput ? csrfInput.value : "";
 
         if (!navigator.geolocation) {
-
             status.innerText =
                 "Live location is not supported by this browser.";
 
             if (topLocation) {
-
-                topLocation.innerText =
-                    "📍 Location not supported";
+                topLocation.innerText = "📍 Location not supported";
             }
-
             return;
         }
 
-
-        /*
-         * Tell user that browser is requesting location.
-         */
-
-        status.innerText =
-            "Requesting your live location...";
-
+        status.innerText = "Requesting your live location...";
 
         if (topLocation) {
-
-            topLocation.innerText =
-                "📍 Getting live location...";
+            topLocation.innerText = "📍 Getting live location...";
         }
 
-
-        /*
-         * Request browser location.
-         */
-
         navigator.geolocation.getCurrentPosition(
-
-            /*
-             * SUCCESS
-             */
-
             function(position) {
-
-                const latitude =
-                    position.coords.latitude;
-
-                const longitude =
-                    position.coords.longitude;
-
-                const userLatitude = latitude;
-                const userLongitude = longitude;
-
-
-                /*
-                 * Show live location at the top.
-                 */
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
 
                 if (topLocation) {
-
                     topLocation.innerText =
                         "📍 Live Location: " +
-                        latitude.toFixed(5) +
-                        ", " +
+                        latitude.toFixed(5) + ", " +
                         longitude.toFixed(5);
                 }
 
-
-                /*
-                 * Show coordinates in status.
-                 */
-
                 status.innerHTML =
-                    "✓ Live location detected. " +
-                    "Latitude: <strong>" +
+                    "✓ Live location detected. Latitude: <strong>" +
                     latitude.toFixed(6) +
-                    "</strong> | " +
-                    "Longitude: <strong>" +
+                    "</strong> | Longitude: <strong>" +
                     longitude.toFixed(6) +
-                    "</strong>";
+                    "</strong><br>Finding nearby pharmacies...";
 
+                const formData = new URLSearchParams();
+                formData.append("latitude", latitude);
+                formData.append("longitude", longitude);
+                formData.append("radius", radius);
 
-                /*
-                 * Prepare POST data.
-                 */
-
-                const formData =
-                    new URLSearchParams();
-
-
-                formData.append(
-                    "latitude",
-                    latitude
-                );
-
-
-                formData.append(
-                    "longitude",
-                    longitude
-                );
-
-
-                formData.append(
-                    "radius",
-                    radius
-                );
-
-
-                status.innerHTML +=
-                    "<br>Finding nearby pharmacies...";
-
-
-                /*
-                 * Send location to Django.
-                 */
-
-                fetch(
-                    "{% url 'nearby_pharmacies' %}",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/x-www-form-urlencoded; charset=UTF-8",
-
-                            "X-CSRFToken":
-                                csrfToken
-
-                        },
-
-                        credentials:
-                            "same-origin",
-
-                        body:
-                            formData.toString()
-
+                fetch("{% url 'nearby_pharmacies' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded; charset=UTF-8",
+                        "X-CSRFToken": csrfToken
+                    },
+                    credentials: "same-origin",
+                    body: formData.toString()
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error(
+                            "Server returned HTTP " + response.status
+                        );
                     }
-                )
 
-
-                /*
-                 * Check server response.
-                 */
-
-                .then(
-                    function(response) {
-
-                        if (!response.ok) {
-
-                            throw new Error(
-                                "Server returned HTTP " +
-                                response.status
-                            );
-                        }
-
-
-                        return response.json();
-
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (!data.success) {
+                        throw new Error(
+                            data.error ||
+                            "Could not find nearby pharmacies."
+                        );
                     }
-                )
 
+                    normalList.style.display = "none";
+                    nearbyList.style.display = "block";
 
-                /*
-                 * Process Django JSON.
-                 */
+                    if (listTitle) {
+                        listTitle.innerText = "Nearby Pharmacies";
+                    }
 
-                .then(
-                    function(data) {
+                    if (!data.results || data.results.length === 0) {
+                        nearbyList.innerHTML = `
+                            <div class="empty-state">
+                                <h3>No Nearby Pharmacies</h3>
+                                <p>
+                                    No pharmacy was found within ${
+                                        (data.radius / 1000).toFixed(1)
+                                    } km of your live location.
+                                </p>
+                            </div>`;
 
-                        if (!data.success) {
+                        status.innerText = "No nearby pharmacies found.";
+                        return;
+                    }
 
-                            throw new Error(
-                                data.error ||
-                                "Could not find nearby pharmacies."
-                            );
-                        }
+                    let resultHtml = "";
 
+                    data.results.forEach(function(pharmacy) {
+                        const distanceText = pharmacy.distance < 1000
+                            ? Math.round(pharmacy.distance) + " m"
+                            : (pharmacy.distance / 1000).toFixed(2) + " km";
 
-                        /*
-                         * Hide normal database list.
-                         */
+                        resultHtml += `
+                            <article class="pharmacy-card">
+                                <div class="pharmacy-top">
+                                    <div>
+                                        <div class="pharmacy-name">
+                                            ${escapeHtml(pharmacy.name)}
+                                        </div>
+                                        <div class="pharmacy-address">
+                                            ${escapeHtml(pharmacy.address)}
+                                        </div>
+                                    </div>
 
-                        if (normalList) {
-
-                            normalList.style.display =
-                                "none";
-                        }
-
-
-                        /*
-                         * Show nearby results.
-                         */
-
-                        nearbyList.style.display =
-                            "block";
-
-
-                        /*
-                         * No pharmacies.
-                         */
-
-                        if (
-                            !data.results ||
-                            data.results.length === 0
-                        ) {
-
-                            nearbyList.innerHTML = `
-
-                                <div class="empty-state">
-
-                                    <h3>
-                                        No Nearby Pharmacies
-                                    </h3>
-
-                                    <p>
-                                        No pharmacy was found within
-                                        ${(data.radius / 1000).toFixed(1)}
-                                        km of your live location.
-                                    </p>
-
+                                    ${
+                                        pharmacy.verified
+                                        ? '<span class="verified">✓ Verified</span>'
+                                        : '<span class="unverified">Unverified</span>'
+                                    }
                                 </div>
 
-                            `;
+                                <div class="pharmacy-meta">
+                                    <span class="tag blue">
+                                        📍 ${distanceText}
+                                    </span>
+                                    ${
+                                        pharmacy.is_24_7
+                                        ? '<span class="tag green">24/7</span>'
+                                        : ''
+                                    }
+                                    ${
+                                        pharmacy.emergency
+                                        ? '<span class="tag">Emergency</span>'
+                                        : ''
+                                    }
+                                    ${
+                                        pharmacy.home_delivery
+                                        ? '<span class="tag blue">Home Delivery</span>'
+                                        : ''
+                                    }
+                                    ${
+                                        pharmacy.online_order
+                                        ? '<span class="tag blue">Online Order</span>'
+                                        : ''
+                                    }
+                                </div>
 
+                                <div class="pharmacy-bottom">
+                                    <div class="phone">
+                                        ${
+                                            pharmacy.phone
+                                            ? "☎ " + escapeHtml(pharmacy.phone)
+                                            : "Phone not available"
+                                        }
+                                    </div>
 
-                            status.innerText =
-                                "No nearby pharmacies found.";
+                                    <div>
+                                        <a href="#"
+                                           class="details-btn"
+                                           onclick="openNearbyPharmacyProfile(
+                                               ${Number(pharmacy.id)},
+                                               ${latitude},
+                                               ${longitude}
+                                           ); return false;">
+                                            View Details →
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>`;
+                    });
 
-                            return;
-                        }
+                    nearbyList.innerHTML = resultHtml;
 
+                    status.innerHTML =
+                        "✓ Found <strong>" + data.count +
+                        "</strong> pharmacy/pharmacies within <strong>" +
+                        (data.radius / 1000).toFixed(1) +
+                        " km</strong> of your live location.";
+                })
+                .catch(function(error) {
+                    console.error("Nearby pharmacy error:", error);
+                    status.innerText =
+                        "Could not load nearby pharmacies.";
 
-                        /*
-                         * Build pharmacy cards.
-                         */
+                    normalList.style.display = "none";
+                    nearbyList.style.display = "block";
 
-                        let resultHtml =
-                            "";
-
-
-                        data.results.forEach(
-                            function(pharmacy) {
-
-
-                                /*
-                                 * Distance formatting.
-                                 */
-
-                                let distanceText;
-
-
-                                if (
-                                    pharmacy.distance < 1000
-                                ) {
-
-                                    distanceText =
-                                        Math.round(
-                                            pharmacy.distance
-                                        ) +
-                                        " m";
-
-                                } else {
-
-                                    distanceText =
-                                        (
-                                            pharmacy.distance /
-                                            1000
-                                        ).toFixed(2) +
-                                        " km";
-                                }
-
-
-                                /*
-                                 * Pharmacy card.
-                                 */
-
-                                resultHtml += `
-
-                                    <article
-                                        class="pharmacy-card"
-                                    >
-
-                                        <div
-                                            class="pharmacy-top"
-                                        >
-
-                                            <div>
-
-                                                <div
-                                                    class="pharmacy-name"
-                                                >
-                                                    ${escapeHtml(
-                                                        pharmacy.name
-                                                    )}
-                                                </div>
-
-
-                                                <div
-                                                    class="pharmacy-address"
-                                                >
-                                                    ${escapeHtml(
-                                                        pharmacy.address
-                                                    )}
-                                                </div>
-
-                                            </div>
-
-
-                                            ${
-                                                pharmacy.verified
-                                                ? `
-                                                    <span
-                                                        class="verified"
-                                                    >
-                                                        ✓ Verified
-                                                    </span>
-                                                `
-                                                : `
-                                                    <span
-                                                        class="unverified"
-                                                    >
-                                                        Unverified
-                                                    </span>
-                                                `
-                                            }
-
-                                        </div>
-
-
-                                        <div
-                                            class="pharmacy-meta"
-                                        >
-
-                                            <span
-                                                class="tag blue"
-                                            >
-                                                📍 ${distanceText}
-                                            </span>
-
-
-                                            ${
-                                                pharmacy.is_24_7
-                                                ? `
-                                                    <span
-                                                        class="tag green"
-                                                    >
-                                                        24/7
-                                                    </span>
-                                                `
-                                                : ""
-                                            }
-
-
-                                            ${
-                                                pharmacy.emergency
-                                                ? `
-                                                    <span
-                                                        class="tag"
-                                                    >
-                                                        Emergency
-                                                    </span>
-                                                `
-                                                : ""
-                                            }
-
-
-                                            ${
-                                                pharmacy.home_delivery
-                                                ? `
-                                                    <span
-                                                        class="tag blue"
-                                                    >
-                                                        Home Delivery
-                                                    </span>
-                                                `
-                                                : ""
-                                            }
-
-
-                                            ${
-                                                pharmacy.online_order
-                                                ? `
-                                                    <span
-                                                        class="tag blue"
-                                                    >
-                                                        Online Order
-                                                    </span>
-                                                `
-                                                : ""
-                                            }
-
-                                        </div>
-
-
-                                        <div
-                                            class="pharmacy-bottom"
-                                        >
-
-                                            <div
-                                                class="phone"
-                                            >
-
-                                                ${
-                                                    pharmacy.phone
-                                                    ? "☎ " +
-                                                      escapeHtml(
-                                                          pharmacy.phone
-                                                      )
-                                                    : "Phone not available"
-                                                }
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <a
-                                                    href="#"
-                                                    class="details-btn"
-                                                    style="text-decoration: none; display: inline-block;"
-                                                    onclick="
-                                                        openNearbyPharmacyProfile(
-                                                            ${pharmacy.id},
-                                                            ${userLatitude},
-                                                            ${userLongitude}
-                                                        );
-                                                        return false;
-                                                    "
-                                                >
-                                                    View Details →
-                                                </a>
-
-                                            </div>
-
-                                        </div>
-
-                                    </article>
-
-                                `;
-                            }
-                        );
-
-
-                        /*
-                         * Put cards into page.
-                         */
-
-                        nearbyList.innerHTML =
-                            resultHtml;
-
-
-                        /*
-                         * Final success message.
-                         */
-
-                        status.innerHTML =
-                            "✓ Found <strong>" +
-                            data.count +
-                            "</strong> pharmacy/pharmacies " +
-                            "within <strong>" +
-                            (
-                                data.radius / 1000
-                            ).toFixed(1) +
-                            " km</strong> of your live location.";
-
+                    if (listTitle) {
+                        listTitle.innerText = "Nearby Pharmacies";
                     }
-                )
 
-
-                /*
-                 * Fetch/backend error.
-                 */
-
-                .catch(
-                    function(error) {
-
-                        console.error(
-                            "Nearby pharmacy error:",
-                            error
-                        );
-
-
-                        status.innerText =
-                            "Could not load nearby pharmacies.";
-
-
-                        nearbyList.style.display =
-                            "block";
-
-
-                        nearbyList.innerHTML = `
-
-                            <div class="empty-state">
-
-                                <h3>
-                                    Something went wrong
-                                </h3>
-
-                                <p>
-                                    ${escapeHtml(
-                                        error.message
-                                    )}
-                                </p>
-
-                            </div>
-
-                        `;
-
-                    }
-                );
-
+                    nearbyList.innerHTML = `
+                        <div class="empty-state">
+                            <h3>Something went wrong</h3>
+                            <p>${escapeHtml(error.message)}</p>
+                        </div>`;
+                });
             },
-
-
-            /*
-             * LOCATION ERROR
-             */
-
             function(error) {
-
                 if (topLocation) {
-
-                    topLocation.innerText =
-                        "📍 Use My Live Location";
+                    topLocation.innerText = "📍 Use My Live Location";
                 }
-
 
                 if (error.code === 1) {
-
                     status.innerText =
                         "Location permission was denied. Please allow location access.";
-
-                }
-
-                else if (error.code === 2) {
-
+                } else if (error.code === 2) {
                     status.innerText =
                         "Your live location could not be determined.";
-
-                }
-
-                else if (error.code === 3) {
-
-                    status.innerText =
-                        "Location request timed out.";
-
-                }
-
-                else {
-
+                } else if (error.code === 3) {
+                    status.innerText = "Location request timed out.";
+                } else {
                     status.innerText =
                         "Unable to get your live location.";
-
                 }
-
             },
-
-
-            /*
-             * LOCATION OPTIONS
-             */
-
             {
-
                 enableHighAccuracy: true,
-
                 timeout: 15000,
-
                 maximumAge: 0
-
             }
-
         );
-
     }
-
-
-    /*
-     * =====================================================
-     * HTML ESCAPE
-     * =====================================================
-     */
 
     function escapeHtml(value) {
-
-        if (
-            value === null ||
-            value === undefined
-        ) {
-
+        if (value === null || value === undefined) {
             return "";
         }
 
-
         return String(value)
-
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-
-            .replace(
-                /</g,
-                "&lt;"
-            )
-
-            .replace(
-                />/g,
-                "&gt;"
-            )
-
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-
-            .replace(
-                /'/g,
-                "&#039;"
-            );
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
-
-
-    /*
-     * =====================================================
-     * JAVASCRIPT STRING ESCAPE
-     * =====================================================
-     */
-
-    function escapeJs(value) {
-
-        if (
-            value === null ||
-            value === undefined
-        ) {
-
-            return "";
-        }
-
-
-        return String(value)
-
-            .replace(
-                /\\/g,
-                "\\\\"
-            )
-
-            .replace(
-                /'/g,
-                "\\'"
-            )
-
-            .replace(
-                /"/g,
-                '\\"'
-            )
-
-            .replace(
-                /\r?\n/g,
-                " "
-            );
-    }
-
-
-    /*
-     * =====================================================
-     * OPEN PHARMACY PROFILE FROM NEARBY RESULTS
-     * =====================================================
-     */
 
     function openNearbyPharmacyProfile(
         pharmacyId,
         userLatitude,
         userLongitude
     ) {
+        const detailBaseUrl = "{% url 'pharmacy_detail' 999999 %}";
+        const detailUrl = detailBaseUrl.replace(
+            "999999",
+            encodeURIComponent(pharmacyId)
+        );
 
-        const detailBaseUrl =
-            "{% url 'pharmacy_detail' 999999 %}";
-
-        const detailUrl =
-            detailBaseUrl.replace(
-                "999999",
-                pharmacyId
-            );
-
-        const finalUrl =
+        window.location.href =
             detailUrl +
-            "?lat=" +
-            encodeURIComponent(userLatitude) +
-            "&lng=" +
-            encodeURIComponent(userLongitude);
-
-        window.location.href = finalUrl;
+            "?lat=" + encodeURIComponent(userLatitude) +
+            "&lng=" + encodeURIComponent(userLongitude);
     }
 
-
-    /*
-     * =====================================================
-     * SAVE PHARMACY
-     * =====================================================
-     */
-
-    function savePharmacy(
-        pharmacyId
-    ) {
-
+    function savePharmacy(pharmacyId) {
         alert(
-            "Save Pharmacy\n\n" +
-            "Pharmacy ID: " +
-            pharmacyId +
-            "\n\n" +
-            "Save functionality will be connected next."
+            "Save Pharmacy\n\nPharmacy ID: " + pharmacyId +
+            "\n\nSave functionality will be connected next."
         );
     }
-
 </script>
 
 </body>
 </html>
+```

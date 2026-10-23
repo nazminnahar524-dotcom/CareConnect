@@ -1,0 +1,163 @@
+
+{% extends 'base.html' %}
+{% block title %}Appointment History · CareConnect{% endblock %}
+
+{% block content %}
+<style>
+.appointment-history {
+    --ah-green: #16845b;
+    --ah-dark: #123d31;
+    --ah-soft: #e8f6ef;
+    --ah-border: #dce9e2;
+    color: #203b30;
+}
+.appointment-history .ah-card {
+    height: 100%; background: white;
+    border: 1px solid var(--ah-border);
+    border-radius: 18px;
+    box-shadow: 0 7px 24px rgba(18,61,49,.05);
+    transition: transform .2s, box-shadow .2s;
+}
+.appointment-history .ah-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(18,61,49,.08);
+}
+.appointment-history .ah-heading { color: var(--ah-dark); font-weight: 800; }
+.appointment-history .ah-muted { color: #6b7f76; }
+.appointment-history .ah-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--ah-soft); color: var(--ah-green);
+    display: inline-flex; align-items: center;
+    justify-content: center; flex-shrink: 0; font-size: 20px;
+}
+.appointment-history .ah-status {
+    display: inline-block; border-radius: 20px;
+    padding: 6px 11px; font-size: 11px; font-weight: 800;
+    background: #eef1ef; color: #59665f;
+}
+.appointment-history .ah-status-completed {
+    background: #eaf2ff; color: #2358a5;
+}
+.appointment-history .ah-status-cancelled {
+    background: #fff0ef; color: #b42318;
+}
+.appointment-history .ah-btn {
+    display: inline-flex; justify-content: center; align-items: center;
+    gap: 7px; border-radius: 10px; padding: 10px 14px;
+    background: var(--ah-green); color: white;
+    border: 1px solid var(--ah-green);
+    text-decoration: none; font-weight: 700;
+}
+.appointment-history .ah-btn:hover {
+    background: var(--ah-dark); color: white;
+}
+.appointment-history .ah-detail {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13px; margin-bottom: 12px;
+}
+.appointment-history .ah-detail i {
+    width: 16px; margin-top: 3px; color: var(--ah-green);
+}
+</style>
+
+<div class="appointment-history">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-3 mb-4">
+        <div>
+            <div class="small fw-bold mb-2" style="color:#16845b;letter-spacing:1px;">
+                YOUR RECORDS
+            </div>
+            <h2 class="ah-heading mb-2">Appointment History</h2>
+            <p class="ah-muted mb-0">
+                Review your completed and cancelled appointments.
+            </p>
+        </div>
+
+        <a href="{% url 'my_appointments' %}" class="ah-btn">
+            <i class="fa-regular fa-calendar-check"></i>
+            My Appointments
+        </a>
+    </div>
+
+    {% if appointments %}
+    <div class="row g-4">
+        {% for app in appointments %}
+        <div class="col-md-6 col-xl-4">
+            <article class="ah-card p-3 p-lg-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <span class="ah-icon">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </span>
+                    <div class="flex-grow-1">
+                        <h5 class="ah-heading mb-1">Dr. {{ app.doctor.name }}</h5>
+                        <p class="ah-muted small mb-0">{{ app.doctor.specialty }}</p>
+                    </div>
+                </div>
+
+                {% if app.status == 'Completed' %}
+                    <span class="ah-status ah-status-completed">Completed</span>
+                {% elif app.status == 'Cancelled' %}
+                    <span class="ah-status ah-status-cancelled">Cancelled</span>
+                {% else %}
+                    <span class="ah-status">{{ app.status }}</span>
+                {% endif %}
+
+                <hr style="border-color:#e8efea;">
+
+                <div class="ah-detail">
+                    <i class="fa-solid fa-hospital"></i>
+                    <div>
+                        <div class="ah-muted">Hospital</div>
+                        <strong>{{ app.doctor.hospital_name }}</strong>
+                    </div>
+                </div>
+
+                <div class="ah-detail">
+                    <i class="fa-regular fa-calendar"></i>
+                    <div>
+                        <div class="ah-muted">Date</div>
+                        <strong>{{ app.appointment_date|date:"d M Y" }}</strong>
+                    </div>
+                </div>
+
+                <div class="ah-detail">
+                    <i class="fa-regular fa-clock"></i>
+                    <div>
+                        <div class="ah-muted">Time slot</div>
+                        <strong>{{ app.time_slot }}</strong>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3 gap-2">
+                    <div>
+                        <div class="ah-muted small">Consultation fee</div>
+                        <strong class="fs-5" style="color:#16845b;">
+                            ৳{{ app.doctor.consultation_fee }}
+                        </strong>
+                    </div>
+
+                    <a href="{% url 'doctor_detail' app.doctor_id %}"
+                       class="ah-btn">
+                        View Doctor
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <section class="ah-card p-5 text-center" style="height:auto;">
+        <span class="ah-icon mb-3" style="width:60px;height:60px;">
+            <i class="fa-regular fa-folder-open"></i>
+        </span>
+        <h4 class="ah-heading">No appointment history yet</h4>
+        <p class="ah-muted">
+            Completed and cancelled appointments will appear here.
+        </p>
+        <a href="{% url 'doctor_list' %}" class="ah-btn">
+            <i class="fa-solid fa-user-doctor"></i> Find a Doctor
+        </a>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

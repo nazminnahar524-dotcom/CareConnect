@@ -1,58 +1,1012 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}CareConnect{% endblock %}</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
-        :root{--cc-green:#138a63;--cc-dark:#12664d;--cc-soft:#eaf8f2;--cc-bg:#f6faf8;--cc-text:#1b2924;--cc-muted:#74827c;--cc-border:#e2ebe7;--cc-card:#fff}
-        *{box-sizing:border-box} body{margin:0;background:var(--cc-bg);color:var(--cc-text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px} a{text-decoration:none}
-        .cc-top{background:#fff;border-bottom:1px solid var(--cc-border);min-height:68px}.cc-brand{font-weight:800;color:#18241f!important;letter-spacing:-.4px}.cc-mark{width:34px;height:34px;border-radius:10px;background:var(--cc-soft);display:inline-flex;align-items:center;justify-content:center;color:var(--cc-green);margin-right:8px}.cc-location{font-size:12px;border:1px solid var(--cc-border);background:#fbfdfc;border-radius:10px;padding:7px 10px;color:#52615b}.cc-search{max-width:390px}.cc-search .form-control{border-right:0;background:#fbfdfc;border-color:var(--cc-border);height:40px}.cc-search .btn{background:var(--cc-green);color:#fff;border-color:var(--cc-green);width:42px}.cc-action{width:38px;height:38px;border:1px solid var(--cc-border);border-radius:11px;background:#fff;color:#53635c;display:inline-flex;align-items:center;justify-content:center}.cc-user{border:1px solid var(--cc-border);background:#fff;border-radius:12px;padding:6px 10px;font-size:12px;font-weight:700}
-        .cc-tabs{background:#fff;border-bottom:1px solid var(--cc-border)}.cc-tabs .nav-link{color:#65736d;font-weight:650;padding:13px 18px;border-bottom:2px solid transparent}.cc-tabs .nav-link.active,.cc-tabs .nav-link:hover{color:var(--cc-green);border-bottom-color:var(--cc-green)}
-        .cc-page{max-width:1500px;margin:0 auto;padding:22px 24px 34px}.cc-card{background:var(--cc-card);border:1px solid var(--cc-border);border-radius:14px;box-shadow:0 5px 18px rgba(22,74,55,.045)}.cc-muted{color:var(--cc-muted)}.cc-icon{width:42px;height:42px;border-radius:11px;background:var(--cc-soft);color:var(--cc-green);display:inline-flex;align-items:center;justify-content:center}.btn-cc{background:var(--cc-green);border-color:var(--cc-green);color:#fff;font-weight:700}.btn-cc:hover{background:var(--cc-dark);border-color:var(--cc-dark);color:#fff}.btn-outline-cc{color:var(--cc-green);border-color:#b8ddcf;font-weight:700}.btn-outline-cc:hover{background:var(--cc-soft);color:var(--cc-dark)}.form-control,.form-select{border-color:var(--cc-border);min-height:42px}.form-control:focus,.form-select:focus{border-color:#8fcdb9;box-shadow:0 0 0 .18rem rgba(19,138,99,.10)}
-        .cc-stat{padding:16px 17px;min-height:91px}.cc-stat .value{font-size:22px;font-weight:800}.cc-stat .label{font-size:11px;color:var(--cc-muted);margin-top:2px}.cc-doctor-avatar{width:70px;height:70px;border-radius:12px;background:#edf7f3;color:var(--cc-green);display:flex;align-items:center;justify-content:center;font-size:25px;flex:none}.cc-doctor-row{transition:.18s ease}.cc-doctor-row:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(22,74,55,.08)}.cc-filter-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.45px;color:#5f6d67}.cc-chip{display:inline-flex;align-items:center;border:1px solid var(--cc-border);background:#fff;border-radius:20px;padding:6px 10px;font-size:11px;color:#596760}.cc-footer{color:#82908a;font-size:12px}
-        @media(max-width:991px){.cc-page{padding:16px}.cc-location{display:none}.cc-search{max-width:none;margin:10px 0}.cc-tabs .nav-link{padding:11px 12px}.cc-user{width:100%}}
+        :root {
+            --cc-green: #138a63;
+            --cc-dark: #12664d;
+            --cc-soft: #eaf8f2;
+            --cc-bg: #f6faf8;
+            --cc-text: #1b2924;
+            --cc-muted: #74827c;
+            --cc-border: #e2ebe7;
+            --cc-card: #fff;
+        }
+
+        body {
+            margin: 0;
+            background: var(--cc-bg);
+            color: var(--cc-text);
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+            font-size: 14px;
+        }
+
+        a { text-decoration: none; }
+
+        /* Navbar */
+        .cc-top {
+            background: #fff;
+            border-bottom: 1px solid var(--cc-border);
+            min-height: 68px;
+        }
+
+        .cc-brand {
+            font-weight: 800;
+            color: #18241f !important;
+            letter-spacing: -.4px;
+        }
+
+        .cc-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            background: var(--cc-soft);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cc-green);
+            margin-right: 8px;
+            transition: transform .3s ease;
+        }
+
+        .cc-brand:hover .cc-mark {
+            transform: scale(1.1) rotate(6deg);
+        }
+
+        .cc-location-btn {
+            font-size: 12px;
+            border: 1px solid var(--cc-border);
+            background: #fbfdfc;
+            border-radius: 10px;
+            padding: 7px 10px;
+            color: #52615b;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .cc-location-btn:hover {
+            background: var(--cc-soft);
+            border-color: #b8ddcf;
+            color: var(--cc-dark);
+        }
+
+        /* Search and autocomplete */
+        .cc-search-wrapper {
+            position: relative;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .cc-search .form-control {
+            border-right: 0;
+            background: #fbfdfc;
+            border-color: var(--cc-border);
+            height: 40px;
+        }
+
+        .cc-search .btn {
+            background: var(--cc-green);
+            color: #fff;
+            border-color: var(--cc-green);
+            width: 42px;
+        }
+
+        .search-results-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid var(--cc-border);
+            box-shadow: 0 16px 36px rgba(0,0,0,.12);
+            margin-top: 6px;
+            z-index: 1050;
+            display: none;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+
+        .search-result-item {
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--cc-text);
+            transition: background .2s ease;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background: var(--cc-soft); }
+
+        .search-item-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--cc-soft);
+            color: var(--cc-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        /* Navbar action buttons */
+        .cc-action-btn {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--cc-border);
+            border-radius: 11px;
+            background: #fff;
+            color: #53635c;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all .2s ease;
+        }
+
+        .cc-action-btn:hover {
+            background: var(--cc-soft);
+            border-color: #b8ddcf;
+            color: var(--cc-green);
+        }
+
+        .cc-user {
+            border: 1px solid var(--cc-border);
+            background: #fff;
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .cc-tabs {
+            background: #fff;
+            border-bottom: 1px solid var(--cc-border);
+        }
+
+        .cc-tabs .nav-link {
+            color: #65736d;
+            font-weight: 650;
+            padding: 13px 18px;
+            border-bottom: 2px solid transparent;
+            transition: .2s;
+        }
+
+        .cc-tabs .nav-link.active,
+        .cc-tabs .nav-link:hover {
+            color: var(--cc-green);
+            border-bottom-color: var(--cc-green);
+        }
+
+        .cc-page {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 22px 24px 34px;
+        }
+
+        .pulse-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        /* Chat dropdown */
+        .chat-dropdown-menu {
+            width: 340px;
+            border-radius: 16px;
+            border: 1px solid var(--cc-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,.08);
+            padding: 16px;
+        }
+
+        .chat-messages-container {
+            max-height: 240px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 4px;
+        }
+
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            max-width: 85%;
+            line-height: 1.4;
+        }
+
+        .chat-bubble-support {
+            background: #f1f5f9;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+        }
+
+        .chat-bubble-user {
+            background: var(--cc-green);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+
+        .btn-cc {
+            background: var(--cc-green);
+            border-color: var(--cc-green);
+            color: #fff;
+        }
+
+        .btn-cc:hover {
+            background: var(--cc-dark);
+            border-color: var(--cc-dark);
+            color: #fff;
+        }
+
+        .btn-outline-cc {
+            color: var(--cc-green);
+            border-color: var(--cc-green);
+        }
+
+        .btn-outline-cc:hover {
+            background: var(--cc-green);
+            color: #fff;
+        }
+
+        /* ===== Modern CareConnect Footer ===== */
+        .cc-footer {
+            position: relative;
+            overflow: hidden;
+            margin-top: 44px;
+            padding: 48px 0 20px;
+            color: #d5e5dc;
+            background: linear-gradient(125deg, #102f26, #14523c 58%, #10382e);
+            border-top: 3px solid #55c58a;
+        }
+
+        .cc-footer::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            top: -180px;
+            right: -70px;
+            border: 1px solid rgba(164,237,193,.18);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 30px rgba(164,237,193,.04),
+                0 0 0 60px rgba(164,237,193,.025);
+            pointer-events: none;
+        }
+
+        .cc-footer .container,
+        .cc-footer .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cc-footer-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 16px;
+            color: #fff;
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -.6px;
+        }
+
+        .cc-footer-brand:hover { color: #fff; }
+
+        .cc-footer-logo {
+            width: 46px;
+            height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 14px;
+            background: rgba(255,255,255,.09);
+            color: #98e8b7;
+            font-size: 22px;
+        }
+
+        .cc-footer-brand-accent { color: #98e8b7; }
+
+        .cc-footer-description,
+        .cc-footer-contact {
+            color: #c0d7ca;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .cc-footer-description {
+            max-width: 360px;
+            margin-bottom: 18px;
+        }
+
+        .cc-footer-contact {
+            max-width: 320px;
+            margin-bottom: 20px;
+        }
+
+        .cc-footer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 13px;
+            border: 1px solid rgba(152,232,183,.25);
+            border-radius: 30px;
+            background: rgba(152,232,183,.08);
+            color: #a8ebc2;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .cc-footer-heading {
+            margin: 7px 0 20px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .cc-footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cc-footer-links li { margin-bottom: 14px; }
+
+        .cc-footer-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #c7dbcf;
+            font-size: 13px;
+            transition: color .2s ease, transform .2s ease;
+        }
+
+        .cc-footer-links a i {
+            color: #8ce0ad;
+            font-size: 10px;
+        }
+
+        .cc-footer-links a:hover {
+            color: #a9efc2;
+            transform: translateX(4px);
+        }
+
+        .cc-footer-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 17px;
+            border: 1px solid #a0e8bb;
+            border-radius: 10px;
+            background: #a0e8bb;
+            color: #123d31;
+            font-size: 12px;
+            font-weight: 800;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .cc-footer-cta:hover {
+            color: #123d31;
+            background: #c2f3d3;
+            transform: translateY(-2px);
+        }
+
+        .cc-footer-divider {
+            height: 1px;
+            margin: 32px 0 18px;
+            background: rgba(255,255,255,.14);
+        }
+
+        .cc-footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .cc-footer-bottom p,
+        .cc-footer-note {
+            margin: 0;
+            color: #b9cec1;
+            font-size: 11px;
+        }
+
+        .cc-footer-bottom strong { color: #fff; }
+
+        .cc-footer-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .cc-footer-note i { color: #98e8b7; }
+
+        @media (max-width: 991px) {
+            .cc-page { padding: 16px; }
+            .cc-search-wrapper { max-width: none; margin: 10px 0; }
+            .cc-tabs .nav-link { padding: 11px 12px; }
+            .cc-user { width: 100%; }
+        }
+
+        @media (max-width: 767px) {
+            .cc-footer {
+                margin-top: 30px;
+                padding: 34px 0 18px;
+            }
+
+            .cc-footer-heading { margin-bottom: 14px; }
+            .cc-footer-divider { margin-top: 24px; }
+
+            .cc-footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .chat-dropdown-menu {
+                width: min(340px, calc(100vw - 30px));
+            }
+        }
     </style>
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
+
+<!-- Top Navigation -->
 <nav class="navbar navbar-expand-xl cc-top sticky-top">
-  <div class="container-fluid px-3 px-xl-4">
-    <a class="navbar-brand cc-brand d-flex align-items-center me-3" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}"><span class="cc-mark"><i class="fa-solid fa-heart-pulse"></i></span>Care<span style="color:var(--cc-green)">Connect</span></a>
-    {% if user.is_authenticated %}<span class="cc-location me-3"><i class="fa-solid fa-location-dot me-1" style="color:var(--cc-green)"></i>Dharmondhi, Dhaka <i class="fa-solid fa-chevron-down ms-1" style="font-size:9px"></i></span>{% endif %}
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ccNav"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="ccNav">
-      {% if user.is_authenticated %}
-      <form action="{% url 'doctor_list' %}" method="get" class="input-group cc-search ms-xl-2 me-auto"><input class="form-control" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search doctors, hospitals, specialties..."><button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button></form>
-      <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
-        <span class="cc-action"><i class="fa-regular fa-bell"></i></span><span class="cc-action"><i class="fa-regular fa-comment-dots"></i></span>
-        <div class="dropdown"><button class="cc-user dropdown-toggle" data-bs-toggle="dropdown" type="button"><i class="fa-regular fa-circle-user me-1" style="color:var(--cc-green)"></i>Hi, {{ user.username }}</button><ul class="dropdown-menu dropdown-menu-end shadow-sm border-0"><li><a class="dropdown-item" href="{% url 'my_appointments' %}">My Appointments</a></li><li><hr class="dropdown-divider"></li><li><form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="dropdown-item text-danger" type="submit">Log out</button></form></li></ul></div>
-      </div>
-      {% else %}
-      <div class="ms-auto d-flex gap-2"><a class="btn btn-outline-cc rounded-3 px-3" href="{% url 'login' %}">Log in</a><a class="btn btn-cc rounded-3 px-3" href="{% url 'signup' %}">Sign up</a></div>
-      {% endif %}
+    <div class="container-fluid px-3 px-xl-4">
+
+        <a class="navbar-brand cc-brand d-flex align-items-center me-3"
+           href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}">
+            <span class="cc-mark">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </span>
+            Care<span style="color: var(--cc-green)">Connect</span>
+        </a>
+
+        {% if user.is_authenticated %}
+        <div class="dropdown d-none d-md-block me-3">
+            <button class="btn cc-location-btn dropdown-toggle border-0"
+                    type="button"
+                    id="locationMenu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                <i class="fa-solid fa-location-dot me-1" style="color: var(--cc-green)"></i>
+                Dhanmondhi, Dhaka
+            </button>
+
+            <ul class="dropdown-menu shadow-sm border-0 rounded-3 p-2"
+                aria-labelledby="locationMenu">
+                <li>
+                    <a class="dropdown-item rounded-2 small fw-bold text-success" href="#">
+                        <i class="fa-solid fa-location-crosshairs me-2"></i>
+                        Dhanmondhi, Dhaka
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item rounded-2 small" href="#">
+                        <i class="fa-solid fa-location-dot me-2 text-muted"></i>
+                        Gulshan, Dhaka
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item rounded-2 small" href="#">
+                        <i class="fa-solid fa-location-dot me-2 text-muted"></i>
+                        Banani, Dhaka
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#ccNav"
+                aria-controls="ccNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="ccNav">
+
+            {% if user.is_authenticated %}
+
+            <!-- Instant Live Search -->
+            <div class="cc-search-wrapper ms-xl-2 me-auto">
+                <form action="{% url 'doctor_list' %}" method="get"
+                      class="input-group cc-search" id="searchForm">
+                    <input class="form-control"
+                           id="searchInput"
+                           name="q"
+                           value="{{ request.GET.q|default:'' }}"
+                           placeholder="Search doctors, hospitals, specialties (e.g. Labaid)..."
+                           autocomplete="off">
+
+                    <button class="btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+
+                <div class="search-results-dropdown" id="searchResults"></div>
+            </div>
+
+            <!-- User Actions -->
+            <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
+
+                <!-- Notifications -->
+                <div class="dropdown">
+                    <button class="btn cc-action-btn border-0 dropdown-toggle p-0"
+                            type="button"
+                            id="notifyMenu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="pulse-badge"></span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-3"
+                        style="width: 310px;" aria-labelledby="notifyMenu">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-dark">Notifications</span>
+                            <span class="badge bg-success-subtle text-success small rounded-pill px-2">
+                                2 New
+                            </span>
+                        </div>
+
+                        <hr class="my-2">
+
+                        <li>
+                            <a class="dropdown-item rounded-3 p-2 small text-wrap mb-1"
+                               href="{% url 'my_appointments' %}">
+                                <div class="d-flex gap-2 align-items-center">
+                                    <div class="bg-success-subtle text-success rounded-circle p-2 d-flex align-items-center justify-content-center"
+                                         style="width:32px;height:32px;">
+                                        <i class="fa-solid fa-calendar-check"></i>
+                                    </div>
+                                    <div>
+                                        <strong class="text-dark d-block">Appointment Confirmed</strong>
+                                        <span class="text-muted" style="font-size:11px;">
+                                            Dr. Ahmed assigned your schedule slot.
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Messaging -->
+                <div class="dropdown">
+                    <button class="btn cc-action-btn border-0 dropdown-toggle p-0"
+                            type="button"
+                            id="msgMenu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            data-bs-auto-close="outside">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        <span class="pulse-badge" style="background-color:#3b82f6;"></span>
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end chat-dropdown-menu"
+                         aria-labelledby="msgMenu">
+                        <div class="d-flex justify-content-between align-items-center pb-2 mb-2 border-bottom">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                     style="width:28px;height:28px;font-size:11px;">
+                                    CS
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size:13px;">
+                                        CareConnect Support
+                                    </h6>
+                                    <span class="text-success" style="font-size:10px;">
+                                        <i class="fa-solid fa-circle me-1" style="font-size:8px;"></i>
+                                        Online
+                                    </span>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-muted rounded-pill" style="font-size:10px;">
+                                Live Chat
+                            </span>
+                        </div>
+
+                        <div class="chat-messages-container mb-3" id="chatBox">
+                            <div class="chat-bubble chat-bubble-support">
+                                Hello <strong>{{ user.username }}</strong>!
+                                Welcome to CareConnect. How can we assist with
+                                your health appointment or prescription today?
+                            </div>
+                        </div>
+
+                        <div class="input-group input-group-sm">
+                            <input type="text"
+                                   id="chatInput"
+                                   class="form-control rounded-start-pill ps-3"
+                                   placeholder="Type your message..."
+                                   style="font-size:12px;height:36px;">
+
+                            <button class="btn btn-cc rounded-end-pill px-3"
+                                    type="button" id="sendChatBtn"
+                                    style="height:36px;">
+                                <i class="fa-solid fa-paper-plane" style="font-size:11px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Menu -->
+                <div class="dropdown">
+                    <button class="cc-user dropdown-toggle border-0"
+                            data-bs-toggle="dropdown" type="button">
+                        <i class="fa-regular fa-circle-user me-1"
+                           style="color:var(--cc-green)"></i>
+                        Hi, {{ user.username }}
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
+                        <li>
+                            <a class="dropdown-item rounded-2"
+                               href="{% url 'my_appointments' %}">
+                                My Appointments
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="dropdown-item text-danger rounded-2" type="submit">
+                                    Log out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="ms-auto d-flex gap-2">
+                <a class="btn btn-outline-cc rounded-3 px-3"
+                   href="{% url 'login' %}">Log in</a>
+                <a class="btn btn-cc rounded-3 px-3"
+                   href="{% url 'signup' %}">Sign up</a>
+            </div>
+
+            {% endif %}
+        </div>
     </div>
-  </div>
 </nav>
+
+<!-- Main Navigation Tabs -->
 {% if user.is_authenticated %}
 <div class="cc-tabs">
-  <div class="container-fluid px-3 px-xl-4">
-    <ul class="nav">
-      <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i> Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'doctor_list' %}"><i class="fa-solid fa-user-doctor me-1"></i> Doctors</a></li>
-      <li class="nav-item"><a class="nav-link" href="{% url 'my_appointments' %}"><i class="fa-regular fa-calendar-check me-1"></i> Appointments</a></li>
-      <li class="nav-item"><a class="nav-link text-danger fw-bold" href="{% url 'nearby_donors' %}"><i class="fa-solid fa-hand-holding-heart me-1"></i> Donors</a></li>
-    </ul>
-  </div>
+    <div class="container-fluid px-3 px-xl-4">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                   href="{% url 'home' %}">
+                    <i class="fa-solid fa-house me-1"></i> Home
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}"
+                   href="{% url 'doctor_list' %}">
+                    <i class="fa-solid fa-user-doctor me-1"></i> Doctors
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}"
+                   href="{% url 'my_appointments' %}">
+                    <i class="fa-regular fa-calendar-check me-1"></i> Appointments
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}"
+                   href="{% url 'pharmacy_list' %}">
+                    <i class="fa-solid fa-prescription-bottle-medical me-1"></i> Pharmacies
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if 'hospital' in request.resolver_match.url_name %}active{% endif %}"
+                   href="{% url 'hospital_list' %}">
+                    <i class="fa-solid fa-hospital me-1"></i> Hospitals
+                </a>
+            </li>
+
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'medicine_list' or request.resolver_match.url_name == 'medicine_detail' %}active{% endif %}"
+               href="{% url 'medicines:medicine_list' %}">
+                <i class="fa-solid fa-pills me-1"></i> Medicines
+            </a>
+        </li>
+
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}"
+                   href="{% url 'nearby_donors' %}">
+                    <i class="fa-solid fa-hand-holding-heart me-1"></i> Donors
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 {% endif %}
+
+<!-- Page Content -->
 <main class="cc-page">
-{% if messages %}{% for message in messages %}<div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} border-0 shadow-sm">{{ message }}</div>{% endfor %}{% endif %}
-{% block content %}{% endblock %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} border-0 shadow-sm">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
 </main>
-<footer class="container-fluid px-4 pb-4 cc-footer">© 2026 CareConnect · Healthcare information and appointment portal</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>{% block extra_js %}{% endblock %}
-</body></html>
+
+<!-- Modern Footer -->
+<footer class="cc-footer">
+    <div class="container-fluid px-4 px-xl-5">
+        <div class="row gy-4">
+
+            <!-- Brand -->
+            <div class="col-lg-5 col-md-6">
+                <a class="cc-footer-brand"
+                   href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}">
+                    <span class="cc-footer-logo">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </span>
+                    <span>
+                        Care<span class="cc-footer-brand-accent">Connect</span>
+                    </span>
+                </a>
+
+                <p class="cc-footer-description">
+                    Your health, our priority. Find trusted healthcare
+                    services, explore specialists, and manage your
+                    appointments in one place.
+                </p>
+
+                <span class="cc-footer-pill">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    Healthcare made simpler
+                </span>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-3 col-md-6">
+                <h6 class="cc-footer-heading">EXPLORE CARECONNECT</h6>
+
+                <ul class="cc-footer-links">
+                    <li>
+                        <a href="{% url 'doctor_list' %}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                            Find Doctors
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'hospital_list' %}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                            Hospitals
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'pharmacy_list' %}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                            Pharmacies
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'nearby_donors' %}">
+                            <i class="fa-solid fa-chevron-right"></i>
+                            Blood Donors
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Appointments -->
+            <div class="col-lg-4 col-md-6">
+                <h6 class="cc-footer-heading">YOUR HEALTH JOURNEY</h6>
+
+                <p class="cc-footer-contact">
+                    Keep your healthcare journey organized.
+                    Browse specialists and manage your upcoming
+                    visits whenever you need to.
+                </p>
+
+                <a class="cc-footer-cta"
+                   href="{% if user.is_authenticated %}{% url 'my_appointments' %}{% else %}{% url 'login' %}{% endif %}">
+                    <i class="fa-regular fa-calendar-check"></i>
+                    My Appointments
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="cc-footer-divider"></div>
+
+        <div class="cc-footer-bottom">
+            <p>
+                © {% now "Y" %} <strong>CareConnect</strong>.
+                All rights reserved.
+            </p>
+
+            <span class="cc-footer-note">
+                <i class="fa-solid fa-heart"></i>
+                Made for better healthcare
+            </span>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Search autocomplete
+    const searchDatabase = [
+        { name: "Hospitals Page", type: "Page", icon: "fa-hospital", url: "{% url 'hospital_list' %}" },
+        { name: "Labaid Specialized Hospital", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=labaid" },
+        { name: "Square Hospital Dhaka", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=square" },
+        { name: "United Hospital Gulshan", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=united" },
+        { name: "Doctors Directory", type: "Page", icon: "fa-user-doctor", url: "{% url 'doctor_list' %}" },
+        { name: "Cardiology Specialists", type: "Specialty", icon: "fa-heart-pulse", url: "{% url 'doctor_list' %}?specialty=cardiology" },
+        { name: "Neurology Specialists", type: "Specialty", icon: "fa-brain", url: "{% url 'doctor_list' %}?specialty=neurology" },
+        { name: "Pharmacies", type: "Page", icon: "fa-prescription-bottle-medical", url: "{% url 'pharmacy_list' %}" },
+        { name: "Blood Donors Network", type: "Page", icon: "fa-hand-holding-heart", url: "{% url 'nearby_donors' %}" },
+        { name: "My Appointments", type: "Page", icon: "fa-calendar-check", url: "{% url 'my_appointments' %}" }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.getElementById("searchResults");
+
+    if (searchInput && searchResults) {
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim().toLowerCase();
+            searchResults.innerHTML = "";
+
+            if (query.length < 1) {
+                searchResults.style.display = "none";
+                return;
+            }
+
+            const filtered = searchDatabase.filter(item =>
+                item.name.toLowerCase().includes(query)
+            );
+
+            if (filtered.length > 0) {
+                filtered.forEach(item => {
+                    const itemElem = document.createElement("a");
+                    itemElem.href = item.url;
+                    itemElem.className = "search-result-item text-decoration-none";
+
+                    const iconBox = document.createElement("div");
+                    iconBox.className = "search-item-icon";
+
+                    const icon = document.createElement("i");
+                    icon.className = "fa-solid " + item.icon;
+                    iconBox.appendChild(icon);
+
+                    const details = document.createElement("div");
+                    const name = document.createElement("div");
+                    name.className = "fw-bold text-dark";
+                    name.style.fontSize = "13px";
+                    name.textContent = item.name;
+
+                    const type = document.createElement("span");
+                    type.className = "text-muted";
+                    type.style.fontSize = "11px";
+                    type.textContent = item.type;
+
+                    details.appendChild(name);
+                    details.appendChild(type);
+                    itemElem.appendChild(iconBox);
+                    itemElem.appendChild(details);
+                    searchResults.appendChild(itemElem);
+                });
+
+                searchResults.style.display = "block";
+            } else {
+                const noResults = document.createElement("div");
+                noResults.className = "p-3 text-center text-muted small";
+                noResults.textContent =
+                    'No direct matches found for "' + query +
+                    '". Press Enter to search doctors.';
+                searchResults.appendChild(noResults);
+                searchResults.style.display = "block";
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!searchInput.contains(event.target) &&
+                !searchResults.contains(event.target)) {
+                searchResults.style.display = "none";
+            }
+        });
+    }
+
+    // Chat messaging
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const sendChatBtn = document.getElementById("sendChatBtn");
+
+    function sendUserMessage() {
+        const message = chatInput.value.trim();
+        if (!message || !chatBox) return;
+
+        const userBubble = document.createElement("div");
+        userBubble.className = "chat-bubble chat-bubble-user";
+        userBubble.textContent = message;
+        chatBox.appendChild(userBubble);
+
+        chatInput.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        setTimeout(function () {
+            const supportBubble = document.createElement("div");
+            supportBubble.className = "chat-bubble chat-bubble-support";
+            supportBubble.textContent =
+                'Thanks for reaching out! Our medical team has received your inquiry regarding: "' +
+                message + '". We will get back to you shortly.';
+
+            chatBox.appendChild(supportBubble);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 700);
+    }
+
+    if (sendChatBtn && chatInput && chatBox) {
+        sendChatBtn.addEventListener("click", sendUserMessage);
+
+        chatInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") sendUserMessage();
+        });
+    }
+});
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
