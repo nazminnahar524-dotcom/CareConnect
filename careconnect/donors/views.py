@@ -1,4 +1,5 @@
 import math
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Donor
@@ -17,21 +18,29 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 def nearby_donors(request):
     blood_group = request.GET.get('blood_group', '')
     gender = request.GET.get('gender', '')
+    address = request.GET.get('address', '').strip()
 
     # User current or default location (Dhanmondi, Dhaka)
     try:
         user_lat = float(request.GET.get('lat', 23.7461))
         user_lng = float(request.GET.get('lng', 90.3742))
-        radius = float(request.GET.get('radius', 10.0))
+        radius = float(request.GET.get('radius', 20050.0))
     except ValueError:
         user_lat, user_lng, radius = 23.7461, 90.3742, 10.0
 
     donors = Donor.objects.filter(is_available=True)
+    available_donors_count = donors.count()
 
     if blood_group and blood_group != 'All Groups':
         donors = donors.filter(blood_group=blood_group)
     if gender and gender != 'All':
         donors = donors.filter(gender=gender)
+    if address:
+        donors = donors.filter(
+            Q(area__icontains=address)
+            | Q(upazila__icontains=address)
+            | Q(district__icontains=address)
+        )
 
     donor_list = []
     for donor in donors:
@@ -49,18 +58,23 @@ def nearby_donors(request):
         'user_lng': user_lng,
         'radius': radius,
         'total_donors': len(donor_list),
+        'available_donors_count': available_donors_count,
         'selected_blood_group': blood_group,
         'selected_gender': gender,
+        'selected_address': address,
     }
     return render(request, 'donors/nearby_donors.html', context)
 
 
 def register_donor(request):
     if request.method == 'POST':
-        form = DonorRegistrationForm(request.POST)
+        form = DonorRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             donor = form.save(commit=False)
-            if request.user.is_authenticated:
+            if (
+                request.user.is_authenticated
+                and not Donor.objects.filter(user=request.user).exists()
+            ):
                 donor.user = request.user
             donor.save()
             messages.success(request, 'Thank you for registering as a blood donor!')
@@ -72,7 +86,7 @@ def register_donor(request):
 
 
 def donor_detail(request, donor_id):
-    donor = get_object_or_404(Donor, id=donor_id)
+    donor = get_object_or_404(Donor, id=donor_id, is_available=True)
     donation_history = donor.donation_history.all()
     context = {
         'donor': donor,

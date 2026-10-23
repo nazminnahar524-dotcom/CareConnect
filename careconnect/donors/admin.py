@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Donor, DonationHistory
 
-
 @admin.register(Donor)
 class DonorAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'blood_group', 'gender', 'area', 'district', 'is_available', 'latitude', 'longitude')
+    list_editable = ('is_available',)
     list_filter = ('blood_group', 'gender', 'is_available', 'district')
     search_fields = ('full_name', 'phone_number', 'area', 'district')
     fieldsets = (

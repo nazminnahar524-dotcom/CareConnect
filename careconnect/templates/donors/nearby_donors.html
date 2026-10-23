@@ -10,15 +10,27 @@
             <p class="text-muted">Find blood donors near you and save lives</p>
         </div>
         <div class="d-flex align-items-center gap-3">
-            <a href="{% url 'register_donor' %}" class="btn btn-danger fw-semibold px-3 py-2">+ Become a Donor</a>
             <div class="bg-light p-3 rounded-3 text-center border">
-                <h3 class="fw-bold mb-0 text-danger">{{ available_donors_count }}+</h3>
+                <h3 class="fw-bold mb-0 text-danger">{{ available_donors_count }}</h3>
                 <small class="text-muted">Available Donors</small>
             </div>
-            <div class="bg-light p-3 rounded-3 text-center border">
-                <h3 class="fw-bold mb-0 text-success">8</h3>
-                <small class="text-muted">Blood Groups</small>
-            </div>
+            <details class="bg-light p-3 rounded-3 text-center border">
+                <summary class="list-unstyled" style="cursor: pointer;">
+                    <h3 class="fw-bold mb-0 text-success">8</h3>
+                    <small class="text-muted">Blood Groups</small>
+                    <small class="d-block text-success mt-1">Click to view</small>
+                </summary>
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3" aria-label="Available blood groups">
+                    <span class="badge bg-danger">A+</span>
+                    <span class="badge bg-danger">A-</span>
+                    <span class="badge bg-danger">B+</span>
+                    <span class="badge bg-danger">B-</span>
+                    <span class="badge bg-danger">AB+</span>
+                    <span class="badge bg-danger">AB-</span>
+                    <span class="badge bg-danger">O+</span>
+                    <span class="badge bg-danger">O-</span>
+                </div>
+            </details>
         </div>
     </div>
 
@@ -31,6 +43,18 @@
                     <a href="{% url 'nearby_donors' %}" class="text-decoration-none text-muted small">Reset</a>
                 </div>
                 <form method="GET" action="{% url 'nearby_donors' %}">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="address-filter">Address</label>
+                        <input
+                            type="search"
+                            id="address-filter"
+                            name="address"
+                            class="form-control"
+                            placeholder="Area, upazila, or district"
+                            value="{{ selected_address }}"
+                        >
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Blood Group</label>
                         <select name="blood_group" class="form-select">
@@ -71,7 +95,7 @@
         <!-- Donors List -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0">{{ donors.count }} Donors Found</h5>
+                <h5 class="fw-bold mb-0">{{ total_donors }} Donors Found</h5>
                 <span class="text-muted small">Sort by: <strong>Nearest</strong></span>
             </div>
 
@@ -80,15 +104,29 @@
                 <div class="col-md-6">
                     <div class="card p-3 border-0 shadow-sm rounded-3 h-100">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
+                            <div class="d-flex align-items-center gap-3">
+                                {% if donor.profile_photo %}
+                                    <img
+                                        src="{{ donor.profile_photo.url }}"
+                                        alt="{{ donor.full_name }}'s profile photo"
+                                        class="rounded-circle flex-shrink-0"
+                                        style="width: 56px; height: 56px; object-fit: cover;"
+                                    >
+                                {% else %}
+                                    <span class="rounded-circle bg-light text-secondary d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px;" role="img" aria-label="No profile photo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5.5 6s-.5-4-5.5-4-5.5 4-5.5 4 .5 1 5.5 1 5.5-1 5.5-1Z"/>
+                                        </svg>
+                                    </span>
+                                {% endif %}
                                 <h5 class="fw-bold mb-0 text-dark">{{ donor.full_name }}</h5>
-                                <small class="text-muted">{{ donor.gender }}, {{ donor.age }} yrs</small>
                             </div>
                             <span class="badge bg-danger fs-6 px-3 py-2">{{ donor.blood_group }}</span>
                         </div>
+                        <small class="text-muted mb-2">{{ donor.gender }}, {{ donor.age|default:"N/A" }} yrs</small>
 
                         <p class="text-muted small mb-2">
-                            📍 {{ donor.area }} • <strong>{{ donor.distance_km }} km away</strong>
+                            📍 {{ donor.area }} • <strong>{{ donor.distance }} km away</strong>
                         </p>
 
                         <div class="d-flex align-items-center gap-2 mb-3">
