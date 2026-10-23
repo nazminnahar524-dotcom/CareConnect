@@ -15,10 +15,23 @@
                 <h3 class="fw-bold mb-0 text-danger">{{ available_donors_count }}</h3>
                 <small class="text-muted">Available Donors</small>
             </div>
-            <div class="bg-light p-3 rounded-3 text-center border">
-                <h3 class="fw-bold mb-0 text-success">8</h3>
-                <small class="text-muted">Blood Groups</small>
-            </div>
+            <details class="bg-light p-3 rounded-3 text-center border">
+                <summary class="list-unstyled" style="cursor: pointer;">
+                    <h3 class="fw-bold mb-0 text-success">8</h3>
+                    <small class="text-muted">Blood Groups</small>
+                    <small class="d-block text-success mt-1">Click to view</small>
+                </summary>
+                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3" aria-label="Available blood groups">
+                    <span class="badge bg-danger">A+</span>
+                    <span class="badge bg-danger">A-</span>
+                    <span class="badge bg-danger">B+</span>
+                    <span class="badge bg-danger">B-</span>
+                    <span class="badge bg-danger">AB+</span>
+                    <span class="badge bg-danger">AB-</span>
+                    <span class="badge bg-danger">O+</span>
+                    <span class="badge bg-danger">O-</span>
+                </div>
+            </details>
         </div>
     </div>
 
