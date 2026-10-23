@@ -30,5 +30,5 @@ class Appointment(models.Model):
     def __str__(self):
         return (
             f"{self.patient.username} -> "
-            f"Dr. {self.doctor.name} ({self.appointment_date})"
+            f" {self.doctor.name} ({self.appointment_date})"
         )

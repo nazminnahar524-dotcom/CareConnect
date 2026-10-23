@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +12,20 @@
         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     >
 
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
     <style>
         :root {
             --primary: #16845b;
@@ -22,6 +37,8 @@
             --border: #dcebe3;
             --background: #f4f9f6;
             --white: #ffffff;
+            --line: #edf3ef;
+            --shadow: 0 7px 24px rgba(24, 74, 54, 0.045);
         }
 
         * {
@@ -30,30 +47,44 @@
             box-sizing: border-box;
         }
 
+        html {
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
         body {
+            min-height: 100vh;
             font-family: "Nunito Sans", "Segoe UI", Arial, sans-serif;
             background: var(--background);
             color: var(--text);
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.7;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ================= HEADER ================= */
+
         .top-header {
-            min-height: 62px;
+            min-height: 66px;
             background: var(--white);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 30px;
+            padding: 12px 30px;
+            gap: 16px;
         }
 
         .logo {
-            font-size: 25px;
+            font-size: 27px;
             font-weight: 900;
-            letter-spacing: -0.7px;
+            letter-spacing: -0.8px;
+            line-height: 1.3;
             color: var(--primary);
         }
 
@@ -64,78 +95,101 @@
         }
 
         .header-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
             background: #eff5f1;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 17px;
         }
 
+        /* ================= PAGE CONTAINER ================= */
+
         .container {
-            width: 94%;
+            width: calc(100% - 48px);
             max-width: 1250px;
-            margin: 24px auto 50px;
+            margin: 28px auto 54px;
         }
 
         .back-btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             text-decoration: none;
             color: #527568;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 17px;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            transition: color .2s ease;
         }
 
         .back-btn:hover {
             color: var(--primary);
         }
 
+        /* ================= CARD BASE ================= */
+
         .profile-card,
         .info-card,
         .map-card {
             background: var(--white);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 7px 24px rgba(24, 74, 54, 0.045);
+            border-radius: 17px;
+            box-shadow: var(--shadow);
+            min-width: 0;
         }
 
         .profile-card {
-            padding: 26px;
-            margin-bottom: 20px;
+            padding: 30px;
+            margin-bottom: 22px;
         }
+
+        /* ================= PROFILE HEADER ================= */
 
         .profile-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 20px;
+            gap: 24px;
+        }
+
+        .profile-top > div:first-child {
+            min-width: 0;
+            flex: 1;
         }
 
         .profile-name {
             color: var(--heading);
-            font-size: 30px;
+            font-size: 34px;
             font-weight: 900;
-            letter-spacing: -0.8px;
+            letter-spacing: -0.9px;
             line-height: 1.3;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
         }
 
         .profile-address {
             color: var(--muted);
-            font-size: 13px;
-            line-height: 1.8;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.85;
             overflow-wrap: anywhere;
         }
 
         .verified,
         .unverified {
-            display: inline-block;
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 8px 13px;
+            border-radius: 24px;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1.5;
             white-space: nowrap;
         }
 
@@ -150,33 +204,45 @@
         }
 
         .distance-box {
-            margin-top: 18px;
-            padding: 12px 15px;
+            margin-top: 20px;
+            padding: 14px 17px;
             background: var(--primary-light);
             border: 1px solid #d0eadb;
-            border-radius: 10px;
+            border-radius: 11px;
             color: var(--primary-dark);
-            font-size: 13px;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
         }
+
+        /* ================= ACTION BUTTONS ================= */
 
         .actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 11px;
+            margin-top: 23px;
         }
 
         .action-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 7px;
             text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 9px;
+            padding: 12px 17px;
+            min-height: 44px;
+            border: 1px solid transparent;
+            border-radius: 10px;
             font-family: inherit;
-            font-size: 13px;
-            font-weight: 800;
-            transition: background .2s ease, transform .2s ease;
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.5;
+            transition:
+                background .2s ease,
+                color .2s ease,
+                border-color .2s ease,
+                transform .2s ease;
         }
 
         .action-btn:hover {
@@ -203,35 +269,42 @@
             background: #d9f0e3;
         }
 
+        /* ================= DETAILS GRID ================= */
+
         .details-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
+            align-items: stretch;
+            gap: 20px;
         }
 
         .info-card {
-            padding: 21px;
+            padding: 25px;
             min-width: 0;
         }
 
         .info-card h2,
         .map-card h2 {
             color: var(--heading);
-            font-size: 18px;
+            font-size: 21px;
             font-weight: 900;
-            letter-spacing: -0.3px;
-            line-height: 1.4;
-            margin-bottom: 15px;
+            letter-spacing: -0.35px;
+            line-height: 1.45;
+            margin-bottom: 17px;
         }
+
+        /* ================= INFORMATION ROWS ================= */
 
         .info-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #edf3ef;
-            font-size: 13px;
+            gap: 20px;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 15px;
+            line-height: 1.7;
+            min-width: 0;
         }
 
         .info-row:last-child {
@@ -241,30 +314,54 @@
 
         .info-label {
             color: var(--muted);
-            flex-shrink: 0;
+            font-size: 14px;
+            font-weight: 600;
+            flex: 0 1 42%;
+            min-width: 0;
+            overflow-wrap: anywhere;
         }
 
         .info-value {
             color: var(--heading);
-            font-weight: 800;
+            font-size: 14px;
+            font-weight: 900;
             text-align: right;
+            flex: 1 1 58%;
+            min-width: 0;
             overflow-wrap: anywhere;
+            word-break: normal;
         }
+
+        .info-value a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .info-value a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        /* ================= SERVICES ================= */
 
         .service-list {
             display: flex;
             flex-wrap: wrap;
+            align-items: flex-start;
             gap: 9px;
         }
 
         .service-tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background: #f0f5f2;
             color: #587366;
-            padding: 7px 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
         }
 
         .service-tag.active {
@@ -272,12 +369,17 @@
             color: #08784c;
         }
 
+        /* ================= OPEN / CLOSED STATUS ================= */
+
         .open-status {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 7px;
-            font-size: 11px;
-            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1.5;
             white-space: nowrap;
         }
 
@@ -296,84 +398,274 @@
             color: #687b70;
         }
 
+        /* ================= MAP ================= */
+
         .map-card {
-            padding: 21px;
-            margin-top: 20px;
+            padding: 25px;
+            margin-top: 22px;
         }
 
         #pharmacyMap {
             width: 100%;
-            height: 400px;
-            border-radius: 11px;
+            height: 420px;
+            border-radius: 12px;
             overflow: hidden;
             background: #eef5f0;
             z-index: 1;
         }
 
         .map-info {
-            margin-top: 12px;
-            padding: 11px 13px;
+            margin-top: 14px;
+            padding: 13px 15px;
             background: #f0f8f3;
             border: 1px solid var(--border);
-            border-radius: 9px;
+            border-radius: 10px;
             color: var(--muted);
-            font-size: 12px;
+            font-size: 14px;
+            line-height: 1.75;
+            overflow-wrap: anywhere;
+        }
+
+        .map-info strong {
+            color: var(--heading);
+            font-weight: 900;
         }
 
         .no-map {
             background: #f8fbf9;
             border: 1px dashed #b8d8c6;
-            padding: 40px 20px;
+            padding: 42px 20px;
             text-align: center;
             color: var(--muted);
-            border-radius: 10px;
+            border-radius: 11px;
+            font-size: 15px;
+            line-height: 1.8;
         }
 
-        @media (max-width: 800px) {
-            .top-header {
-                padding: 10px 16px;
-            }
+        .no-map strong {
+            color: var(--heading);
+            font-size: 17px;
+            font-weight: 900;
+        }
 
+        .no-map p {
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        /* ================= TABLET ================= */
+
+        @media (max-width: 900px) {
             .container {
-                width: 95%;
-                margin-top: 18px;
+                width: calc(100% - 36px);
             }
 
             .profile-card {
-                padding: 20px;
-            }
-
-            .profile-top {
-                flex-direction: column;
-                gap: 12px;
+                padding: 25px;
             }
 
             .profile-name {
-                font-size: 26px;
+                font-size: 30px;
             }
 
             .details-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            #pharmacyMap {
-                height: 350px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .logo {
-                font-size: 22px;
-            }
-
-            .profile-name {
-                font-size: 23px;
+                gap: 16px;
             }
 
             .info-card,
             .map-card {
+                padding: 21px;
+            }
+
+            .info-card h2,
+            .map-card h2 {
+                font-size: 19px;
+            }
+
+            .info-row {
+                gap: 12px;
+            }
+
+            .info-label,
+            .info-value {
+                font-size: 13px;
+            }
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 650px) {
+            .top-header {
+                min-height: 60px;
+                padding: 11px 16px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            .header-right {
+                gap: 7px;
+            }
+
+            .header-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                font-size: 15px;
+            }
+
+            .container {
+                width: calc(100% - 28px);
+                margin-top: 20px;
+                margin-bottom: 32px;
+            }
+
+            .back-btn {
+                font-size: 13px;
+                margin-bottom: 14px;
+            }
+
+            .profile-card {
+                padding: 20px;
+                margin-bottom: 16px;
+                border-radius: 14px;
+            }
+
+            .profile-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 13px;
+            }
+
+            .profile-name {
+                font-size: 27px;
+                letter-spacing: -0.55px;
+                line-height: 1.35;
+            }
+
+            .profile-address {
+                font-size: 14px;
+                line-height: 1.8;
+            }
+
+            .verified,
+            .unverified {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .distance-box {
+                margin-top: 16px;
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .actions {
+                gap: 9px;
+                margin-top: 19px;
+            }
+
+            .action-btn {
+                min-height: 43px;
+                padding: 11px 13px;
+                font-size: 13px;
+            }
+
+            .details-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 15px;
+            }
+
+            .info-card,
+            .map-card {
+                padding: 20px;
+                border-radius: 14px;
+            }
+
+            .info-card h2,
+            .map-card h2 {
+                font-size: 19px;
+                margin-bottom: 13px;
+            }
+
+            .info-row {
+                gap: 12px;
+                padding: 12px 0;
+            }
+
+            .info-label {
+                flex: 0 1 40%;
+                font-size: 13px;
+            }
+
+            .info-value {
+                flex: 1 1 60%;
+                font-size: 13px;
+            }
+
+            .service-list {
+                gap: 8px;
+            }
+
+            .service-tag {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .open-status {
+                font-size: 11px;
+                padding: 6px 8px;
+            }
+
+            .map-card {
+                margin-top: 16px;
+            }
+
+            #pharmacyMap {
+                height: 340px;
+            }
+
+            .map-info {
+                font-size: 13px;
+                padding: 11px;
+            }
+        }
+
+        /* ================= SMALL MOBILE ================= */
+
+        @media (max-width: 380px) {
+            .container {
+                width: calc(100% - 20px);
+            }
+
+            .profile-card,
+            .info-card,
+            .map-card {
                 padding: 16px;
+            }
+
+            .profile-name {
+                font-size: 24px;
+            }
+
+            .info-card h2,
+            .map-card h2 {
+                font-size: 18px;
+            }
+
+            .info-row {
+                gap: 8px;
+            }
+
+            .info-label {
+                flex-basis: 38%;
+                font-size: 12px;
+            }
+
+            .info-value {
+                flex-basis: 62%;
+                font-size: 12px;
             }
 
             .actions {
@@ -382,24 +674,20 @@
 
             .action-btn {
                 width: 100%;
-                text-align: center;
-            }
-
-            .info-row {
-                gap: 8px;
-            }
-
-            .info-label {
-                white-space: normal;
-            }
-
-            .info-value {
-                max-width: 65%;
             }
 
             #pharmacyMap {
-                height: 300px;
+                height: 290px;
             }
+        }
+
+        /* ================= ACCESSIBILITY ================= */
+
+        .action-btn:focus-visible,
+        .back-btn:focus-visible,
+        .info-value a:focus-visible {
+            outline: 3px solid rgba(22, 132, 91, .35);
+            outline-offset: 3px;
         }
     </style>
 </head>
@@ -488,6 +776,8 @@
 
     <div class="details-grid">
 
+        <!-- PHARMACY INFORMATION -->
+
         <section class="info-card">
             <h2>Pharmacy Information</h2>
 
@@ -532,6 +822,8 @@
             {% endif %}
         </section>
 
+        <!-- CONTACT INFORMATION -->
+
         <section class="info-card">
             <h2>Contact Information</h2>
 
@@ -557,7 +849,6 @@
                             href="{{ pharmacy.website }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            style="color: var(--primary); text-decoration: none;"
                         >Visit Website ↗</a>
                     </span>
                 </div>
@@ -568,6 +859,8 @@
                 <span class="info-value">{{ pharmacy.address }}</span>
             </div>
         </section>
+
+        <!-- SERVICES AND FACILITIES -->
 
         <section class="info-card">
             <h2>Services &amp; Facilities</h2>
@@ -602,6 +895,8 @@
                 {% endif %}
             </div>
         </section>
+
+        <!-- WORKING HOURS -->
 
         <section class="info-card">
             <h2>Working Hours</h2>
@@ -651,6 +946,8 @@
 
     </div>
 
+    <!-- PHARMACY MAP -->
+
     <section class="map-card">
         <h2>Pharmacy Location</h2>
 
@@ -663,10 +960,13 @@
             </div>
         {% else %}
             <div class="no-map">
-                <div style="font-size: 28px; margin-bottom: 10px;">📍</div>
+                <div style="font-size: 30px; margin-bottom: 10px;">📍</div>
+
                 <strong>Location coordinates unavailable</strong>
-                <p style="margin-top: 5px;">
-                    A map cannot be displayed until coordinates are added for this pharmacy.
+
+                <p>
+                    A map cannot be displayed until coordinates are added
+                    for this pharmacy.
                 </p>
             </div>
         {% endif %}
@@ -681,7 +981,10 @@
     const pharmacyLatitude = Number("{{ pharmacy.latitude|escapejs }}");
     const pharmacyLongitude = Number("{{ pharmacy.longitude|escapejs }}");
 
+    const mapElement = document.getElementById("pharmacyMap");
+
     if (
+        mapElement &&
         Number.isFinite(pharmacyLatitude) &&
         Number.isFinite(pharmacyLongitude) &&
         pharmacyLatitude >= -90 &&
@@ -714,8 +1017,9 @@
         pharmacyName.textContent = "{{ pharmacy.name|escapejs }}";
 
         const address = document.createElement("div");
-        address.style.fontSize = "12px";
+        address.style.fontSize = "13px";
         address.style.color = "#698176";
+        address.style.marginTop = "4px";
         address.textContent = "{{ pharmacy.address|escapejs }}";
 
         popup.appendChild(pharmacyName);
@@ -726,9 +1030,8 @@
         setTimeout(function () {
             map.invalidateSize();
         }, 200);
-    } else {
-        document.getElementById("pharmacyMap").innerHTML =
-            "Invalid pharmacy coordinates.";
+    } else if (mapElement) {
+        mapElement.textContent = "Invalid pharmacy coordinates.";
     }
 </script>
 {% endif %}

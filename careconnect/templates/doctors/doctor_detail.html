@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Dr. {{ doctor.name }} | CareConnect{% endblock %}
+{% block title %} {{ doctor.name }} | CareConnect{% endblock %}
 
 {% block content %}
 
@@ -335,9 +335,16 @@
                 <div class="dd-profile-header">
                     <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-4">
 
-                        <div class="dd-avatar">
+
+                    <div class="dd-avatar" style="overflow:hidden;">
+                        {% if doctor.photo %}
+                            <img src="{{ doctor.photo.url }}"
+                                 alt=" {{ doctor.name }}"
+                                 style="width:100%; height:100%; object-fit:cover;">
+                        {% else %}
                             <i class="fa-solid fa-user-doctor"></i>
-                        </div>
+                        {% endif %}
+                    </div>
 
                         <div class="flex-grow-1" style="min-width:0;">
 
@@ -346,7 +353,7 @@
                             </div>
 
                             <h2 class="dd-heading mb-2">
-                                Dr. {{ doctor.name }}
+                                dp-heading mb-2 {{ doctor.name }}
                             </h2>
 
                             <div class="mb-3">
@@ -375,7 +382,7 @@
                 <div class="dd-section">
 
                     <h5 class="dd-heading mb-2">
-                        Welcome to Dr. {{ doctor.name }}'s Profile
+                        Welcome to  {{ doctor.name }}'s Profile
                     </h5>
 
                     <p class="dd-muted mb-0" style="line-height:1.9;">
@@ -409,7 +416,7 @@
                     </div>
 
                     <p class="dd-muted mb-4" style="line-height:1.9;">
-                        Dr. {{ doctor.name }} is a {{ doctor.specialty }}
+                         {{ doctor.name }} is a {{ doctor.specialty }}
                         specialist practicing at {{ doctor.hospital_name }}.
                         Patients can review the doctor's recorded qualifications,
                         available days and visiting hours before requesting
