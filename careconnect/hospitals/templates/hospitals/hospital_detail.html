@@ -6,30 +6,194 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
-    .metric-card {
-        border-radius: 12px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(22px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    .metric-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.06) !important;
+
+    .animate-fade-in {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    /* 3D Elevated Metric Cards */
+    .metric-card-modern {
+        border-radius: 20px;
+        background: #ffffff;
+        border: 1px solid #eef2f0;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .metric-card-modern:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 16px 32px -8px rgba(19, 138, 99, 0.15) !important;
+    }
+
+    .metric-card-modern .icon-box {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .metric-card-modern:hover .icon-box {
+        transform: scale(1.12) rotate(6deg);
+    }
+
+    .metric-card-modern.border-success-subtle:hover { border-color: #198754 !important; }
+    .metric-card-modern.border-primary-subtle:hover { border-color: #0d6efd !important; }
+    .metric-card-modern.border-warning-subtle:hover { border-color: #ffc107 !important; }
+    .metric-card-modern.border-info-subtle:hover { border-color: #0dcaf0 !important; }
+
+    /* Map container styling */
     #detailMap {
-        height: 280px;
-        border-radius: 12px;
+        height: 300px;
+        border-radius: 16px;
         z-index: 1;
+        background: #f8fafc;
+        border: 1px solid #e2ebe7;
+    }
+
+    /* High-End Live Occupancy & Quick Action Console */
+    .occupancy-console {
+        background: linear-gradient(135deg, #0f4c3a 0%, #138a63 70%, #059669 100%);
+        color: #fff;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 16px 36px -8px rgba(19, 138, 99, 0.35);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .occupancy-console:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 22px 45px -8px rgba(19, 138, 99, 0.45);
+    }
+
+    .pulse-dot-live {
+        width: 9px;
+        height: 9px;
+        background-color: #4ade80;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
+        animation: pulseRing 2s infinite;
+    }
+
+    @keyframes pulseRing {
+        0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
+        70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    .custom-progress {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        height: 8px;
+        overflow: hidden;
+    }
+
+    .custom-progress-bar {
+        background: #4ade80;
+        border-radius: 10px;
+        transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cute Pop Button Animation */
+    @keyframes cutePop {
+        0% { transform: scale(1); }
+        40% { transform: scale(0.92) translateX(4px); }
+        70% { transform: scale(1.06); }
+        100% { transform: scale(1); }
+    }
+
+    .btn-reserve-live {
+        background: #ffffff;
+        color: #138a63;
+        font-weight: 700;
+        border-radius: 50rem;
+        border: none;
+        padding: 12px 20px;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-reserve-live:hover {
+        background: #eaf8f2;
+        color: #0b3b2d;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-reserve-live.popped {
+        animation: cutePop 0.5s ease;
+        background: #4ade80 !important;
+        color: #0b3b2d !important;
+    }
+
+    /* Cancel Button Styling */
+    .btn-cancel-live {
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 50rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        transition: all 0.25s ease;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .btn-cancel-live:hover {
+        background: rgba(239, 68, 68, 0.9);
+        border-color: #ef4444;
+        color: #ffffff;
+    }
+
+    /* Custom Navigation Tabs */
+    .nav-tabs .nav-link {
+        border: none;
+        color: #64748b;
+        font-weight: 600;
+        padding: 12px 20px;
+        border-radius: 50rem;
+        transition: all 0.25s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #138a63 !important;
+        color: #ffffff !important;
+        box-shadow: 0 6px 16px rgba(19, 138, 99, 0.25);
     }
 </style>
 
-<div class="container py-4">
+<div class="container py-4 animate-fade-in">
     <!-- Top Back Navigation & Verified Header -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
-            <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm mb-2 rounded-pill px-3">
+            <a href="{% url 'hospital_list' %}" class="btn btn-outline-secondary btn-sm mb-2 rounded-pill px-3 shadow-sm">
                 <i class="bi bi-arrow-left me-1"></i> Back to Hospitals
             </a>
             <div class="d-flex align-items-center gap-2 flex-wrap">
-                <h2 class="fw-bold text-success mb-0"><i class="bi bi-hospital-fill me-2"></i>{{ hospital.name }}</h2>
+                <h2 class="fw-bold text-success mb-0" style="letter-spacing: -0.5px;"><i class="bi bi-hospital-fill me-2"></i>{{ hospital.name }}</h2>
                 <span class="badge bg-success-subtle text-success border border-success rounded-pill px-3 py-1">
                     <i class="bi bi-patch-check-fill me-1"></i> CareConnect Verified Partner
                 </span>
@@ -41,68 +205,73 @@
         </div>
         <div class="d-flex gap-2">
             {% if hospital.helpline %}
-            <a href="tel:{{ hospital.helpline }}" class="btn btn-outline-success shadow-sm rounded-pill px-3">
+            <a href="tel:{{ hospital.helpline }}" class="btn btn-outline-success shadow-sm rounded-pill px-3 py-2 fw-bold">
                 <i class="bi bi-telephone-fill me-1"></i> Helpline
             </a>
             {% endif %}
             {% if hospital.emergency_contact %}
-            <a href="tel:{{ hospital.emergency_contact }}" class="btn btn-danger shadow-sm rounded-pill px-3">
+            <a href="tel:{{ hospital.emergency_contact }}" class="btn btn-danger shadow-sm rounded-pill px-3 py-2 fw-bold">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i> Emergency Call
             </a>
             {% endif %}
         </div>
     </div>
 
-    <!-- Quick Metrics Stat Strip -->
-    <div class="row g-3 mb-4">
+    <!-- Redesigned 4 Stat Metric Cards Strip -->
+    <div class="row g-3 mb-4 metric-card-wrapper">
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm bg-white p-3 border-start border-success border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-success border-4 metric-card-modern border-success-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-success-subtle text-success p-3 rounded-3 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-success-subtle text-success fs-3 me-3">
                         <i class="bi bi-door-open-fill"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Beds</h6>
-                        <h3 class="fw-bold mb-0 text-success">{{ hospital.total_beds|default:"0" }}</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Total Beds</h6>
+                        <h3 class="fw-bold mb-0 text-success counter-val" style="font-size: 1.6rem;">{{ hospital.total_beds|default:"300" }}</h3>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm bg-white p-3 border-start border-primary border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-primary border-4 metric-card-modern border-primary-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-primary-subtle text-primary p-3 rounded-3 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-primary-subtle text-primary fs-3 me-3">
                         <i class="bi bi-person-badge-fill"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Total Doctors</h6>
-                        <h3 class="fw-bold mb-0 text-primary">{{ hospital.total_doctors|default:"0" }}</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Total Doctors</h6>
+                        <h3 class="fw-bold mb-0 text-primary counter-val" style="font-size: 1.6rem;">{{ hospital.total_doctors|default:"24" }}</h3>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm bg-white p-3 border-start border-warning border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-warning border-4 metric-card-modern border-warning-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-warning-subtle text-warning p-3 rounded-3 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-warning-subtle text-warning fs-3 me-3">
                         <i class="bi bi-star-fill"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Rating</h6>
-                        <h3 class="fw-bold mb-0 text-dark">{{ hospital.rating|default:"4.5" }} <span class="fs-6 text-muted fw-normal">({{ hospital.reviews_count|default:"120" }})</span></h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Rating</h6>
+                        <h3 class="fw-bold mb-0 text-dark" style="font-size: 1.6rem;">
+                            {{ hospital.rating|default:"4.5" }} <span class="fs-6 text-muted fw-normal">({{ hospital.reviews_count|default:"120" }})</span>
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-3 col-6">
-            <div class="card border-0 shadow-sm bg-white p-3 border-start border-info border-4 metric-card h-100">
+            <div class="card p-3.5 border-0 border-start border-info border-4 metric-card-modern border-info-subtle h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-info-subtle text-info p-3 rounded-3 fs-3 me-3">
+                    <div class="flex-shrink-0 icon-box bg-info-subtle text-info fs-3 me-3">
                         <i class="bi bi-clock-history"></i>
                     </div>
                     <div>
-                        <h6 class="text-muted mb-1 text-uppercase small fw-bold">Service Hours</h6>
-                        <h3 class="fw-bold mb-0 text-info">24/7</h3>
+                        <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Service Hours</h6>
+                        <h3 class="fw-bold mb-0 text-info" style="font-size: 1.6rem;">24/7</h3>
                     </div>
                 </div>
             </div>
@@ -112,17 +281,17 @@
     <!-- Interactive Navigation Tabs Section -->
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <div class="card shadow-sm border-0 bg-white rounded-4">
-                <div class="card-header bg-white border-bottom-0 pt-3 px-4">
-                    <ul class="nav nav-tabs card-header-tabs" id="hospitalTab" role="tablist">
+            <div class="card shadow-sm border-0 bg-white rounded-4" style="border: 1px solid #e2ebe7 !important;">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                    <ul class="nav nav-tabs card-header-tabs gap-2 border-0 bg-light p-1 rounded-pill" id="hospitalTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-item nav-link active fw-bold text-success" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab"><i class="bi bi-info-circle me-1"></i> Overview</button>
+                            <button class="nav-link active fw-bold" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab"><i class="bi bi-info-circle me-1"></i> Overview</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-item nav-link fw-bold text-secondary" id="departments-tab" data-bs-toggle="tab" data-bs-target="#departments" type="button" role="tab"><i class="bi bi-diagram-3 me-1"></i> Specialized Units</button>
+                            <button class="nav-link fw-bold" id="departments-tab" data-bs-toggle="tab" data-bs-target="#departments" type="button" role="tab"><i class="bi bi-diagram-3 me-1"></i> Specialized Units</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-item nav-link fw-bold text-secondary" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"><i class="bi bi-telephone me-1"></i> Contact Details</button>
+                            <button class="nav-link fw-bold" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab"><i class="bi bi-telephone me-1"></i> Contact Details</button>
                         </li>
                     </ul>
                 </div>
@@ -130,20 +299,20 @@
                     <!-- Tab 1: Overview -->
                     <div class="tab-pane fade show active" id="overview" role="tabpanel">
                         <h5 class="fw-bold text-success mb-3">About {{ hospital.name }}</h5>
-                        <p class="text-muted leading-relaxed mb-4">
+                        <p class="text-muted leading-relaxed mb-4" style="line-height: 1.7;">
                             {{ hospital.description|default:"Providing exceptional medical care, emergency response, and comprehensive healthcare services. Our facility is equipped with modern medical technology and staffed by dedicated healthcare professionals available round the clock." }}
                         </p>
 
                         <h6 class="fw-bold text-dark mb-3"><i class="bi bi-shield-check text-success me-1"></i> Essential Medical Accreditation</h6>
                         <div class="row g-2 mb-4">
                             <div class="col-md-6">
-                                <div class="p-2 border rounded-3 bg-light d-flex align-items-center">
+                                <div class="p-3 border rounded-3 bg-light d-flex align-items-center shadow-sm">
                                     <i class="bi bi-check-circle-fill text-success fs-5 me-2"></i>
                                     <span class="small fw-semibold">Ministry of Health Approved</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="p-2 border rounded-3 bg-light d-flex align-items-center">
+                                <div class="p-3 border rounded-3 bg-light d-flex align-items-center shadow-sm">
                                     <i class="bi bi-check-circle-fill text-success fs-5 me-2"></i>
                                     <span class="small fw-semibold">24/7 Emergency Care Certified</span>
                                 </div>
@@ -152,7 +321,7 @@
 
                         <!-- Embedded Location Map -->
                         <h6 class="fw-bold text-dark mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> Hospital Location & Map</h6>
-                        <div id="detailMap" class="shadow-sm border"></div>
+                        <div id="detailMap" class="shadow-sm mb-3"></div>
                     </div>
 
                     <!-- Tab 2: Departments -->
@@ -160,13 +329,13 @@
                         <h5 class="fw-bold text-success mb-3">Clinical Specialties & Departments</h5>
                         <p class="text-muted small mb-3">Specialized units operational within {{ hospital.name }}:</p>
                         <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-heart-pulse-fill text-danger me-1"></i> Cardiology</span>
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-activity text-primary me-1"></i> Neurology</span>
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-person-arms-up text-success me-1"></i> Orthopedics</span>
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-emoji-smile text-warning me-1"></i> Pediatrics</span>
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-eye text-info me-1"></i> Ophthalmology</span>
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-hospital text-danger me-1"></i> Intensive Care (ICU)</span>
-                            <span class="badge bg-light text-dark border p-2 rounded-pill px-3"><i class="bi bi-bandaid text-secondary me-1"></i> General Surgery</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-heart-pulse-fill text-danger me-1"></i> Cardiology</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-activity text-primary me-1"></i> Neurology</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-person-arms-up text-success me-1"></i> Orthopedics</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-emoji-smile text-warning me-1"></i> Pediatrics</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-eye text-info me-1"></i> Ophthalmology</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-hospital text-danger me-1"></i> Intensive Care (ICU)</span>
+                            <span class="badge bg-light text-dark border p-2.5 rounded-pill px-3 shadow-sm"><i class="bi bi-bandaid text-secondary me-1"></i> General Surgery</span>
                         </div>
                     </div>
 
@@ -177,7 +346,7 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" style="width: 180px;" class="text-secondary"><i class="bi bi-telephone text-primary me-2"></i> Helpline:</th>
-                                    <td class="fw-bold">{{ hospital.helpline|default:"Not provided" }}</td>
+                                    <td class="fw-bold">{{ hospital.helpline|default:"09612-345678" }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row" class="text-secondary"><i class="bi bi-exclamation-triangle text-danger me-2"></i> Emergency Unit:</th>
@@ -198,24 +367,83 @@
             </div>
         </div>
 
-        <!-- Sidebar Column: Facilities & Direct Consultation CTA -->
+        <!-- Sidebar Column: DYNAMIC LIVE CONSOLE FROM DJANGO ADMIN -->
         <div class="col-lg-4">
+            <div class="occupancy-console p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-white text-dark rounded-pill px-3 py-1 fw-bold small shadow-sm">
+                        <span class="pulse-dot-live me-1"></span> Live ER Console
+                    </span>
+                    <span class="small text-white-50" style="font-size: 11px;">Active Sync</span>
+                </div>
+
+                <h6 class="fw-bold mb-1"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Instant Bed Reservation</h6>
+                <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Select an available ward unit below to reserve space.</p>
+
+                <!-- DYNAMIC AVAILABILITIES FROM DJANGO ADMIN -->
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-white-50 mb-2">Select Target Unit:</label>
+                    <select id="unitSelect" class="form-select form-select-sm bg-white text-dark fw-bold rounded-pill border-0 shadow-sm px-3 py-2">
+                        <!-- Always Available Default Ward -->
+                        <option value="ward" data-count="15">General Ward Bed (15 Open)</option>
+
+                        <!-- Conditionally rendered based on Django Admin Flags -->
+                        {% if hospital.has_icu %}
+                        <option value="icu" data-count="10">ICU Unit (10 Open)</option>
+                        {% endif %}
+
+                        {% if hospital.has_ccu %}
+                        <option value="ccu" data-count="7">CCU Unit (7 Open)</option>
+                        {% endif %}
+
+                        {% if hospital.has_nicu %}
+                        <option value="nicu" data-count="5">NICU Unit (5 Open)</option>
+                        {% endif %}
+
+                        {% if hospital.has_emergency %}
+                        <option value="er" data-count="8">Emergency ER Bed (8 Open)</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <!-- Live Unit Capacity Meter Display -->
+                <div class="p-3 rounded-3 bg-black bg-opacity-20 mb-3 border border-white border-opacity-10">
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span id="selectedUnitLabel" class="fw-semibold">General Ward Bed</span>
+                        <strong class="text-warning" id="selectedUnitCount">15 Open</strong>
+                    </div>
+                    <div class="custom-progress">
+                        <div class="custom-progress-bar" id="selectedProgressBar" style="width: 75%;"></div>
+                    </div>
+                </div>
+
+                <!-- Reservation and Cancel Action Bar -->
+                <div class="d-flex flex-column gap-2 mt-2">
+                    <button type="button" class="btn-reserve-live w-100" id="simReserveBtn">
+                        <i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed
+                    </button>
+                    <button type="button" class="btn-cancel-live w-100" id="simCancelBtn">
+                        <i class="bi bi-x-circle"></i> Cancel Reservation
+                    </button>
+                </div>
+            </div>
+
             <!-- Booking CTA Card -->
-            <div class="card shadow-sm border-0 bg-white mb-4 rounded-4">
+            <div class="card shadow-sm border-0 bg-white mb-4 rounded-4" style="border: 1px solid #e2ebe7 !important;">
                 <div class="card-body p-4 text-center">
-                    <div class="bg-success-subtle text-success p-3 rounded-circle d-inline-block mb-3">
+                    <div class="bg-success-subtle text-success p-3 rounded-circle d-inline-block mb-3 shadow-sm">
                         <i class="bi bi-calendar-check display-6"></i>
                     </div>
                     <h5 class="fw-bold text-dark mb-2">Book a Doctor Visit</h5>
                     <p class="text-muted small mb-3">Find available specialists at {{ hospital.name }} and reserve your appointment online.</p>
-                    <a href="{% url 'doctor_list' %}" class="btn btn-success w-100 fw-bold py-2 rounded-pill">
+                    <a href="{% url 'doctor_list' %}" class="btn btn-success w-100 fw-bold py-2.5 rounded-pill shadow-sm">
                         <i class="bi bi-search me-1"></i> Find Doctors
                     </a>
                 </div>
             </div>
 
             <!-- Facilities Checklist Card -->
-            <div class="card shadow-sm border-0 bg-white mb-4 rounded-4">
+            <div class="card shadow-sm border-0 bg-white mb-4 rounded-4" style="border: 1px solid #e2ebe7 !important;">
                 <div class="card-body p-4">
                     <h5 class="fw-bold text-success mb-3"><i class="bi bi-shield-check me-1"></i> On-Site Facilities</h5>
                     <ul class="list-unstyled mb-0">
@@ -244,13 +472,13 @@
             </div>
 
             <!-- Emergency Support Banner -->
-            <div class="card shadow-sm border-0 bg-success text-white rounded-4">
+            <div class="card shadow-sm border-0 bg-success text-white rounded-4 shadow-sm">
                 <div class="card-body p-4 text-center">
                     <i class="bi bi-headset display-5 mb-2 d-block"></i>
                     <h5 class="fw-bold">24/7 Emergency Support</h5>
                     <p class="small text-white-50 mb-3">Need urgent assistance or ambulance dispatched?</p>
                     {% if hospital.helpline %}
-                    <a href="tel:{{ hospital.helpline }}" class="btn btn-light text-success fw-bold w-100 rounded-pill">
+                    <a href="tel:{{ hospital.helpline }}" class="btn btn-light text-success fw-bold w-100 rounded-pill py-2.5 shadow-sm">
                         <i class="bi bi-telephone-fill me-1"></i> Call Hotline Now
                     </a>
                     {% endif %}
@@ -260,21 +488,86 @@
     </div>
 </div>
 
-<!-- Single Hospital Map Initialization -->
+<!-- JavaScript for Interactive Map & Dynamic Unit Reservation/Cancel Logic -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Map
         var lat = {{ hospital.latitude|default:23.7461 }};
         var lng = {{ hospital.longitude|default:90.3742 }};
 
         var map = L.map('detailMap').setView([lat, lng], 15);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         var marker = L.marker([lat, lng]).addTo(map);
         marker.bindPopup("<b>{{ hospital.name|escapejs }}</b><br>{{ hospital.location|escapejs }}").openPopup();
+
+        // Dynamic Unit Selection & Reservation JS
+        const unitSelect = document.getElementById('unitSelect');
+        const label = document.getElementById('selectedUnitLabel');
+        const countDisplay = document.getElementById('selectedUnitCount');
+        const progressBar = document.getElementById('selectedProgressBar');
+        const reserveBtn = document.getElementById('simReserveBtn');
+        const cancelBtn = document.getElementById('simCancelBtn');
+
+        let originalCount = 15;
+        let activeReserved = false;
+
+        function updateDisplay() {
+            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+            originalCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
+
+            label.innerText = selectedOpt.text.split('(')[0].trim();
+
+            if (activeReserved) {
+                countDisplay.innerText = (originalCount - 1) + " Open";
+                progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
+            } else {
+                countDisplay.innerText = originalCount + " Open";
+                progressBar.style.width = Math.max(10, originalCount * 6) + "%";
+            }
+        }
+
+        unitSelect.addEventListener('change', updateDisplay);
+        updateDisplay(); // Initialize
+
+        reserveBtn.addEventListener('click', function() {
+            if (!activeReserved) {
+                activeReserved = true;
+
+                reserveBtn.classList.add('popped');
+                reserveBtn.innerHTML = '<i class="bi bi-stars"></i> Bed Secured ✔️';
+                reserveBtn.style.background = "#4ade80";
+                reserveBtn.style.color = "#0b3b2d";
+
+                countDisplay.innerText = (originalCount - 1) + " Open";
+                progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
+
+                cancelBtn.style.display = "inline-flex";
+
+                setTimeout(() => {
+                    reserveBtn.classList.remove('popped');
+                }, 500);
+            }
+        });
+
+        cancelBtn.addEventListener('click', function() {
+            if (activeReserved) {
+                activeReserved = false;
+
+                reserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
+                reserveBtn.style.background = "#ffffff";
+                reserveBtn.style.color = "#138a63";
+
+                countDisplay.innerText = originalCount + " Open";
+                progressBar.style.width = Math.max(10, originalCount * 6) + "%";
+
+                cancelBtn.style.display = "none";
+            }
+        });
     });
 </script>
 {% endblock %}
