@@ -18,6 +18,7 @@
         height: 280px;
         border-radius: 12px;
         z-index: 1;
+        background: #f8fafc;
     }
 </style>
 
@@ -268,9 +269,11 @@
 
         var map = L.map('detailMap').setView([lat, lng], 15);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // CartoDB Voyager Tile Layer (Reliable, fast, and no 403 blocks)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
+            subdomains: 'abcd',
+            attribution: '© OpenStreetMap contributors, © CARTO'
         }).addTo(map);
 
         var marker = L.marker([lat, lng]).addTo(map);
