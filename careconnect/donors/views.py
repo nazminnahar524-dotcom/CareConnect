@@ -68,7 +68,7 @@ def nearby_donors(request):
 
 def register_donor(request):
     if request.method == 'POST':
-        form = DonorRegistrationForm(request.POST)
+        form = DonorRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             donor = form.save(commit=False)
             if (

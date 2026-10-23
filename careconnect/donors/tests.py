@@ -1,6 +1,12 @@
+from io import BytesIO
+import tempfile
+
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from django.test import override_settings
 from django.urls import reverse
+from PIL import Image
 
 from .admin import DonorAdmin
 from .models import Donor
@@ -168,13 +174,48 @@ class DonorRegistrationTests(TestCase):
         response = self.client.post(self.registration_url, self.valid_data)
 
         self.assertRedirects(response, reverse('nearby_donors'))
-        self.assertTrue(
-            Donor.objects.filter(
-                full_name='New Blood Donor',
-                blood_group='B+',
-                is_available=True,
-            ).exists()
+        donor = Donor.objects.get(full_name='New Blood Donor')
+        self.assertEqual(donor.blood_group, 'B+')
+        self.assertTrue(donor.is_available)
+        nearby_response = self.client.get(reverse('nearby_donors'))
+        self.assertContains(nearby_response, donor.full_name)
+        self.assertContains(nearby_response, 'No profile photo')
+        detail_response = self.client.get(
+            reverse('donor_detail', args=[donor.pk])
         )
+        self.assertContains(detail_response, 'No profile photo')
+
+    def test_registration_accepts_optional_photo_and_shows_it_on_pages(self):
+        image_buffer = BytesIO()
+        Image.new('RGB', (2, 2), color='green').save(image_buffer, format='PNG')
+        image_buffer.seek(0)
+        photo = SimpleUploadedFile(
+            'donor.png',
+            image_buffer.read(),
+            content_type='image/png',
+        )
+
+        with tempfile.TemporaryDirectory() as media_dir:
+            with override_settings(MEDIA_ROOT=media_dir):
+                response = self.client.post(
+                    self.registration_url,
+                    {**self.valid_data, 'profile_photo': photo},
+                )
+
+                self.assertRedirects(response, reverse('nearby_donors'))
+                donor = Donor.objects.get(full_name='New Blood Donor')
+                self.assertTrue(donor.profile_photo)
+                self.assertTrue(donor.profile_photo.storage.exists(donor.profile_photo.name))
+
+                nearby_response = self.client.get(reverse('nearby_donors'))
+                self.assertContains(nearby_response, donor.profile_photo.url)
+                self.assertContains(nearby_response, "New Blood Donor's profile photo")
+
+                detail_response = self.client.get(
+                    reverse('donor_detail', args=[donor.pk])
+                )
+                self.assertContains(detail_response, donor.profile_photo.url)
+                self.assertContains(detail_response, "New Blood Donor's profile photo")
 
     def test_invalid_registration_displays_validation_errors(self):
         invalid_data = {**self.valid_data, 'district': ''}

@@ -5,13 +5,14 @@ class DonorRegistrationForm(forms.ModelForm):
     class Meta:
         model = Donor
         fields = [
-            'full_name', 'blood_group', 'gender', 'age',
+            'full_name', 'profile_photo', 'blood_group', 'gender', 'age',
             'district', 'upazila', 'area', 'phone_number',
             'whatsapp_number', 'email', 'occupation',
             'languages', 'about_me', 'is_available'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
+            'profile_photo': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'blood_group': forms.Select(attrs={'class': 'form-select'}),
             'gender': forms.Select(attrs={'class': 'form-select'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Age'}),

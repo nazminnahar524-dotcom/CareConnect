@@ -18,6 +18,11 @@ class Donor(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     full_name = models.CharField(max_length=100)
+    profile_photo = models.ImageField(
+        upload_to='donor_photos/',
+        blank=True,
+        null=True,
+    )
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     blood_group = models.CharField(max_length=5, choices=BLOOD_GROUP_CHOICES)
