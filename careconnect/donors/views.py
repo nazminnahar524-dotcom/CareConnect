@@ -1,4 +1,5 @@
 import math
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Donor
@@ -17,6 +18,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 def nearby_donors(request):
     blood_group = request.GET.get('blood_group', '')
     gender = request.GET.get('gender', '')
+    address = request.GET.get('address', '').strip()
 
     # User current or default location (Dhanmondi, Dhaka)
     try:
@@ -32,6 +34,12 @@ def nearby_donors(request):
         donors = donors.filter(blood_group=blood_group)
     if gender and gender != 'All':
         donors = donors.filter(gender=gender)
+    if address:
+        donors = donors.filter(
+            Q(area__icontains=address)
+            | Q(upazila__icontains=address)
+            | Q(district__icontains=address)
+        )
 
     donor_list = []
     for donor in donors:
@@ -51,6 +59,7 @@ def nearby_donors(request):
         'total_donors': len(donor_list),
         'selected_blood_group': blood_group,
         'selected_gender': gender,
+        'selected_address': address,
     }
     return render(request, 'donors/nearby_donors.html', context)
 

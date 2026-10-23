@@ -32,6 +32,18 @@
                 </div>
                 <form method="GET" action="{% url 'nearby_donors' %}">
                     <div class="mb-3">
+                        <label class="form-label fw-semibold" for="address-filter">Address</label>
+                        <input
+                            type="search"
+                            id="address-filter"
+                            name="address"
+                            class="form-control"
+                            placeholder="Area, upazila, or district"
+                            value="{{ selected_address }}"
+                        >
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label fw-semibold">Blood Group</label>
                         <select name="blood_group" class="form-select">
                             <option value="">All Groups</option>
