@@ -2,6 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from pathlib import Path
+
+
+PROJECT_DIR = Path(__file__).resolve().parent / 'careconnect'
+sys.path.insert(0, str(PROJECT_DIR))
 
 
 def main():

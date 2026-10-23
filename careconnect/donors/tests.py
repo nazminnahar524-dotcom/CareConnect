@@ -68,6 +68,15 @@ class NearbyDonorAddressFilterTests(TestCase):
         self.assertEqual(response.context['selected_address'], 'mirpur')
         self.assertEqual(response.context['available_donors_count'], 3)
 
+    def test_donor_cards_support_hover_and_animated_detail_navigation(self):
+        response = self.client.get(reverse('nearby_donors'))
+
+        self.assertContains(response, 'data-donor-card')
+        self.assertContains(response, 'data-detail-transition')
+        self.assertContains(response, '.donor-card:hover')
+        self.assertContains(response, 'prefers-reduced-motion: reduce')
+        self.assertContains(response, 'donor-navigating')
+
     def test_default_nearby_page_shows_available_donors_outside_local_radius(self):
         distant_donor = Donor.objects.create(
             full_name='Distant Registered Donor',
