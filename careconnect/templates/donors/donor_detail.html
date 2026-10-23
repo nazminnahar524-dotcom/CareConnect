@@ -84,49 +84,8 @@
             </div>
         </div>
 
-        <!-- Right: Blood Request Form & Direct Message (PDF Page 27 Match) -->
+        <!-- Right: Direct Contact -->
         <div class="col-lg-5">
-            <!-- Request Blood Form -->
-            <div class="card p-4 shadow-sm border-0 rounded-4 mb-4 bg-white">
-                <h5 class="fw-bold text-danger mb-1">Request Blood</h5>
-                <p class="text-muted small mb-3">Send a blood request to this donor. They will be notified.</p>
-
-                <form method="POST" action="">
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Required Blood Group</label>
-                        <input type="text" name="blood_group" class="form-control" value="{{ donor.blood_group }}" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Units Needed</label>
-                        <select name="units_needed" class="form-select">
-                            <option value="1">1 Unit</option>
-                            <option value="2">2 Units</option>
-                            <option value="3">3 Units</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Hospital / Location</label>
-                        <input type="text" name="hospital_location" class="form-control" placeholder="e.g. Square Hospital, Dhaka" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Needed By Date</label>
-                        <input type="date" name="required_date" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Message (Optional)</label>
-                        <textarea name="message" class="form-control" rows="3" placeholder="Explain patient condition..."></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-danger w-100 fw-bold py-2">Send Request</button>
-                </form>
-            </div>
-
             <!-- Direct Contact Box -->
             <div class="card p-4 shadow-sm border-0 rounded-4 bg-light">
                 <h6 class="fw-bold mb-2">Direct Contact</h6>

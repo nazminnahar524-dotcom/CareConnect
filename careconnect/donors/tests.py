@@ -33,6 +33,16 @@ class NearbyDonorAddressFilterTests(TestCase):
             upazila='Pahartali',
             area='Pahartali',
         )
+        Donor.objects.create(
+            full_name='Unavailable Donor',
+            gender='Male',
+            blood_group='A+',
+            phone_number='01700000004',
+            district='Dhaka',
+            upazila='Dhanmondi',
+            area='Dhanmondi',
+            is_available=False,
+        )
 
     def test_filters_by_address_and_keeps_blood_group_filter(self):
         response = self.client.get(
@@ -45,3 +55,4 @@ class NearbyDonorAddressFilterTests(TestCase):
         self.assertNotContains(response, 'Mirpur A Positive')
         self.assertNotContains(response, 'Chattogram O Positive')
         self.assertEqual(response.context['selected_address'], 'mirpur')
+        self.assertEqual(response.context['available_donors_count'], 3)

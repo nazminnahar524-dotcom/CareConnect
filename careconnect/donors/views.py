@@ -29,6 +29,7 @@ def nearby_donors(request):
         user_lat, user_lng, radius = 23.7461, 90.3742, 10.0
 
     donors = Donor.objects.filter(is_available=True)
+    available_donors_count = donors.count()
 
     if blood_group and blood_group != 'All Groups':
         donors = donors.filter(blood_group=blood_group)
@@ -57,6 +58,7 @@ def nearby_donors(request):
         'user_lng': user_lng,
         'radius': radius,
         'total_donors': len(donor_list),
+        'available_donors_count': available_donors_count,
         'selected_blood_group': blood_group,
         'selected_gender': gender,
         'selected_address': address,
