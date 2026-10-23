@@ -244,6 +244,18 @@
         color: #ffffff !important;
         box-shadow: 0 6px 16px rgba(19, 138, 99, 0.25);
     }
+
+    .hospital-fallback-banner {
+        background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+        min-height: 180px;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        box-shadow: 0 8px 20px rgba(6, 78, 59, 0.15);
+    }
 </style>
 
 <div class="container py-4 animate-fade-in">
@@ -361,17 +373,23 @@
                     <div class="tab-pane fade show active" id="overview" role="tabpanel">
                         <div class="overview-card-styled p-4 mb-4">
 
-                            <!-- HOSPITAL PHOTO DISPLAY -->
-                            {% if hospital.image %}
-                            <div class="mb-4 text-center">
-                                <img src="{{ hospital.image.url }}" alt="{{ hospital.name }}" class="img-fluid rounded-4 shadow-sm border border-success border-opacity-25" style="max-height: 320px; width: 100%; object-fit: cover;">
-                            </div>
-                            {% endif %}
-
                             <h5 class="fw-bold text-success mb-2"><i class="bi bi-building-fill-check me-2"></i>About {{ hospital.name }}</h5>
                             <p class="text-dark leading-relaxed mb-4" style="line-height: 1.7; font-size: 0.95rem;">
                                 {{ hospital.description|default:"Providing exceptional medical care, emergency response, and comprehensive healthcare services. Our facility is equipped with modern medical technology and staffed by dedicated healthcare professionals available round the clock." }}
                             </p>
+
+                            <!-- HOSPITAL PHOTO WITH AUTOMATIC FALLBACK -->
+                            <div class="mb-4 text-center" id="hospitalPhotoContainer">
+                                {% if hospital.image %}
+                                    <img src="{{ hospital.image.url }}" alt="{{ hospital.name }}" class="img-fluid rounded-4 shadow-sm border border-success border-opacity-25" style="max-height: 340px; width: 100%; object-fit: cover;" onerror="this.onerror=null; document.getElementById('hospitalPhotoContainer').innerHTML='<div class=\'hospital-fallback-banner p-4 text-center\'><i class=\'bi bi-hospital display-4 mb-2\'></i><h5 class=\'fw-bold mb-1\'>{{ hospital.name|escapejs }}</h5><span class=\'small text-white-50\'>CareConnect Verified Medical Center</span></div>';">
+                                {% else %}
+                                    <div class="hospital-fallback-banner p-4 text-center">
+                                        <i class="bi bi-hospital display-4 mb-2"></i>
+                                        <h5 class="fw-bold mb-1">{{ hospital.name }}</h5>
+                                        <span class="small text-white-50">CareConnect Verified Medical Center</span>
+                                    </div>
+                                {% endif %}
+                            </div>
 
                             <div class="row g-3 mb-4">
                                 <div class="col-md-4">
