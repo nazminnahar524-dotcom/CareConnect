@@ -12,27 +12,47 @@
             box-sizing: border-box;
         }
 
+        html {
+            min-height: 100%;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            min-height: 100vh;
             margin: 0;
-            padding: 28px clamp(16px, 3vw, 48px);
-            background: #f5f7fb;
-            color: #263238;
+            padding: 28px clamp(16px, 3.5vw, 52px);
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f9f7;
+            color: #173f35;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: #16845f;
+            text-decoration: none;
+        }
+
+        a:focus-visible {
+            outline: 3px solid #8bd3b4;
+            outline-offset: 4px;
         }
 
         .container {
             width: 100%;
-            max-width: 1500px;
+            max-width: 1450px;
             margin: 0 auto;
         }
 
-        a {
-            color: #176b57;
-            text-decoration: none;
-        }
+        /* BRAND AND BREADCRUMB */
 
-        a:hover {
-            text-decoration: underline;
+        .brand-label {
+            margin: 0 0 7px;
+            color: #71877e;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
         }
 
         .back-link {
@@ -40,35 +60,74 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 15px;
+            padding: 10px 14px;
+            border: 1px solid #d9e9e1;
+            border-radius: 10px;
+            background: #fff;
+            color: #137b59;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background 0.2s, border-color 0.2s;
         }
 
-        .medicine-detail {
-            background: #fff;
-            padding: clamp(22px, 3vw, 40px);
-            border: 1px solid #edf0f3;
-            border-radius: 14px;
-            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+        .back-link:hover {
+            background: #e7f5ef;
+            border-color: #b8ddcb;
         }
+
+        /* MAIN DETAIL CARD */
+
+        .medicine-detail {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(22px, 3.5vw, 44px);
+            border: 1px solid #dcebe4;
+            border-radius: 22px;
+            background: #fff;
+            box-shadow: 0 12px 34px rgba(22, 75, 54, 0.055);
+        }
+
+        .medicine-detail::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #16845f, #8bd3b4);
+        }
+
+        /* MEDICINE HEADER */
 
         .detail-header {
             display: flex;
-            align-items: flex-start;
-            gap: 28px;
-            padding-bottom: 26px;
-            border-bottom: 1px solid #edf0f2;
+            align-items: center;
+            gap: 25px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e4eee9;
+        }
+
+        .medicine-image,
+        .medicine-placeholder {
+            width: 132px;
+            height: 132px;
+            flex: 0 0 132px;
+            border: 1px solid #dcebe4;
+            border-radius: 21px;
+            background: #edf8f2;
         }
 
         .medicine-image {
-            width: 180px;
-            height: 180px;
-            flex-shrink: 0;
+            display: block;
+            padding: 10px;
             object-fit: contain;
-            padding: 12px;
-            border: 1px solid #edf0f2;
-            border-radius: 12px;
-            background: #fafcfd;
+        }
+
+        .medicine-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 57px;
         }
 
         .medicine-heading {
@@ -76,115 +135,350 @@
             flex: 1;
         }
 
+        .heading-label {
+            margin: 0 0 8px;
+            color: #16845f;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
         h1 {
-            color: #176b57;
-            font-size: clamp(28px, 3vw, 38px);
             margin: 0 0 12px;
+            color: #083f32;
+            font-size: clamp(28px, 3.2vw, 40px);
+            font-weight: 800;
+            line-height: 1.2;
             overflow-wrap: anywhere;
         }
 
         .subtitle {
-            color: #64727a;
+            margin: 0 0 17px;
+            color: #6b8177;
+            font-size: 14px;
             line-height: 1.7;
-            margin: 0 0 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .subtitle strong {
+            color: #234b3e;
+        }
+
+        .badge-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
         }
 
         .prescription {
-            display: inline-block;
-            padding: 8px 12px;
-            border-radius: 7px;
-            background: #eef5f2;
-            color: #176b57;
-            font-size: 14px;
-            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 13px;
+            border-radius: 10px;
+            background: #e6f6ed;
+            color: #11764f;
+            font-size: 12px;
+            font-weight: 700;
         }
 
         .prescription.required {
-            background: #fff3e8;
-            color: #9a4b08;
+            background: #fff2e6;
+            color: #a65313;
         }
 
-        .section-title {
-            color: #176b57;
-            font-size: 21px;
-            margin: 30px 0 14px;
+        .category-chip {
+            display: inline-flex;
+            padding: 9px 13px;
+            border: 1px solid #dcebe4;
+            border-radius: 10px;
+            background: #f7faf8;
+            color: #537065;
+            font-size: 12px;
+            font-weight: 700;
         }
+
+        /* SECTION HEADINGS */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 30px 0 18px;
+        }
+
+        .section-heading-icon {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #e7f5ef;
+            color: #16845f;
+            font-size: 20px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            color: #123f33;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .section-heading p {
+            margin: 5px 0 0;
+            color: #7a8e85;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* INFORMATION GRID */
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0 32px;
-            margin-top: 10px;
+            gap: 15px;
         }
 
-        .info-row {
+        .info-item {
             min-width: 0;
-            padding: 16px 0;
-            border-bottom: 1px solid #edf0f2;
+            padding: 19px;
+            border: 1px solid #e1ede7;
+            border-radius: 14px;
+            background: #fbfdfc;
+            transition: border-color 0.2s, background 0.2s,
+                        transform 0.2s;
+        }
+
+        .info-item:hover {
+            border-color: #b8ddcb;
+            background: #f5fbf7;
+            transform: translateY(-2px);
+        }
+
+        .info-item-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: #758a80;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.55px;
+            text-transform: uppercase;
+        }
+
+        .info-item-label span {
+            color: #16845f;
+            font-size: 15px;
+        }
+
+        .info-item-value {
+            color: #173f35;
+            font-size: 14px;
+            font-weight: 600;
             line-height: 1.7;
             overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
-        .label {
-            display: block;
-            margin-bottom: 4px;
-            color: #63717a;
-            font-size: 13px;
-            font-weight: 600;
+        .status-value {
+            color: #a65313;
         }
 
-        .value {
-            font-size: 15px;
-            color: #263238;
+        .status-value.otc {
+            color: #11764f;
         }
+
+        /* DESCRIPTION / INDICATION */
 
         .text-section {
-            padding: 18px 20px;
-            background: #f8fafb;
-            border-radius: 10px;
-            border: 1px solid #edf0f2;
-            line-height: 1.8;
+            margin-top: 14px;
+            padding: 22px;
+            border: 1px solid #e1ede7;
+            border-radius: 15px;
+            background: #f8fbf9;
+        }
+
+        .text-section h3 {
+            margin: 0 0 12px;
+            color: #173f35;
+            font-size: 15px;
+            font-weight: 800;
         }
 
         .text-content {
+            color: #5e776b;
+            font-size: 13px;
+            line-height: 1.9;
             white-space: pre-line;
             overflow-wrap: anywhere;
         }
 
-        .footer-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding-top: 18px;
-            border-top: 1px solid #edf0f2;
-            width: 100%;
-            font-weight: 600;
+        /* SAFETY NOTICE */
+
+        .safety-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            margin-top: 25px;
+            padding: 17px 19px;
+            border: 1px solid #d9eae0;
+            border-radius: 14px;
+            background: #f0f8f3;
         }
 
-        @media (max-width: 700px) {
+        .safety-icon {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #dcefe3;
+            font-size: 17px;
+        }
+
+        .safety-note h3 {
+            margin: 1px 0 6px;
+            color: #205542;
+            font-size: 13px;
+        }
+
+        .safety-note p {
+            margin: 0;
+            color: #668074;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+
+        .detail-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 30px;
+            padding-top: 22px;
+            border-top: 1px solid #e4eee9;
+        }
+
+        .footer-brand {
+            color: #81948b;
+            font-size: 12px;
+        }
+
+        .footer-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 12px 17px;
+            border: 1px solid #16845f;
+            border-radius: 10px;
+            background: #16845f;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .footer-link:hover {
+            background: #106b4c;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE LAYOUT */
+
+        @media (max-width: 760px) {
             body {
-                padding: 18px 12px;
+                padding: 18px 13px;
             }
 
             .medicine-detail {
-                padding: 20px;
+                padding: 22px 17px;
+                border-radius: 17px;
             }
 
             .detail-header {
-                flex-direction: column;
-                gap: 18px;
+                align-items: flex-start;
+                gap: 17px;
             }
 
-            .medicine-image {
-                width: 140px;
-                height: 140px;
+            .medicine-image,
+            .medicine-placeholder {
+                width: 88px;
+                height: 88px;
+                flex-basis: 88px;
+                border-radius: 15px;
+            }
+
+            .medicine-placeholder {
+                font-size: 38px;
             }
 
             .info-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr);
+                gap: 11px;
             }
 
-            .section-title {
-                font-size: 19px;
+            .info-item {
+                padding: 16px;
+            }
+
+            .section-heading h2 {
+                font-size: 18px;
+            }
+
+            .text-section {
+                padding: 17px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .detail-header {
+                flex-direction: column;
+            }
+
+            .medicine-image,
+            .medicine-placeholder {
+                width: 100px;
+                height: 100px;
+                flex-basis: 100px;
+            }
+
+            h1 {
+                font-size: 29px;
+            }
+
+            .detail-footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .footer-link {
+                width: 100%;
+            }
+
+            .back-link {
+                font-size: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
             }
         }
     </style>
@@ -195,12 +489,15 @@
 
     <a class="back-link"
        href="{% url 'medicines:medicine_list' %}">
-        ← Back to Medicines
+        <span aria-hidden="true">←</span>
+        Back to Medicines
     </a>
 
     <main class="medicine-detail">
 
-        <div class="detail-header">
+        <!-- MEDICINE HEADER -->
+
+        <header class="detail-header">
 
             {% if medicine.image %}
                 <img
@@ -208,120 +505,265 @@
                     src="{{ medicine.image.url }}"
                     alt="{{ medicine.name }}"
                 >
+            {% else %}
+                <div class="medicine-placeholder" aria-hidden="true">
+                    💊
+                </div>
             {% endif %}
 
             <div class="medicine-heading">
+
+                <p class="heading-label">CARECONNECT MEDICINE PROFILE</p>
+
                 <h1>{{ medicine.name }}</h1>
 
                 {% if medicine.generic_name %}
                     <p class="subtitle">
-                        Generic name: {{ medicine.generic_name }}
+                        <strong>Generic name:</strong>
+                        {{ medicine.generic_name }}
+                    </p>
+                {% else %}
+                    <p class="subtitle">
+                        Medicine information and available details
                     </p>
                 {% endif %}
 
-                <span class="prescription
-                    {% if medicine.prescription_required %}required{% endif %}">
-                    {% if medicine.prescription_required %}
-                        Prescription Required
-                    {% else %}
-                        Over the Counter (OTC)
+                <div class="badge-row">
+
+                    <span class="prescription
+                        {% if medicine.prescription_required %}required{% endif %}">
+                        {% if medicine.prescription_required %}
+                            <span aria-hidden="true">●</span>
+                            Prescription Required
+                        {% else %}
+                            <span aria-hidden="true">✓</span>
+                            Over the Counter (OTC)
+                        {% endif %}
+                    </span>
+
+                    {% if medicine.get_category_display %}
+                        <span class="category-chip">
+                            {{ medicine.get_category_display }}
+                        </span>
                     {% endif %}
-                </span>
-            </div>
 
-        </div>
-
-        <h2 class="section-title">Medicine Information</h2>
-
-        <div class="info-grid">
-
-            <div class="info-row">
-                <span class="label">Category</span>
-                <div class="value">{{ medicine.get_category_display }}</div>
-            </div>
-
-            {% if medicine.sub_category %}
-                <div class="info-row">
-                    <span class="label">Subcategory</span>
-                    <div class="value">{{ medicine.sub_category }}</div>
-                </div>
-            {% endif %}
-
-            {% if medicine.brand_name %}
-                <div class="info-row">
-                    <span class="label">Brand Name</span>
-                    <div class="value">{{ medicine.brand_name }}</div>
-                </div>
-            {% endif %}
-
-            {% if medicine.generic_name %}
-                <div class="info-row">
-                    <span class="label">Generic Name</span>
-                    <div class="value">{{ medicine.generic_name }}</div>
-                </div>
-            {% endif %}
-
-            {% if medicine.manufacturer %}
-                <div class="info-row">
-                    <span class="label">Manufacturer</span>
-                    <div class="value">{{ medicine.manufacturer }}</div>
-                </div>
-            {% endif %}
-
-            {% if medicine.dosage_form %}
-                <div class="info-row">
-                    <span class="label">Dosage Form</span>
-                    <div class="value">{{ medicine.dosage_form }}</div>
-                </div>
-            {% endif %}
-
-            {% if medicine.pack_size %}
-                <div class="info-row">
-                    <span class="label">Pack Size</span>
-                    <div class="value">{{ medicine.pack_size }}</div>
-                </div>
-            {% endif %}
-
-            {% if medicine.registration_number %}
-                <div class="info-row">
-                    <span class="label">Registration Number</span>
-                    <div class="value">{{ medicine.registration_number }}</div>
-                </div>
-            {% endif %}
-
-            <div class="info-row">
-                <span class="label">Prescription Status</span>
-                <div class="value">
-                    {% if medicine.prescription_required %}
-                        Prescription required
-                    {% else %}
-                        Not required (OTC)
-                    {% endif %}
                 </div>
             </div>
 
-        </div>
+        </header>
+
+        <!-- MEDICINE INFORMATION -->
+
+        <section aria-labelledby="medicine-information-heading">
+
+            <div class="section-heading">
+                <div class="section-heading-icon" aria-hidden="true">
+                    ▤
+                </div>
+
+                <div>
+                    <h2 id="medicine-information-heading">
+                        Medicine Information
+                    </h2>
+                    <p>Details available for this medicine</p>
+                </div>
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <div class="info-item-label">
+                        <span aria-hidden="true">▦</span>
+                        Category
+                    </div>
+                    <div class="info-item-value">
+                        {{ medicine.get_category_display|default:"Not specified" }}
+                    </div>
+                </div>
+
+                {% if medicine.sub_category %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">▤</span>
+                            Subcategory
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.sub_category }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.brand_name %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">✦</span>
+                            Brand Name
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.brand_name }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.generic_name %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">✚</span>
+                            Generic Name
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.generic_name }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.manufacturer %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">▥</span>
+                            Manufacturer
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.manufacturer }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.dosage_form %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">💊</span>
+                            Dosage Form
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.dosage_form }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.pack_size %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">▣</span>
+                            Pack Size
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.pack_size }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.registration_number %}
+                    <div class="info-item">
+                        <div class="info-item-label">
+                            <span aria-hidden="true">✓</span>
+                            Registration Number
+                        </div>
+                        <div class="info-item-value">
+                            {{ medicine.registration_number }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="info-item">
+                    <div class="info-item-label">
+                        <span aria-hidden="true">♡</span>
+                        Prescription Status
+                    </div>
+
+                    <div class="info-item-value status-value
+                        {% if not medicine.prescription_required %}otc{% endif %}">
+                        {% if medicine.prescription_required %}
+                            Prescription required
+                        {% else %}
+                            Not required (OTC)
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- DESCRIPTION -->
 
         {% if medicine.description %}
-            <h2 class="section-title">Description</h2>
-            <div class="text-section text-content">
-                {{ medicine.description }}
-            </div>
+            <section aria-labelledby="description-heading">
+
+                <div class="section-heading">
+                    <div class="section-heading-icon" aria-hidden="true">
+                        ☰
+                    </div>
+
+                    <div>
+                        <h2 id="description-heading">Description</h2>
+                        <p>Available medicine description</p>
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <div class="text-content">{{ medicine.description }}</div>
+                </div>
+
+            </section>
         {% endif %}
+
+        <!-- INDICATION -->
 
         {% if medicine.indication %}
-            <h2 class="section-title">Indication</h2>
-            <div class="text-section text-content">
-                {{ medicine.indication }}
-            </div>
+            <section aria-labelledby="indication-heading">
+
+                <div class="section-heading">
+                    <div class="section-heading-icon" aria-hidden="true">
+                        ✚
+                    </div>
+
+                    <div>
+                        <h2 id="indication-heading">Indication</h2>
+                        <p>Recorded information about this medicine</p>
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <div class="text-content">{{ medicine.indication }}</div>
+                </div>
+
+            </section>
         {% endif %}
 
-        <a class="footer-link"
-           href="{% url 'medicines:medicine_list' %}">
-            ← Back to all medicines
-        </a>
+        <!-- SAFETY NOTE -->
+
+        <aside class="safety-note">
+            <div class="safety-icon" aria-hidden="true">ℹ</div>
+
+            <div>
+                <h3>Important Health Reminder</h3>
+                <p>
+                    Review the medicine information carefully. Use prescription
+                    medicines only as directed by a qualified healthcare
+                    professional. This page is for informational purposes and
+                    does not replace professional medical advice.
+                </p>
+            </div>
+        </aside>
+
+        <!-- FOOTER -->
+
+        <footer class="detail-footer">
+            <span class="footer-brand">
+                CARECONNECT · Medicine Information
+            </span>
+
+            <a
+                class="footer-link"
+                href="{% url 'medicines:medicine_list' %}"
+            >
+                <span aria-hidden="true">←</span>
+                Back to all medicines
+            </a>
+        </footer>
 
     </main>
+
 </div>
 </body>
 </html>
