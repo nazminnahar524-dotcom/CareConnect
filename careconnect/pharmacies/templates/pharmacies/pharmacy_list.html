@@ -711,137 +711,90 @@ h1 {
    Adapted from doctors/doctor_list.html
 ========================================== */
 
-/* Desktop: keep the page fixed in the viewport */
-@media (min-width: 751px) {
+/* ==========================================
+   PHARMACY PAGE + LIST INDEPENDENT SCROLL
+========================================== */
 
-    html,
-    body {
-        height: 100%;
-        overflow: hidden;
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-    }
-
-    /* Header remains stationary */
-    .top-header {
-        flex: 0 0 auto;
-    }
-
-    /* Main page fits the remaining viewport */
-    .container {
-        height: calc(100vh - 110px);
-        height: calc(100dvh - 110px);
-        min-height: 0;
-
-        display: flex;
-        flex-direction: column;
-
-        margin: 25px auto 0;
-        overflow: hidden;
-    }
-
-    /* Back link stays fixed */
-    .container > .back-btn {
-        flex: 0 0 auto;
-    }
-
-    /* Page heading stays fixed */
-    .container > .page-header {
-        flex: 0 0 auto;
-    }
-
-    /* Nearby search panel stays fixed */
-    .container > .nearby-panel {
-        flex: 0 0 auto;
-    }
-
-    /* Main content uses remaining height */
-    .container > .content-grid {
-        flex: 1 1 0;
-        min-height: 0;
-
-        display: grid;
-        grid-template-columns: 250px minmax(0, 1fr);
-        align-items: stretch;
-
-        overflow: hidden;
-    }
-
-    /* Keep filters in place */
-    .content-grid > .filter-card {
-        min-height: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-        overscroll-behavior-y: contain;
-    }
-
-    /* Pharmacy column occupies available height */
-    .content-grid > .list-section {
-        display: flex;
-        flex-direction: column;
-
-        min-width: 0;
-        min-height: 0;
-
-        overflow: hidden;
-    }
-
-    /* Pharmacy heading stays in place */
-    .list-section > .list-header {
-        flex: 0 0 auto;
-    }
-
-    /* Only the pharmacy results scroll */
-    .list-section > #careconnectList {
-        flex: 1 1 0;
-
-        height: 0;
-        min-height: 0;
-        max-height: none;
-
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        overscroll-behavior-y: contain;
-        scrollbar-gutter: stable;
-
-        padding: 2px 8px 8px 2px;
-    }
-
-    /* Keep cards fully visible inside the scroll area */
-    #careconnectList > .pharmacy-card {
-        flex-shrink: 0;
-    }
-
-    /* Avoid extra space at the end of the list */
-    #careconnectList > .pharmacy-card:last-child {
-        margin-bottom: 4px;
-    }
+/* Whole page can scroll normally */
+html,
+body {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Mobile: restore normal page scrolling */
+body {
+    display: block;
+}
+
+/* Main container follows normal document flow */
+.container {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    margin: 25px auto 50px;
+}
+
+/* Main content layout */
+.container > .content-grid {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    align-items: start;
+    gap: 18px;
+    overflow: visible;
+}
+
+/* Filters move with the page */
+.content-grid > .filter-card {
+    min-height: 0;
+    overflow: visible;
+}
+
+/* Pharmacy section */
+.content-grid > .list-section {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+}
+
+/* Pharmacy heading scrolls with the page */
+.list-section > .list-header {
+    flex: 0 0 auto;
+}
+
+/* Only pharmacy cards get their own scroll area */
+.list-section > #careconnectList {
+    flex: 0 0 auto;
+    height: 500px;
+    max-height: 65vh;
+    min-height: 250px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior-y: contain;
+    scrollbar-gutter: stable;
+
+    padding: 2px 8px 8px 2px;
+}
+
+/* Cards stay inside the list scroll area */
+#careconnectList > .pharmacy-card {
+    flex-shrink: 0;
+}
+
+/* Mobile layout */
 @media (max-width: 750px) {
-
-    html,
-    body {
-        height: auto;
-        overflow: auto;
-    }
-
     .container {
         height: auto;
-        min-height: 0;
-        display: block;
         overflow: visible;
         margin: 20px auto 35px;
     }
 
-    .content-grid {
-        display: grid;
+    .container > .content-grid {
         grid-template-columns: 1fr;
         overflow: visible;
     }
@@ -853,12 +806,14 @@ h1 {
     }
 
     .list-section > #careconnectList {
-        height: auto;
-        max-height: none;
-        overflow: visible;
-        padding: 0;
+        height: 400px;
+        max-height: 60vh;
+        min-height: 250px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 }
+
     </style>
 </head>
 
