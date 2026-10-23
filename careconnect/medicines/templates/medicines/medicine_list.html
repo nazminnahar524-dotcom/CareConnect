@@ -12,9 +12,9 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 28px clamp(16px, 3vw, 48px);
+            font-family: Arial, sans-serif;
             background: #f5f7fb;
             color: #263238;
         }
@@ -32,17 +32,12 @@
         }
 
         .page-description {
-            margin: 0 0 20px;
             color: #52616b;
             line-height: 1.6;
+            margin: 0 0 22px;
         }
 
-        /* Medicine count section */
         .stats-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
             margin-bottom: 22px;
         }
 
@@ -50,268 +45,313 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            background: #fff;
-            padding: 22px;
+            background: white;
+            padding: 18px 22px;
+            border: 1px solid #e5e7eb;
             border-radius: 12px;
-            border: 1px solid #edf0f3;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
         }
 
         .stat-icon {
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 48px;
+            height: 48px;
             flex-shrink: 0;
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
             background: #e0f2ec;
-            font-size: 27px;
+            border-radius: 10px;
+            font-size: 25px;
         }
 
         .stat-label {
-            margin: 0 0 6px;
-            color: #52616b;
-            font-size: 13px;
+            margin: 0 0 5px;
+            color: #64748b;
+            font-size: 12px;
             font-weight: bold;
-            letter-spacing: 0.6px;
             text-transform: uppercase;
         }
 
         .stat-number {
             margin: 0;
             color: #176b57;
-            font-size: clamp(28px, 3vw, 36px);
-            line-height: 1.2;
+            font-size: 28px;
             font-weight: bold;
-            overflow-wrap: anywhere;
         }
 
         .stat-description {
-            margin: 5px 0 0;
+            margin: 4px 0 0;
             color: #718096;
             font-size: 13px;
-            line-height: 1.5;
         }
 
-        .filters {
+        /* Main layout: sidebar + medicine list */
+
+        .content-grid {
             display: grid;
-            grid-template-columns:
-                minmax(220px, 2fr)
-                minmax(180px, 1.2fr)
-                minmax(180px, 1.2fr)
-                auto
-                auto;
-            align-items: center;
-            gap: 12px;
-            background: #fff;
-            padding: 18px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
         }
 
-        input,
-        select,
-        button {
+        /* Filter sidebar */
+
+        .filter-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .filter-card h3 {
+            font-size: 17px;
+            margin: 0 0 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .filter-input,
+        .filter-select {
             width: 100%;
             min-width: 0;
-            min-height: 42px;
-            padding: 11px 12px;
-            border: 1px solid #ccd5d9;
+            height: 40px;
+            padding: 0 10px;
+            border: 1px solid #dbe2ea;
             border-radius: 7px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        input,
-        select {
-            background: #fff;
+            background: white;
             color: #263238;
+            font-family: inherit;
+            font-size: 13px;
         }
 
-        input:focus,
-        select:focus {
-            outline: 2px solid rgba(23, 107, 87, 0.2);
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
             border-color: #176b57;
         }
 
-        button {
-            width: auto;
-            white-space: nowrap;
-            background: #176b57;
-            color: #fff;
+        .filter-submit {
+            width: 100%;
+            min-height: 42px;
+            padding: 10px;
             border: none;
-            cursor: pointer;
+            border-radius: 8px;
+            background: #176b57;
+            color: white;
             font-weight: 600;
-            transition: background 0.2s ease;
+            cursor: pointer;
         }
 
-        button:hover {
+        .filter-submit:hover {
             background: #105441;
         }
 
-        .reset-link {
-            padding: 10px 4px;
-            white-space: nowrap;
+        .filter-reset {
+            display: block;
+            margin-top: 10px;
+            padding: 10px;
             text-align: center;
-            color: #176b57;
-            font-weight: 500;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 13px;
         }
 
-        .reset-link:hover,
-        .detail-link:hover {
+        .filter-reset:hover {
+            color: #176b57;
             text-decoration: underline;
         }
 
-        /* Results count */
-        .results-summary {
+        /* Medicine list */
+
+        .list-section {
+            min-width: 0;
+        }
+
+        .list-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 0 0 16px;
-            color: #52616b;
-            font-size: 14px;
-            line-height: 1.6;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding: 16px 18px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .list-header h2 {
+            margin: 0;
+            color: #263238;
+            font-size: 18px;
+        }
+
+        .results-summary {
+            margin: 0 0 14px;
+            color: #64748b;
+            font-size: 13px;
         }
 
         .results-summary strong {
             color: #176b57;
         }
 
-        .medicine-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 18px;
-            align-items: stretch;
-        }
-
         .medicine-card {
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            padding: 22px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-            border: 1px solid #edf0f3;
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
+            margin-bottom: 14px;
+            padding: 19px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .medicine-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+            border-color: #b7d8cd;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
         }
 
-        .medicine-card h2 {
-            margin: 0 0 12px;
+        .medicine-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .medicine-name {
+            margin: 0 0 6px;
             color: #176b57;
-            font-size: 20px;
+            font-size: 19px;
             line-height: 1.4;
             overflow-wrap: anywhere;
         }
 
-        .medicine-card p {
-            margin: 0 0 14px;
+        .medicine-brand {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
             line-height: 1.6;
             overflow-wrap: anywhere;
         }
 
+        .prescription-badge {
+            display: inline-block;
+            flex-shrink: 0;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .prescription-required {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .prescription-otc {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .medicine-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .medicine-bottom {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+            padding-top: 13px;
+            border-top: 1px solid #eef2f6;
+        }
+
         .detail-link {
             display: inline-block;
-            align-self: flex-start;
-            margin-top: auto;
-            padding-top: 8px;
-            color: #176b57;
-            font-weight: bold;
+            padding: 9px 14px;
+            border-radius: 7px;
+            background: #176b57;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .detail-link:hover {
+            background: #105441;
         }
 
         .empty-message {
-            background: #fff;
-            padding: 28px;
+            padding: 28px 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
             border-radius: 12px;
-            color: #52616b;
+            color: #64748b;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            line-height: 1.6;
         }
 
-        @media (min-width: 1600px) {
-            .medicine-grid {
-                grid-template-columns: repeat(5, minmax(0, 1fr));
-            }
-        }
+        /* Responsive design */
 
-        @media (max-width: 1100px) {
-            .filters {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .filters input {
-                grid-column: 1 / -1;
-            }
-
-            .medicine-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 760px) {
-            body {
-                padding: 20px 16px;
-            }
-
-            .medicine-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+        @media (max-width: 850px) {
+            .content-grid {
+                grid-template-columns: 210px minmax(0, 1fr);
                 gap: 14px;
             }
 
+            .filter-card {
+                padding: 15px;
+            }
+
             .medicine-card {
-                padding: 17px;
+                padding: 16px;
             }
 
-            .medicine-card h2 {
-                font-size: 18px;
+            .medicine-top {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 650px) {
+            body {
+                padding: 20px 14px;
             }
 
-            .stat-card {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-card {
                 padding: 18px;
             }
-        }
 
-        @media (max-width: 520px) {
-            body {
-                padding: 18px 12px;
+            .filter-group {
+                margin-bottom: 15px;
             }
 
-            .filters {
-                grid-template-columns: 1fr;
-                padding: 14px;
-                gap: 10px;
-            }
-
-            .filters input {
-                grid-column: auto;
-            }
-
-            .filters button {
-                width: 100%;
-            }
-
-            .reset-link {
-                padding: 8px;
-            }
-
-            .medicine-grid {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-
-            .medicine-card {
-                padding: 20px;
+            .medicine-name {
+                font-size: 18px;
             }
 
             .stat-card {
@@ -330,10 +370,12 @@
         Search and explore available medicine information.
     </p>
 
-    <!-- Total medicine count -->
+    <!-- Medicine statistics -->
+
     <section class="stats-grid" aria-label="Medicine statistics">
         <div class="stat-card">
             <div class="stat-icon" aria-hidden="true">💊</div>
+
             <div>
                 <p class="stat-label">Total Medicines</p>
                 <p class="stat-number">{{ total_medicines }}</p>
@@ -344,119 +386,205 @@
         </div>
     </section>
 
-    <form method="get" class="filters">
-        <input
-            type="search"
-            name="q"
-            placeholder="Search medicine, brand, generic..."
-            value="{{ search_query }}"
-            aria-label="Search medicines"
-        >
+    <!-- Sidebar and medicine list -->
 
-        <select name="category" aria-label="Filter by category">
-            <option value="">All Categories</option>
+    <div class="content-grid">
 
-            {% for value, label in categories %}
-                <option value="{{ value }}"
-                    {% if selected_category == value %}selected{% endif %}>
-                    {{ label }}
-                </option>
-            {% endfor %}
-        </select>
+        <!-- LEFT SIDEBAR -->
 
-        <select name="prescription" aria-label="Filter by prescription">
-            <option value="">All Prescription Types</option>
+        <aside class="filter-card">
 
-            <option value="required"
-                {% if selected_prescription == "required" %}selected{% endif %}>
-                Prescription Required
-            </option>
+            <h3>Medicine Filters</h3>
 
-            <option value="otc"
-                {% if selected_prescription == "otc" %}selected{% endif %}>
-                Over the Counter (OTC)
-            </option>
-        </select>
+            <form method="get">
 
-        <button type="submit">Search / Filter</button>
+                <div class="filter-group">
+                    <label for="medicine-search">
+                        Search Medicine
+                    </label>
 
-        <a class="reset-link"
-           href="{% url 'medicines:medicine_list' %}">
-            Reset
-        </a>
-    </form>
+                    <input
+                        id="medicine-search"
+                        type="search"
+                        name="q"
+                        class="filter-input"
+                        placeholder="Medicine, brand, generic..."
+                        value="{{ search_query }}"
+                    >
+                </div>
 
-    <!-- Count after applying search and filters -->
-    <div class="results-summary" aria-live="polite">
-        <span>
-            Showing <strong>{{ medicines_count }}</strong>
-            of <strong>{{ total_medicines }}</strong> medicines
-        </span>
+                <div class="filter-group">
+                    <label for="medicine-category">
+                        Category
+                    </label>
+
+                    <select
+                        id="medicine-category"
+                        name="category"
+                        class="filter-select"
+                    >
+                        <option value="">All Categories</option>
+
+                        {% for value, label in categories %}
+                            <option
+                                value="{{ value }}"
+                                {% if selected_category == value %}selected{% endif %}
+                            >
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="medicine-prescription">
+                        Prescription Type
+                    </label>
+
+                    <select
+                        id="medicine-prescription"
+                        name="prescription"
+                        class="filter-select"
+                    >
+                        <option value="">All Types</option>
+
+                        <option
+                            value="required"
+                            {% if selected_prescription == "required" %}selected{% endif %}
+                        >
+                            Prescription Required
+                        </option>
+
+                        <option
+                            value="otc"
+                            {% if selected_prescription == "otc" %}selected{% endif %}
+                        >
+                            Over the Counter (OTC)
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="filter-submit">
+                    Apply Filters
+                </button>
+
+                <a
+                    href="{% url 'medicines:medicine_list' %}"
+                    class="filter-reset"
+                >
+                    Reset Filters
+                </a>
+
+            </form>
+
+        </aside>
+
+        <!-- RIGHT SIDE: MEDICINE LIST -->
+
+        <section class="list-section">
+
+            <div class="list-header">
+                <h2>Available Medicines</h2>
+            </div>
+
+            <p class="results-summary" aria-live="polite">
+                Showing
+                <strong>{{ medicines_count }}</strong>
+                of
+                <strong>{{ total_medicines }}</strong>
+                medicines
+            </p>
+
+            {% if medicines %}
+
+                {% for medicine in medicines %}
+
+                    <article class="medicine-card">
+
+                        <div class="medicine-top">
+
+                            <div>
+                                <h3 class="medicine-name">
+                                    {{ medicine.name }}
+                                </h3>
+
+                                {% if medicine.brand_name %}
+                                    <p class="medicine-brand">
+                                        <strong>Brand:</strong>
+                                        {{ medicine.brand_name }}
+                                    </p>
+                                {% endif %}
+
+                                {% if medicine.generic_name %}
+                                    <p class="medicine-brand">
+                                        <strong>Generic:</strong>
+                                        {{ medicine.generic_name }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            {% if medicine.prescription_required %}
+                                <span class="prescription-badge prescription-required">
+                                    Prescription Required
+                                </span>
+                            {% else %}
+                                <span class="prescription-badge prescription-otc">
+                                    OTC
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="medicine-meta">
+
+                            <span class="tag">
+                                Category:
+                                {{ medicine.get_category_display }}
+                            </span>
+
+                            {% if medicine.dosage_form %}
+                                <span class="tag">
+                                    Form: {{ medicine.dosage_form }}
+                                </span>
+                            {% endif %}
+
+                            {% if medicine.manufacturer %}
+                                <span class="tag">
+                                    Manufacturer: {{ medicine.manufacturer }}
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="medicine-bottom">
+
+                            <a
+                                class="detail-link"
+                                href="{% url 'medicines:medicine_detail' medicine.pk %}"
+                            >
+                                View Details →
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-message">
+                    <strong>No medicines found.</strong>
+                    <p>
+                        Try another search term or change your filters.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
     </div>
-
-    {% if medicines %}
-        <div class="medicine-grid">
-            {% for medicine in medicines %}
-                <article class="medicine-card">
-
-                    <h2>{{ medicine.name }}</h2>
-
-                    {% if medicine.brand_name %}
-                        <p>
-                            <strong>Brand:</strong>
-                            {{ medicine.brand_name }}
-                        </p>
-                    {% endif %}
-
-                    {% if medicine.generic_name %}
-                        <p>
-                            <strong>Generic:</strong>
-                            {{ medicine.generic_name }}
-                        </p>
-                    {% endif %}
-
-                    {% if medicine.manufacturer %}
-                        <p>
-                            <strong>Manufacturer:</strong>
-                            {{ medicine.manufacturer }}
-                        </p>
-                    {% endif %}
-
-                    <p>
-                        <strong>Category:</strong>
-                        {{ medicine.get_category_display }}
-                    </p>
-
-                    {% if medicine.dosage_form %}
-                        <p>
-                            <strong>Dosage form:</strong>
-                            {{ medicine.dosage_form }}
-                        </p>
-                    {% endif %}
-
-                    <p>
-                        <strong>Prescription:</strong>
-                        {% if medicine.prescription_required %}
-                            Required
-                        {% else %}
-                            Not required (OTC)
-                        {% endif %}
-                    </p>
-
-                    <a
-                        class="detail-link"
-                        href="{% url 'medicines:medicine_detail' medicine.pk %}">
-                        View Details →
-                    </a>
-
-                </article>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="empty-message">
-            No medicines found. Try a different search or filter.
-        </p>
-    {% endif %}
 
 </div>
 </body>
