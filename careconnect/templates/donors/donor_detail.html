@@ -43,10 +43,10 @@
                         <strong>Gender:</strong> {{ donor.gender|default:"Not specified" }}
                     </div>
                     <div class="col-6">
-                        <strong>Phone:</strong> {{ donor.phone }}
+                        <strong>Phone:</strong> {{ donor.phone_number }}
                     </div>
                     <div class="col-6">
-                        <strong>WhatsApp:</strong> {{ donor.whatsapp|default:donor.phone }}
+                        <strong>WhatsApp:</strong> {% if donor.whatsapp_number %}{{ donor.whatsapp_number }}{% else %}{{ donor.phone_number }}{% endif %}
                     </div>
                     <div class="col-6">
                         <strong>Email:</strong> {{ donor.email|default:"Not specified" }}
@@ -83,14 +83,12 @@
                 <p class="text-muted small mb-3">Contact donor directly for emergency blood urgent needs.</p>
 
                 <div class="d-grid gap-2">
-                    <a href="tel:{{ donor.phone }}" class="btn btn-success fw-bold py-2">
-                        📞 Call {{ donor.phone }}
+                    <a href="tel:{{ donor.phone_number }}" class="btn btn-success fw-bold py-2">
+                        📞 Call {{ donor.phone_number }}
                     </a>
-                    {% if donor.whatsapp or donor.phone %}
-                        <a href="https://wa.me/{{ donor.whatsapp|default:donor.phone|slugify }}" target="_blank" class="btn btn-outline-success fw-bold py-2">
-                            💬 Chat on WhatsApp
-                        </a>
-                    {% endif %}
+                    <a href="https://wa.me/{{ donor.whatsapp_number|default:donor.phone_number|slugify }}" target="_blank" class="btn btn-outline-success fw-bold py-2">
+                        💬 Chat on WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
