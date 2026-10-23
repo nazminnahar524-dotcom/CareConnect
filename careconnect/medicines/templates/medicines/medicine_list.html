@@ -616,6 +616,40 @@
                 font-size: 9px;
             }
         }
+
+/* Enable scrolling for the entire Medicine page */
+
+html {
+    height: auto !important;
+    min-height: 100%;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
+body {
+    height: auto !important;
+    min-height: 100vh;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
+.container {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+}
+
+.content-grid {
+    overflow: visible !important;
+}
+
+/* Keep the medicine list independently scrollable too */
+
+.list-section {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
     </style>
 </head>
 
