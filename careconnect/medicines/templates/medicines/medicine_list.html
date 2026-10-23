@@ -37,6 +37,8 @@
             margin: 0 0 22px;
         }
 
+        /* Statistics */
+
         .stats-grid {
             margin-bottom: 22px;
         }
@@ -84,7 +86,7 @@
             font-size: 13px;
         }
 
-        /* Main layout: sidebar + medicine list */
+        /* Main layout */
 
         .content-grid {
             display: grid;
@@ -137,6 +139,7 @@
         .filter-select:focus {
             outline: none;
             border-color: #176b57;
+            box-shadow: 0 0 0 2px rgba(23, 107, 87, 0.10);
         }
 
         .filter-submit {
@@ -170,13 +173,47 @@
             text-decoration: underline;
         }
 
-        /* Medicine list */
+        /* Scrollable medicine list */
 
         .list-section {
             min-width: 0;
+            height: 75vh;
+            max-height: 750px;
+            min-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 8px 12px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #aabdb6 #eef2f0;
+            overscroll-behavior-y: contain;
         }
 
+        /* Chrome, Edge and Safari scrollbar */
+
+        .list-section::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .list-section::-webkit-scrollbar-track {
+            background: #eef2f0;
+            border-radius: 10px;
+        }
+
+        .list-section::-webkit-scrollbar-thumb {
+            background: #aabdb6;
+            border-radius: 10px;
+        }
+
+        .list-section::-webkit-scrollbar-thumb:hover {
+            background: #176b57;
+        }
+
+        /* List heading stays visible while scrolling */
+
         .list-header {
+            position: sticky;
+            top: 0;
+            z-index: 5;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -204,6 +241,8 @@
         .results-summary strong {
             color: #176b57;
         }
+
+        /* Medicine cards */
 
         .medicine-card {
             margin-bottom: 14px;
@@ -296,11 +335,14 @@
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
+            transition: background 0.2s;
         }
 
         .detail-link:hover {
             background: #105441;
         }
+
+        /* Empty state */
 
         .empty-message {
             padding: 28px 20px;
@@ -312,7 +354,11 @@
             line-height: 1.6;
         }
 
-        /* Responsive design */
+        .empty-message p {
+            margin-bottom: 0;
+        }
+
+        /* Tablet */
 
         @media (max-width: 850px) {
             .content-grid {
@@ -333,6 +379,8 @@
             }
         }
 
+        /* Mobile */
+
         @media (max-width: 650px) {
             body {
                 padding: 20px 14px;
@@ -350,12 +398,36 @@
                 margin-bottom: 15px;
             }
 
+            .list-section {
+                height: 70vh;
+                max-height: 600px;
+                min-height: 280px;
+                padding-right: 5px;
+            }
+
+            .list-header {
+                padding: 14px;
+            }
+
             .medicine-name {
                 font-size: 18px;
             }
 
             .stat-card {
                 padding: 16px;
+            }
+
+            .prescription-badge {
+                white-space: normal;
+            }
+        }
+
+        /* Reduced motion preference */
+
+        @media (prefers-reduced-motion: reduce) {
+            .medicine-card,
+            .detail-link {
+                transition: none;
             }
         }
     </style>
@@ -393,7 +465,6 @@
         <!-- LEFT SIDEBAR -->
 
         <aside class="filter-card">
-
             <h3>Medicine Filters</h3>
 
             <form method="get">
@@ -476,12 +547,11 @@
                 </a>
 
             </form>
-
         </aside>
 
-        <!-- RIGHT SIDE: MEDICINE LIST -->
+        <!-- RIGHT SIDE: SCROLLABLE MEDICINE LIST -->
 
-        <section class="list-section">
+        <section class="list-section" aria-label="Available medicines">
 
             <div class="list-header">
                 <h2>Available Medicines</h2>
@@ -557,14 +627,12 @@
                         </div>
 
                         <div class="medicine-bottom">
-
                             <a
                                 class="detail-link"
                                 href="{% url 'medicines:medicine_detail' medicine.pk %}"
                             >
                                 View Details →
                             </a>
-
                         </div>
 
                     </article>
