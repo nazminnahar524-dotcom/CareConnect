@@ -136,7 +136,7 @@
             transform: translateX(4px);
         }
 
-        /* Top Header Navbar - Redesigned */
+        /* Top Header Navbar */
         .dashboard-header {
             background: #ffffff;
             border-bottom: 1px solid var(--cc-border);
@@ -271,6 +271,8 @@
             border-radius: 50rem;
             font-weight: 650;
             padding: 8px 22px;
+        }
+
         .btn-cc:hover {
             background: #122822;
             color: #fff;
@@ -289,20 +291,20 @@
             color: #fff;
         }
 
-        /* Page Content Area */
+        /* Balanced Page Content Area Margins */
         .cc-page {
             flex-grow: 1;
-            padding: 32px 28px;
-            max-width: 1600px;
+            padding: 24px 28px;
+            max-width: 1560px;
             width: 100%;
             margin: 0 auto;
         }
 
-        /* Modern Footer Matching Ref */
+        /* Modern Footer */
         .cc-footer {
             background: var(--cc-primary-dark);
             color: #c0d7ca;
-            padding: 48px 28px 24px;
+            padding: 36px 28px 20px;
             border-top: 1px solid rgba(255,255,255,0.08);
             margin-top: auto;
         }
@@ -312,21 +314,21 @@
             align-items: center;
             gap: 12px;
             color: #fff;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
 
         .cc-footer-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
             background: rgba(212, 175, 55, 0.15);
             color: var(--cc-accent);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .cc-footer-links {
@@ -335,7 +337,7 @@
             margin: 0;
         }
 
-        .cc-footer-links li { margin-bottom: 10px; }
+        .cc-footer-links li { margin-bottom: 8px; }
         .cc-footer-links a {
             color: #a3b8b0;
             font-size: 13px;
@@ -353,6 +355,9 @@
             }
             .dashboard-main {
                 margin-left: 0 !important;
+            }
+            .cc-page {
+                padding: 16px;
             }
         }
     </style>
@@ -380,7 +385,7 @@
                 </span>
             </div>
 
-            <!-- Navigation Links matching Dashboard Ref Menu Items -->
+            <!-- Navigation Links -->
             <ul class="sidebar-nav">
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
@@ -488,6 +493,8 @@
                         Hi, {{ user.username }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
+                        <li><a class="dropdown-item rounded-2" href="{% url 'my_appointments' %}">My Appointments</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}
@@ -518,22 +525,22 @@
             {% block content %}{% endblock %}
         </main>
 
-        <!-- Footer -->
+        <!-- Footer (Last Line Removed) -->
         <footer class="cc-footer">
-            <div class="container-fluid px-4">
-                <div class="row gy-4 align-items-center">
+            <div class="container-fluid px-3">
+                <div class="row gy-3 align-items-center justify-content-between">
                     <div class="col-md-6">
                         <div class="cc-footer-brand">
                             <span class="cc-footer-logo"><i class="fa-solid fa-heart-pulse"></i></span>
                             CareConnect
                         </div>
                         <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">
-                            Your health, our priority. Find trusted healthcare services, explore specialists, and manage your consultations in one place.
+                            Your health, our priority. Find trusted healthcare services and manage consultations in one place.
                         </p>
                     </div>
-                    <div class="col-md-6 text-md-end">
+                    <div class="col-md-5 text-md-end">
                         <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">
-                            ©️ {% now "Y" %} <strong>CareConnect</strong>. All rights reserved. <span class="ms-2"><i class="fa-solid fa-heart text-danger"></i> Made for better healthcare</span>
+                            ©️ {% now "Y" %} <strong>CareConnect</strong>. All rights reserved.
                         </p>
                     </div>
                 </div>
