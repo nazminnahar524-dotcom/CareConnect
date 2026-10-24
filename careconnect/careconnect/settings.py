@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'hospitals',
     'donors',
     'medicines',
-    'blood_requests',
+
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -64,10 +64,13 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 4,  # Change this to whatever minimum length you prefer (e.g., 4)
+        }
+    },
+    # The other validators (UserAttributeSimilarityValidator, CommonPasswordValidator, NumericPasswordValidator) are removed so users can use simple or numeric passwords.
 ]
 
 LANGUAGE_CODE = 'en-us'

@@ -149,59 +149,6 @@
         background: #f8fafc;
     }
 
-    /* Animated & Colorful Facilities Card */
-    .facilities-card-styled {
-        background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 60%, #f7fee7 100%);
-        border: 1px solid #bbf7d0;
-        border-radius: 24px;
-        box-shadow: 0 10px 28px rgba(16, 185, 129, 0.08);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .facility-item-cute {
-        background: #ffffff;
-        border: 1px solid #d1fae5;
-        border-radius: 16px;
-        padding: 10px 14px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-    }
-
-    .facility-item-cute:hover {
-        transform: translateX(6px) scale(1.02);
-        border-color: #10b981;
-        box-shadow: 0 8px 18px rgba(16, 185, 129, 0.15);
-        background: #ffffff;
-    }
-
-    .facility-icon-bubble {
-        width: 34px;
-        height: 34px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.05rem;
-        transition: transform 0.3s ease;
-    }
-
-    .facility-item-cute:hover .facility-icon-bubble {
-        transform: rotate(8deg) scale(1.1);
-    }
-
-    .badge-cute-status {
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 50rem;
-        letter-spacing: 0.3px;
-    }
-
     /* Ultra-Stylish Eye-Catching Live ER Console */
     .occupancy-console {
         background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.25) 0%, transparent 50%),
@@ -337,6 +284,59 @@
         color: #ffffff;
         box-shadow: 0 8px 20px rgba(6, 78, 59, 0.15);
     }
+
+    /* Affiliated Doctors Modern Card */
+    .doctor-card-modern {
+        background: linear-gradient(135deg, #f0fdf4 0%, #e6fef2 100%);
+        border: 1.5px solid #bbf7d0;
+        border-radius: 20px;
+        padding: 20px;
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .doctor-card-modern:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 16px 32px rgba(16, 185, 129, 0.15);
+        border-color: #10b981;
+        background: #ffffff;
+    }
+
+    .doctor-avatar-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: #dcfce7;
+        color: #166534;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+
+    .btn-appointment-pill {
+        background: #10b981;
+        color: #ffffff;
+        font-weight: 700;
+        border-radius: 50rem;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.25s ease;
+    }
+
+    .btn-appointment-pill:hover {
+        background: #059669;
+        color: #ffffff;
+        transform: scale(1.03);
+    }
 </style>
 
 <div class="container py-4 animate-fade-in">
@@ -395,7 +395,7 @@
                     </div>
                     <div>
                         <h6 class="text-muted mb-1 text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.8px;">Total Doctors</h6>
-                        <h3 class="fw-bold mb-0 text-primary counter-val" style="font-size: 1.6rem;">{{ hospital.total_doctors|default:"24" }}</h3>
+                        <h3 class="fw-bold mb-0 text-primary counter-val" style="font-size: 1.6rem;">{{ doctors.count|default:hospital.total_doctors|default:"24" }}</h3>
                     </div>
                 </div>
             </div>
@@ -442,6 +442,9 @@
                             <button class="nav-link active fw-bold" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab"><i class="bi bi-info-circle me-1"></i> Overview</button>
                         </li>
                         <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold" id="doctors-tab" data-bs-toggle="tab" data-bs-target="#doctors" type="button" role="tab"><i class="bi bi-person-badge me-1"></i> Affiliated Doctors</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <button class="nav-link fw-bold" id="departments-tab" data-bs-toggle="tab" data-bs-target="#departments" type="button" role="tab"><i class="bi bi-diagram-3 me-1"></i> Specialized Units</button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -450,10 +453,9 @@
                     </ul>
                 </div>
                 <div class="card-body p-4 tab-content" id="hospitalTabContent">
-                    <!-- Tab 1: REDESIGNED OVERVIEW TAB -->
+                    <!-- Tab 1: OVERVIEW TAB -->
                     <div class="tab-pane fade show active" id="overview" role="tabpanel">
                         <div class="overview-card-styled p-4 mb-4">
-
                             <h5 class="fw-bold text-success mb-2"><i class="bi bi-building-fill-check me-2"></i>About {{ hospital.name }}</h5>
                             <p class="text-dark leading-relaxed mb-4" style="line-height: 1.7; font-size: 0.95rem;">
                                 {{ hospital.description|default:"Providing exceptional medical care, emergency response, and comprehensive healthcare services. Our facility is equipped with modern medical technology and staffed by dedicated healthcare professionals available round the clock." }}
@@ -519,7 +521,70 @@
                         </div>
                     </div>
 
-                    <!-- Tab 2: REDESIGNED SPECIALIZED UNITS TAB -->
+                    <!-- Tab 2: AFFILIATED DOCTORS TAB -->
+                    <div class="tab-pane fade" id="doctors" role="tabpanel">
+                        <div class="specialized-card-styled p-4 mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                                <div>
+                                    <h5 class="fw-bold text-success mb-1"><i class="bi bi-person-badge-fill me-2"></i>Affiliated Medical Specialists</h5>
+                                    <p class="text-muted small mb-0">Doctors currently practicing and consulting at {{ hospital.name }}.</p>
+                                </div>
+                                <span class="badge bg-success text-white rounded-pill px-3 py-1.5 fw-bold small">
+                                    {{ doctors.count|default:"0" }} Specialist{% if doctors.count != 1 %}s{% endif %}
+                                </span>
+                            </div>
+
+                            <div class="row g-3 mt-2">
+                                {% for doctor in doctors %}
+                                <div class="col-md-6">
+                                    <div class="doctor-card-modern shadow-sm">
+                                        <div>
+                                            <div class="d-flex align-items-center gap-3 mb-2.5">
+                                                <div class="doctor-avatar-circle">
+                                                    <i class="bi bi-person-fill"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="fw-bold text-dark mb-0">Dr. {{ doctor.name }}</h6>
+                                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill small fw-bold mt-1">
+                                                        {{ doctor.specialty }}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {% if doctor.degree %}
+                                            <p class="small text-muted mb-1.5">
+                                                <i class="bi bi-mortarboard-fill text-primary me-1"></i> {{ doctor.degree }}
+                                            </p>
+                                            {% endif %}
+
+                                            {% if doctor.phone %}
+                                            <p class="small text-secondary mb-3">
+                                                <i class="bi bi-telephone-fill text-success me-1"></i> {{ doctor.phone }}
+                                            </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="pt-2 border-top">
+                                            <a href="{% url 'book_appointment' doctor.pk %}" class="btn-appointment-pill w-100">
+                                                <i class="bi bi-calendar-check-fill me-1"></i> Book Consultation
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="col-12">
+                                    <div class="text-center py-4 bg-white rounded-4 border">
+                                        <i class="bi bi-person-x display-5 text-muted mb-2 d-block"></i>
+                                        <h6 class="fw-bold text-dark">No Doctors Assigned Yet</h6>
+                                        <p class="text-muted small mb-0">There are currently no registered doctors linked to this specific hospital branch.</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: SPECIALIZED UNITS TAB -->
                     <div class="tab-pane fade" id="departments" role="tabpanel">
                         <div class="specialized-card-styled p-4 mb-4">
                             <h5 class="fw-bold text-success mb-2"><i class="bi bi-diagram-3-fill me-2"></i>Clinical Specialties & Departments</h5>
@@ -532,53 +597,41 @@
                                     </span>
                                     <span>Cardiology</span>
                                 </div>
-
                                 <div class="dept-badge-card">
                                     <span class="p-2 bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                                         <i class="bi bi-activity fs-5"></i>
                                     </span>
                                     <span>Neurology</span>
                                 </div>
-
                                 <div class="dept-badge-card">
                                     <span class="p-2 bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                                         <i class="bi bi-person-arms-up fs-5"></i>
                                     </span>
                                     <span>Orthopedics</span>
                                 </div>
-
                                 <div class="dept-badge-card">
                                     <span class="p-2 bg-warning-subtle text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                                         <i class="bi bi-emoji-smile-fill fs-5"></i>
                                     </span>
                                     <span>Pediatrics</span>
                                 </div>
-
                                 <div class="dept-badge-card">
                                     <span class="p-2 bg-info-subtle text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                                         <i class="bi bi-eye-fill fs-5"></i>
                                     </span>
                                     <span>Ophthalmology</span>
                                 </div>
-
                                 <div class="dept-badge-card">
                                     <span class="p-2 bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                                         <i class="bi bi-hospital-fill fs-5"></i>
                                     </span>
                                     <span>Intensive Care (ICU)</span>
                                 </div>
-
-                                <div class="dept-badge-card">
-                                    <span class="p-2 bg-secondary-subtle text-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                        <i class="bi bi-bandaid-fill fs-5"></i>
-                                    </span>
-                                    <span>General Surgery</span>
-                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tab 3: Contact Details -->
+                    <!-- Tab 4: Contact Details -->
                     <div class="tab-pane fade" id="contact" role="tabpanel">
                         <h5 class="fw-bold text-success mb-3">Contact Information</h5>
                         <table class="table table-borderless align-middle">
@@ -606,7 +659,7 @@
             </div>
         </div>
 
-        <!-- Sidebar Column: Stylish Live ER Console & Features -->
+        <!-- Sidebar Column: Stylish Live ER Console -->
         <div class="col-lg-4">
             <div class="occupancy-console p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -619,27 +672,25 @@
                 <h5 class="fw-bold mb-1 text-white"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Instant Bed Reservation</h5>
                 <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Select an available ward unit below to reserve space.</p>
 
-                <!-- Dynamic Availabilities from Django Admin -->
                 <div class="mb-3">
                     <label class="form-label small fw-bold text-white-50 mb-2">Select Target Unit:</label>
                     <select id="unitSelect" class="form-select form-select-sm bg-white text-dark fw-bold rounded-pill border-0 shadow-sm px-3 py-2">
-                        <option value="ward" data-count="15">General Ward Bed (15 Open)</option>
+                        <option value="ward" data-count="15" data-original="15">General Ward Bed (15 Open)</option>
                         {% if hospital.has_icu %}
-                        <option value="icu" data-count="10">ICU Unit (10 Open)</option>
+                        <option value="icu" data-count="10" data-original="10">ICU Unit (10 Open)</option>
                         {% endif %}
                         {% if hospital.has_ccu %}
-                        <option value="ccu" data-count="7">CCU Unit (7 Open)</option>
+                        <option value="ccu" data-count="7" data-original="7">CCU Unit (7 Open)</option>
                         {% endif %}
                         {% if hospital.has_nicu %}
-                        <option value="nicu" data-count="5">NICU Unit (5 Open)</option>
+                        <option value="nicu" data-count="5" data-original="5">NICU Unit (5 Open)</option>
                         {% endif %}
                         {% if hospital.has_emergency %}
-                        <option value="er" data-count="8">Emergency ER Bed (8 Open)</option>
+                        <option value="er" data-count="8" data-original="8">Emergency ER Bed (8 Open)</option>
                         {% endif %}
                     </select>
                 </div>
 
-                <!-- Live Unit Capacity Glass Box -->
                 <div class="p-3 glass-meter-box mb-3">
                     <div class="d-flex justify-content-between small mb-1.5">
                         <span id="selectedUnitLabel" class="fw-semibold text-white">General Ward Bed</span>
@@ -650,7 +701,6 @@
                     </div>
                 </div>
 
-                <!-- Reservation and Cancel Action Bar -->
                 <div class="d-flex flex-column gap-2 mt-2">
                     <button type="button" class="btn-reserve-live w-100" id="simReserveBtn">
                         <i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed
@@ -661,203 +711,111 @@
                 </div>
             </div>
 
-            <!-- Booking CTA Card -->
-            <div class="card shadow-sm border-0 bg-white mb-4 rounded-4" style="border: 1px solid #e2ebe7 !important;">
-                <div class="card-body p-4 text-center">
-                    <div class="bg-success-subtle text-success p-3 rounded-circle d-inline-block mb-3 shadow-sm">
-                        <i class="bi bi-calendar-check display-6"></i>
-                    </div>
-                    <h5 class="fw-bold text-dark mb-2">Book a Doctor Visit</h5>
-                    <p class="text-muted small mb-3">Find available specialists at {{ hospital.name }} and reserve your appointment online.</p>
-                    <a href="{% url 'doctor_list' %}" class="btn btn-success w-100 fw-bold py-2.5 rounded-pill shadow-sm">
-                        <i class="bi bi-search me-1"></i> Find Doctors
-                    </a>
-                </div>
-            </div>
-
-            <!-- Facilities Checklist Card -->
-            <div class="card facilities-card-styled mb-4 p-4">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="fw-bold text-success mb-0 d-flex align-items-center gap-2">
-                        <span class="p-2 bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 32px; height: 32px;">
-                            <i class="bi bi-shield-check fs-6"></i>
-                        </span>
-                        On-Site Facilities
-                    </h5>
-                    <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1 small fw-bold">Live Status</span>
-                </div>
-
-                <div class="facility-list">
-                    <!-- Emergency Care -->
-                    <div class="facility-item-cute">
-                        <div class="d-flex align-items-center gap-2.5">
-                            <div class="facility-icon-bubble {% if hospital.has_emergency %}bg-danger-subtle text-danger{% else %}bg-secondary-subtle text-secondary{% endif %}">
-                                <i class="bi bi-exclamation-octagon-fill"></i>
-                            </div>
-                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">Emergency Care Unit</span>
-                        </div>
-                        {% if hospital.has_emergency %}
-                            <span class="badge-cute-status bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i>24/7 Open</span>
-                        {% else %}
-                            <span class="badge-cute-status bg-light text-muted border"><i class="bi bi-dash-circle me-1"></i>N/A</span>
-                        {% endif %}
-                    </div>
-
-                    <!-- ICU -->
-                    <div class="facility-item-cute">
-                        <div class="d-flex align-items-center gap-2.5">
-                            <div class="facility-icon-bubble {% if hospital.has_icu %}bg-success-subtle text-success{% else %}bg-secondary-subtle text-secondary{% endif %}">
-                                <i class="bi bi-heart-pulse-fill"></i>
-                            </div>
-                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">Intensive Care Unit (ICU)</span>
-                        </div>
-                        {% if hospital.has_icu %}
-                            <span class="badge-cute-status bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
-                        {% else %}
-                            <span class="badge-cute-status bg-light text-muted border"><i class="bi bi-dash-circle me-1"></i>N/A</span>
-                        {% endif %}
-                    </div>
-
-                    <!-- CCU -->
-                    <div class="facility-item-cute">
-                        <div class="d-flex align-items-center gap-2.5">
-                            <div class="facility-icon-bubble {% if hospital.has_ccu %}bg-primary-subtle text-primary{% else %}bg-secondary-subtle text-secondary{% endif %}">
-                                <i class="bi bi-activity"></i>
-                            </div>
-                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">Critical Care Unit (CCU)</span>
-                        </div>
-                        {% if hospital.has_ccu %}
-                            <span class="badge-cute-status bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i>Active</span>
-                        {% else %}
-                            <span class="badge-cute-status bg-light text-muted border"><i class="bi bi-dash-circle me-1"></i>N/A</span>
-                        {% endif %}
-                    </div>
-
-                    <!-- Ambulance -->
-                    <div class="facility-item-cute">
-                        <div class="d-flex align-items-center gap-2.5">
-                            <div class="facility-icon-bubble {% if hospital.has_ambulance %}bg-warning-subtle text-warning{% else %}bg-secondary-subtle text-secondary{% endif %}">
-                                <i class="bi bi-truck-front-fill"></i>
-                            </div>
-                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">24/7 Ambulance Fleet</span>
-                        </div>
-                        {% if hospital.has_ambulance %}
-                            <span class="badge-cute-status bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i>On Call</span>
-                        {% else %}
-                            <span class="badge-cute-status bg-light text-muted border"><i class="bi bi-dash-circle me-1"></i>N/A</span>
-                        {% endif %}
-                    </div>
-
-                    <!-- Pharmacy -->
-                    <div class="facility-item-cute mb-0">
-                        <div class="d-flex align-items-center gap-2.5">
-                            <div class="facility-icon-bubble {% if hospital.has_pharmacy %}bg-info-subtle text-info{% else %}bg-secondary-subtle text-secondary{% endif %}">
-                                <i class="bi bi-capsule"></i>
-                            </div>
-                            <span class="fw-bold text-dark" style="font-size: 0.88rem;">In-House Pharmacy</span>
-                        </div>
-                        {% if hospital.has_pharmacy %}
-                            <span class="badge-cute-status bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle-fill me-1"></i>In-Stock</span>
-                        {% else %}
-                            <span class="badge-cute-status bg-light text-muted border"><i class="bi bi-dash-circle me-1"></i>N/A</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Emergency Support Banner -->
-            <div class="card shadow-sm border-0 bg-success text-white rounded-4 shadow-sm">
-                <div class="card-body p-4 text-center">
-                    <i class="bi bi-headset display-5 mb-2 d-block"></i>
-                    <h5 class="fw-bold">24/7 Emergency Support</h5>
-                    <p class="small text-white-50 mb-3">Need urgent assistance or ambulance dispatched?</p>
-                    {% if hospital.helpline %}
-                    <a href="tel:{{ hospital.helpline }}" class="btn btn-light text-success fw-bold w-100 rounded-pill py-2.5 shadow-sm">
-                        <i class="bi bi-telephone-fill me-1"></i> Call Hotline Now
-                    </a>
-                    {% endif %}
-                </div>
+            <!-- Emergency Hotline Card -->
+            <div class="card border-0 shadow-sm bg-danger text-white p-4 text-center rounded-4">
+                <i class="bi bi-telephone-outbound-fill display-6 mb-2"></i>
+                <h6 class="fw-bold mb-1">Emergency Hotline</h6>
+                <p class="small text-white-50 mb-3">Instant dispatch & immediate ER assistance</p>
+                <a href="tel:999" class="btn btn-light text-danger fw-bold btn-sm rounded-pill shadow-sm py-2"><i class="bi bi-telephone-fill me-1"></i> Call 999 / ER</a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- JavaScript for Map & Reservation Logic -->
+<!-- Leaflet Map Initialization Script -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Initialize Map
-        var lat = {{ hospital.latitude|default:23.7461 }};
-        var lng = {{ hospital.longitude|default:90.3742 }};
+        // Default coordinates for Dhaka or hospital location
+        const lat = {{ hospital.latitude|default:23.8103 }};
+        const lng = {{ hospital.longitude|default:90.4125 }};
 
-        var map = L.map('detailMap').setView([lat, lng], 15);
+        const map = L.map('detailMap').setView([lat, lng], 14);
 
-        L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+        // Fixed OpenStreetMap tile layer with referrerPolicy to prevent 403 blocks
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            referrerPolicy: 'origin'
         }).addTo(map);
 
-        var marker = L.marker([lat, lng]).addTo(map);
-        marker.bindPopup("<b>{{ hospital.name|escapejs }}</b><br>{{ hospital.location|escapejs }}").openPopup();
-
-        // Dynamic Unit Selection & Reservation JS
-        const unitSelect = document.getElementById('unitSelect');
-        const label = document.getElementById('selectedUnitLabel');
-        const countDisplay = document.getElementById('selectedUnitCount');
-        const progressBar = document.getElementById('selectedProgressBar');
-        const reserveBtn = document.getElementById('simReserveBtn');
-        const cancelBtn = document.getElementById('simCancelBtn');
-
-        let originalCount = 15;
-        let activeReserved = false;
-
-        function updateDisplay() {
-            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
-            originalCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
-
-            label.innerText = selectedOpt.text.split('(')[0].trim();
-
-            if (activeReserved) {
-                countDisplay.innerText = (originalCount - 1) + " Open";
-                progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
-            } else {
-                countDisplay.innerText = originalCount + " Open";
-                progressBar.style.width = Math.max(10, originalCount * 6) + "%";
-            }
-        }
-
-        unitSelect.addEventListener('change', updateDisplay);
-        updateDisplay();
-
-        reserveBtn.addEventListener('click', function() {
-            if (!activeReserved) {
-                activeReserved = true;
-
-                reserveBtn.classList.add('popped');
-                reserveBtn.innerHTML = '<i class="bi bi-stars"></i> Yay! Bed Secured 🎉';
-
-                countDisplay.innerText = (originalCount - 1) + " Open";
-                progressBar.style.width = Math.max(10, (originalCount - 1) * 6) + "%";
-
-                cancelBtn.style.display = "inline-flex";
-
-                setTimeout(() => {
-                    reserveBtn.classList.remove('popped');
-                }, 500);
-            }
-        });
-
-        cancelBtn.addEventListener('click', function() {
-            if (activeReserved) {
-                activeReserved = false;
-
-                reserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
-
-                countDisplay.innerText = originalCount + " Open";
-                progressBar.style.width = Math.max(10, originalCount * 6) + "%";
-
-                cancelBtn.style.display = "none";
-            }
-        });
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup("<b>{{ hospital.name|escapejs }}</b><br>{{ hospital.location|escapejs }}")
+            .openPopup();
     });
+
+    // Interactive ER Reservation Simulator with Proper Decrement / Increment Logic
+    const unitSelect = document.getElementById('unitSelect');
+    const selectedUnitLabel = document.getElementById('selectedUnitLabel');
+    const selectedUnitCount = document.getElementById('selectedUnitCount');
+    const selectedProgressBar = document.getElementById('selectedProgressBar');
+    const simReserveBtn = document.getElementById('simReserveBtn');
+    const simCancelBtn = document.getElementById('simCancelBtn');
+
+    function updateDisplayCount() {
+        if (!unitSelect) return;
+        const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+        selectedUnitLabel.textContent = selectedOpt.text.split(' (')[0];
+        const count = selectedOpt.getAttribute('data-count');
+        selectedUnitCount.textContent = count + ' Open';
+        const original = selectedOpt.getAttribute('data-original') || 20;
+        selectedProgressBar.style.width = Math.min((count / original) * 100, 100) + '%';
+    }
+
+    if (unitSelect) {
+        unitSelect.addEventListener('change', function () {
+            // Reset reservation state when switching units
+            simReserveBtn.classList.remove('reserved');
+            simReserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
+            simCancelBtn.style.display = 'none';
+            updateDisplayCount();
+        });
+    }
+
+    if (simReserveBtn) {
+        simReserveBtn.addEventListener('click', function () {
+            if (!unitSelect) return;
+            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+            let currentCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
+
+            if (currentCount > 0 && !this.classList.contains('reserved')) {
+                currentCount -= 1; // Correctly decreases by 1
+                selectedOpt.setAttribute('data-count', currentCount);
+
+                // Update dropdown option label text cleanly
+                const unitName = selectedOpt.text.split(' (')[0];
+                selectedOpt.text = `${unitName} (${currentCount} Open)`;
+
+                updateDisplayCount();
+
+                this.classList.add('popped', 'reserved');
+                this.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> Bed Reserved Successfully!';
+                simCancelBtn.style.display = 'inline-flex';
+                setTimeout(() => this.classList.remove('popped'), 500);
+            }
+        });
+    }
+
+    if (simCancelBtn) {
+        simCancelBtn.addEventListener('click', function () {
+            if (!unitSelect) return;
+            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+            let currentCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
+
+            currentCount += 1; // Restores count back by 1 on cancellation
+            selectedOpt.setAttribute('data-count', currentCount);
+
+            const unitName = selectedOpt.text.split(' (')[0];
+            selectedOpt.text = `${unitName} (${currentCount} Open)`;
+
+            updateDisplayCount();
+
+            simReserveBtn.classList.remove('reserved');
+            simReserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
+            this.style.display = 'none';
+        });
+    }
+
+    // Initial load sync
+    updateDisplayCount();
 </script>
 {% endblock %}

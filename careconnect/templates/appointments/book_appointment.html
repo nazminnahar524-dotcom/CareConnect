@@ -11,41 +11,81 @@
     --bp-border: #dce9e2;
     color: #203b30;
 }
+
 .booking-page .bp-card {
-    background: #fff; border: 1px solid var(--bp-border);
-    border-radius: 20px; overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--bp-border);
+    border-radius: 20px;
+    overflow: hidden;
     box-shadow: 0 8px 30px rgba(18,61,49,.06);
 }
-.booking-page .bp-muted { color: #6b7f76; }
-.booking-page .bp-heading { color: var(--bp-dark); font-weight: 800; }
+
+.booking-page .bp-muted {
+    color: #6b7f76;
+}
+
+.booking-page .bp-heading {
+    color: var(--bp-dark);
+    font-weight: 800;
+}
+
 .booking-page .bp-icon {
-    width: 58px; height: 58px; border-radius: 16px;
-    background: var(--bp-soft); color: var(--bp-green);
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 23px; flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: var(--bp-soft);
+    color: var(--bp-green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    flex-shrink: 0;
 }
+
 .booking-page .bp-input {
-    width: 100%; padding: 12px 13px;
-    border: 1px solid var(--bp-border); border-radius: 11px;
-    background: white; color: #203b30;
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid var(--bp-border);
+    border-radius: 11px;
+    background: white;
+    color: #203b30;
 }
+
 .booking-page .bp-input:focus {
-    outline: none; border-color: var(--bp-green);
+    outline: none;
+    border-color: var(--bp-green);
     box-shadow: 0 0 0 3px rgba(22,132,91,.1);
 }
+
 .booking-page .bp-btn {
-    display: flex; justify-content: center; align-items: center;
-    gap: 8px; width: 100%; padding: 13px;
-    background: var(--bp-green); color: white;
-    border: 1px solid var(--bp-green); border-radius: 12px;
-    font-weight: 700; text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px;
+    background: var(--bp-green);
+    color: white;
+    border: 1px solid var(--bp-green);
+    border-radius: 12px;
+    font-weight: 700;
 }
-.booking-page .bp-btn:hover { background: var(--bp-dark); color: white; }
+
+.booking-page .bp-btn:hover {
+    background: var(--bp-dark);
+    color: white;
+}
+
+.booking-page .bp-input option:disabled {
+    color: #b42318;
+    background: #fff0ef;
+}
 </style>
 
 <div class="booking-page py-2 py-lg-4">
     <div class="row justify-content-center">
         <div class="col-lg-9 col-xl-8">
+
             <div class="mb-4">
                 <a href="{% url 'doctor_detail' doctor.pk %}"
                    class="text-decoration-none fw-semibold small"
@@ -55,22 +95,41 @@
                 </a>
             </div>
 
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                         role="alert">
+                        {{ message }}
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <section class="bp-card">
                 <header class="p-4 p-lg-5"
                         style="background:linear-gradient(135deg,#fff,#e8f6ef);border-bottom:1px solid #dce9e2;">
+
                     <div class="d-flex align-items-center gap-3">
                         <span class="bp-icon">
                             <i class="fa-solid fa-calendar-plus"></i>
                         </span>
+
                         <div>
-                            <div class="small fw-bold mb-2" style="color:#16845b;letter-spacing:1px;">
-                                APPOINTMENT REQUEST
+                            <div class="small fw-bold mb-2"
+                                 style="color:#16845b;letter-spacing:1px;">
+                                BOOK AN APPOINTMENT
                             </div>
+
                             <h2 class="bp-heading mb-2">
-                                Book with Dr. {{ doctor.name }}
+                                Book with {{ doctor.name }}
                             </h2>
+
                             <p class="bp-muted mb-0">
-                                {{ doctor.specialty }} · {{ doctor.hospital_name }}
+                                {{ doctor.specialty }} ·
+                                {{ doctor.hospital_name }}
                             </p>
                         </div>
                     </div>
@@ -80,7 +139,8 @@
                     <div class="mb-4">
                         <h5 class="bp-heading">Appointment details</h5>
                         <p class="bp-muted small mb-0">
-                            Select a suitable date and available time slot.
+                            Choose a date and an available time slot.
+                            Slots already booked by another patient cannot be selected.
                         </p>
                     </div>
 
@@ -89,37 +149,74 @@
 
                         <div class="row g-4">
                             <div class="col-md-6">
-                                <label for="bp-date" class="form-label fw-semibold">
-                                    <i class="fa-regular fa-calendar me-2" style="color:#16845b;"></i>
+                                <label for="bp-date"
+                                       class="form-label fw-semibold">
+                                    <i class="fa-regular fa-calendar me-2"
+                                       style="color:#16845b;"></i>
                                     Appointment date
                                 </label>
-                                <input id="bp-date" type="date" name="appointment_date"
-                                       min="{{ today }}" class="bp-input" required>
-                                <div class="form-text">Past dates are not allowed.</div>
+
+                                <input
+                                    id="bp-date"
+                                    type="date"
+                                    name="appointment_date"
+                                    min="{{ today }}"
+                                    value="{{ selected_date }}"
+                                    class="bp-input"
+                                    required
+                                >
+
+                                <div class="form-text">
+                                    Select a date to see which slots are available.
+                                </div>
                             </div>
 
                             <div class="col-md-6">
-                                <label for="bp-time" class="form-label fw-semibold">
-                                    <i class="fa-regular fa-clock me-2" style="color:#16845b;"></i>
+                                <label for="bp-time"
+                                       class="form-label fw-semibold">
+                                    <i class="fa-regular fa-clock me-2"
+                                       style="color:#16845b;"></i>
                                     Time slot
                                 </label>
-                                <select id="bp-time" name="time_slot" class="bp-input" required>
+
+                                <select id="bp-time"
+                                        name="time_slot"
+                                        class="bp-input"
+                                        required>
                                     <option value="">Choose a slot</option>
-                                    <option>5:00 PM - 5:30 PM</option>
-                                    <option>5:30 PM - 6:00 PM</option>
-                                    <option>6:00 PM - 6:30 PM</option>
-                                    <option>7:00 PM - 7:30 PM</option>
+
+                                    {% for slot in time_slots %}
+                                        {% if slot in booked_slots %}
+                                            <option value="{{ slot }}" disabled>
+                                                {{ slot }} — Booked
+                                            </option>
+                                        {% else %}
+                                            <option value="{{ slot }}">
+                                                {{ slot }} — Available
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
                                 </select>
-                                <div class="form-text">Choose your preferred time.</div>
+
+                                <div class="form-text">
+                                    <span style="color:#16845b;">● Available</span>
+                                    &nbsp;&nbsp;
+                                    <span style="color:#b42318;">● Booked</span>
+                                </div>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center gap-3 p-3 p-md-4 rounded-3 my-4"
                              style="background:#f3faf6;border:1px solid #e1efe7;">
                             <div>
-                                <div class="bp-muted small">Consultation fee</div>
-                                <div class="fw-semibold">Payment information</div>
+                                <div class="bp-muted small">
+                                    Consultation fee
+                                </div>
+                                <div class="fw-semibold">
+                                    Payment information
+                                </div>
                             </div>
+
                             <strong class="fs-4" style="color:#16845b;">
                                 ৳{{ doctor.consultation_fee }}
                             </strong>
@@ -127,12 +224,12 @@
 
                         <button type="submit" class="bp-btn">
                             <i class="fa-solid fa-calendar-check"></i>
-                            Confirm appointment
+                            Book Appointment
                         </button>
 
                         <p class="bp-muted small text-center mt-3 mb-0">
                             <i class="fa-solid fa-lock me-1"></i>
-                            Your booking is linked to your CareConnect account.
+                            Your booking will be recorded automatically.
                         </p>
                     </form>
                 </div>
@@ -140,4 +237,23 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("bp-date");
+
+    dateInput.addEventListener("change", function () {
+        if (!this.value) {
+            return;
+        }
+
+        const url = new URL(window.location.href);
+        url.searchParams.set("date", this.value);
+
+        // Reload the page with the selected date.
+        // The server will fetch the booked slots for that date.
+        window.location.href = url.toString();
+    });
+});
+</script>
 {% endblock %}
