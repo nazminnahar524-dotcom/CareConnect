@@ -70,12 +70,13 @@
                         <i class="fa-regular fa-circle-user me-1" style="color:var(--cc-primary)"></i> Hi, {{ user.username }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
-                        <li><a class="dropdown-item rounded-2" href="{% url 'my_appointments' %}">My Appointments</a></li>
+                        <li><a class="dropdown-item rounded-2" href="{% url 'my_profile' %}"><i class="fa-regular fa-id-card me-1"></i> My Profile</a></li>
+                        <li><a class="dropdown-item rounded-2" href="{% url 'my_appointments' %}"><i class="fa-regular fa-calendar-check me-1"></i> My Appointments</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}
-                                <button class="dropdown-item text-danger rounded-2" type="submit">Log out</button>
+                                <button class="dropdown-item text-danger rounded-2" type="submit"><i class="fa-solid fa-right-from-bracket me-1"></i> Log out</button>
                             </form>
                         </li>
                     </ul>
@@ -120,54 +121,13 @@
         <div class="row gy-3 align-items-center justify-content-between">
             <div class="col-md-6">
                 <div class="cc-footer-brand"><span class="cc-footer-logo"><i class="fa-solid fa-heart-pulse"></i></span> CareConnect</div>
-                <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">Your health, our priority. Find trusted healthcare services and manage consultations in one place[cite: 6].</p>
+                <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">Your health, our priority. Find trusted healthcare services and manage consultations in one place.</p>
             </div>
             <div class="col-md-5 text-md-end">
-                <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">©️ {% now "Y" %} <strong>CareConnect</strong>. All rights reserved.</p>
+                <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">© {% now "Y" %} <strong>CareConnect</strong>. All rights reserved.</p>
             </div>
         </div>
     </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const searchDatabase = [
-        { name: "Hospitals Page", type: "Page", icon: "fa-hospital", url: "{% url 'hospital_list' %}" },
-        { name: "Labaid Specialized Hospital", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=labaid" },
-        { name: "Square Hospital Dhaka", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=square" },
-        { name: "United Hospital Gulshan", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=united" },
-        { name: "Doctors Directory", type: "Page", icon: "fa-user-doctor", url: "{% url 'doctor_list' %}" },
-        { name: "Cardiology Specialists", type: "Specialty", icon: "fa-heart-pulse", url: "{% url 'doctor_list' %}?specialty=cardiology" },
-        { name: "Neurology Specialists", type: "Specialty", icon: "fa-brain", url: "{% url 'doctor_list' %}?specialty=neurology" },
-        { name: "Pharmacies", type: "Page", icon: "fa-prescription-bottle-medical", url: "{% url 'pharmacy_list' %}" },
-        { name: "Blood Donors Network", type: "Page", icon: "fa-hand-holding-heart", url: "{% url 'nearby_donors' %}" },
-        { name: "My Appointments", type: "Page", icon: "fa-calendar-check", url: "{% url 'my_appointments' %}" }
-    ];
-    const searchInput = document.getElementById("searchInput"), searchResults = document.getElementById("searchResults");
-    if (searchInput && searchResults) {
-        searchInput.addEventListener("input", function () {
-            const query = this.value.trim().toLowerCase();
-            searchResults.innerHTML = "";
-            if (query.length < 1) { searchResults.style.display = "none"; return; }
-            const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(query));
-            if (filtered.length > 0) {
-                filtered.forEach(item => {
-                    const itemElem = document.createElement("a");
-                    itemElem.href = item.url; itemElem.className = "search-result-item text-decoration-none";
-                    itemElem.innerHTML = `<div class="search-item-icon"><i class="fa-solid ${item.icon}"></i></div><div><div class="fw-bold text-dark" style="font-size:13px">${item.name}</div><span class="text-muted" style="font-size:11px">${item.type}</span></div>`;
-                    searchResults.appendChild(itemElem);
-                });
-                searchResults.style.display = "block";
-            } else {
-                searchResults.innerHTML = `<div class="p-3 text-center text-muted small">No direct matches found for "${query}". Press Enter to search doctors.</div>`;
-                searchResults.style.display = "block";
-            }
-        });
-        document.addEventListener("click", e => { if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) searchResults.style.display = "none"; });
-    }
-});
-</script>
-{% block extra_js %}{% endblock %}
-</body>
-</html>

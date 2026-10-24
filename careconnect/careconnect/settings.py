@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'hospitals',
     'donors',
     'blood_requests',
+    'user_profile',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
