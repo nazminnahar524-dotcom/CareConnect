@@ -15,9 +15,15 @@
     }
 
     @keyframes pulseGlow {
-        0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+        0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.5); }
+        70% { box-shadow: 0 0 0 12px rgba(25, 135, 84, 0); }
         100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+    }
+
+    @keyframes pulseRedGlow {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+        70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
 
     @keyframes radarSweep {
@@ -25,11 +31,17 @@
         100% { transform: rotate(360deg); }
     }
 
+    @keyframes floatMove {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+        100% { transform: translateY(0px); }
+    }
+
     .animate-fade-in {
         animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Vibrant 3D Metric Cards */
+    /* Vibrant Moveable 3D Metric Cards */
     .metric-card-modern {
         border-radius: 20px;
         background: #ffffff;
@@ -41,8 +53,8 @@
     }
 
     .metric-card-modern:hover {
-        transform: translateY(-6px) scale(1.02);
-        box-shadow: 0 16px 32px -8px rgba(19, 138, 99, 0.15) !important;
+        transform: translateY(-8px) scale(1.025);
+        box-shadow: 0 18px 36px -8px rgba(19, 138, 99, 0.18) !important;
     }
 
     .metric-card-modern .icon-box {
@@ -56,7 +68,7 @@
     }
 
     .metric-card-modern:hover .icon-box {
-        transform: scale(1.12) rotate(6deg);
+        transform: scale(1.15) rotate(8deg);
     }
 
     /* Redesigned Colorful Filter Sidebar */
@@ -67,7 +79,7 @@
         box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
     }
 
-    /* Hospital Cards Elevate Physics */
+    /* Hospital Cards Elevate & Moveable Physics */
     .hospital-card-modern {
         border-radius: 22px;
         transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -91,9 +103,9 @@
     }
 
     .hospital-card-modern:hover {
-        transform: translateY(-8px) scale(1.015);
+        transform: translateY(-8px) scale(1.018);
         border-color: #10b981 !important;
-        box-shadow: 0 22px 42px -10px rgba(16, 185, 129, 0.18) !important;
+        box-shadow: 0 22px 42px -10px rgba(16, 185, 129, 0.2) !important;
     }
 
     .hospital-card-modern:hover::before {
@@ -166,23 +178,35 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        transition: transform 0.25s ease;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .facility-badge-item:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px) scale(1.05);
     }
 
-    /* Cute Ambulance Radar Dispatch Button */
+    /* Moveable & Ultra-Animated Dispatch Feature Box */
+    .feature-dispatch-box {
+        background: radial-gradient(circle at 80% 20%, rgba(248, 113, 113, 0.3) 0%, transparent 60%),
+                    linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #dc2626 100%);
+        border: 2px solid rgba(254, 202, 202, 0.4);
+        border-radius: 22px;
+        padding: 16px;
+        box-shadow: 0 12px 28px rgba(220, 38, 38, 0.35);
+        animation: floatMove 4s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+    }
+
     .btn-dispatch-radar {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: #ffffff;
+        background: #ffffff;
+        color: #dc2626;
         font-weight: 800;
         border-radius: 50rem;
         border: none;
         padding: 12px 20px;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -190,22 +214,23 @@
     }
 
     .btn-dispatch-radar:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 12px 26px rgba(220, 38, 38, 0.5);
-        background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-        color: #ffffff;
+        transform: translateY(-3px) scale(1.04);
+        box-shadow: 0 14px 28px rgba(255, 255, 255, 0.3);
+        background: #fef2f2;
+        color: #991b1b;
     }
 
     /* Radar Scanning Modal Graphic */
     .radar-circle-container {
-        width: 110px;
-        height: 110px;
+        width: 120px;
+        height: 120px;
         border-radius: 50%;
         background: rgba(16, 185, 129, 0.1);
         border: 2px solid #a7f3d0;
         position: relative;
         margin: 0 auto;
         overflow: hidden;
+        box-shadow: 0 0 20px rgba(52, 211, 153, 0.25);
     }
 
     .radar-sweep-hand {
@@ -214,9 +239,9 @@
         left: 0;
         width: 50%;
         height: 50%;
-        background: linear-gradient(45deg, rgba(16, 185, 129, 0.6), transparent);
+        background: linear-gradient(45deg, rgba(16, 185, 129, 0.7), transparent);
         transform-origin: 100% 100%;
-        animation: radarSweep 2.5s linear infinite;
+        animation: radarSweep 2.2s linear infinite;
         border-radius: 100% 0 0 0;
     }
 </style>
@@ -240,7 +265,7 @@
         </div>
     </div>
 
-    <!-- 4 Colorful Metric Cards -->
+    <!-- 4 Colorful Moveable Metric Cards -->
     <div class="row g-3 mb-4">
         <div class="col-md-3 col-6">
             <div class="card p-3.5 border-0 border-start border-success border-4 metric-card-modern border-success-subtle h-100">
@@ -372,10 +397,18 @@
                 <h6 class="fw-bold mb-1 text-white"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Bed Availability Monitor</h6>
                 <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Instant status for critical bed allocation across accredited Dhaka branches.</p>
 
-                <!-- NEW SPECIAL FEATURE: Interactive Ambulance Dispatch Radar Button -->
-                <button type="button" class="btn-dispatch-radar w-100 mb-3" data-bs-toggle="modal" data-bs-target="#ambulanceRadarModal">
-                    <i class="bi bi-truck-front-fill me-1"></i> Dispatch Nearby Ambulance
-                </button>
+                <!-- SPECIAL ANIMATED & MOVEABLE FEATURE BOX -->
+                <div class="feature-dispatch-box mb-3 text-center">
+                    <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold small mb-2 shadow-sm d-inline-block">
+                        <i class="bi bi-broadcast me-1"></i> GPS Live Sync
+                    </span>
+                    <h6 class="fw-bold text-white mb-1"><i class="bi bi-truck-front-fill me-1"></i>Ambulance Radar Station</h6>
+                    <p class="small text-white-50 mb-3" style="font-size: 11px;">Locate active medical dispatch fleets within 2 km.</p>
+
+                    <button type="button" class="btn-dispatch-radar w-100" data-bs-toggle="modal" data-bs-target="#ambulanceRadarModal">
+                        <i class="bi bi-crosshair fs-6"></i> Dispatch Nearby Ambulance
+                    </button>
+                </div>
 
                 <div class="d-flex flex-column gap-2 mb-2">
                     <a href="{% url 'doctor_list' %}" class="quick-action-pill text-decoration-none">
@@ -534,7 +567,7 @@
     </div>
 </div>
 
-<!-- NEW SPECIAL FEATURE: Interactive Ambulance Dispatch Radar Modal -->
+<!-- SPECIAL FEATURE: Interactive Animated Ambulance Dispatch Radar Modal -->
 <div class="modal fade" id="ambulanceRadarModal" tabindex="-1" aria-labelledby="ambulanceRadarModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border: 1px solid #bbf7d0 !important;">
