@@ -6,13 +6,13 @@ from .models import Doctor
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'specialty', 'hospital_name', 'consultation_fee')
-    search_fields = ('name', 'specialty', 'hospital_name')
+    list_display = ('name', 'specialty', 'hospital', 'consultation_fee')
+    search_fields = ('name', 'specialty', 'hospital__name')
     fields = (
         'name',
         'qualification',
         'specialty',
-        'hospital_name',
+        'hospital',
         'consultation_fee',
         'available_days',
         'visiting_hours',
