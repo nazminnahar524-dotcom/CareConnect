@@ -231,6 +231,12 @@
         transform: translateY(-2px) scale(1.02);
     }
 
+    .btn-reserve-live.popped {
+        animation: cutePop 0.5s ease;
+        background: #34d399 !important;
+        color: #022c22 !important;
+    }
+
     .btn-cancel-live {
         background: rgba(239, 68, 68, 0.18);
         color: #fca5a5;
@@ -725,9 +731,11 @@
 
         const map = L.map('detailMap').setView([lat, lng], 14);
 
+        // Fixed OpenStreetMap tile layer with referrerPolicy to prevent 403 blocks
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            referrerPolicy: 'origin'
         }).addTo(map);
 
         L.marker([lat, lng]).addTo(map)
@@ -735,7 +743,7 @@
             .openPopup();
     });
 
-    // Interactive ER Reservation Simulator
+    // Interactive ER Reservation Simulator with Dynamic Count Decrement
     const unitSelect = document.getElementById('unitSelect');
     const selectedUnitLabel = document.getElementById('selectedUnitLabel');
     const selectedUnitCount = document.getElementById('selectedUnitCount');
@@ -743,27 +751,58 @@
     const simReserveBtn = document.getElementById('simReserveBtn');
     const simCancelBtn = document.getElementById('simCancelBtn');
 
+    function updateDisplayCount() {
+        if (!unitSelect) return;
+        const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+        selectedUnitLabel.textContent = selectedOpt.text.split(' (')[0];
+        const count = selectedOpt.getAttribute('data-count');
+        selectedUnitCount.textContent = count + ' Open';
+        selectedProgressBar.style.width = Math.min(count * 6, 100) + '%';
+    }
+
     if (unitSelect) {
-        unitSelect.addEventListener('change', function () {
-            const selectedOpt = this.options[this.selectedIndex];
-            selectedUnitLabel.textContent = selectedOpt.text.split(' (')[0];
-            const count = selectedOpt.getAttribute('data-count');
-            selectedUnitCount.textContent = count + ' Open';
-            selectedProgressBar.style.width = (count * 6) + '%';
-        });
+        unitSelect.addEventListener('change', updateDisplayCount);
     }
 
     if (simReserveBtn) {
         simReserveBtn.addEventListener('click', function () {
-            this.classList.add('popped');
-            this.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> Bed Reserved Successfully!';
-            simCancelBtn.style.display = 'inline-flex';
-            setTimeout(() => this.classList.remove('popped'), 500);
+            if (!unitSelect) return;
+            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+            let currentCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
+
+            if (currentCount > 0 && !this.classList.contains('reserved')) {
+                currentCount -= 1;
+                selectedOpt.setAttribute('daa-count', currentCount);
+
+                // Update dropdown option label text
+                const unitName = selectedOpt.text.split(' (')[0];
+                selectedOpt.text = `${unitName} (${currentCount} Open)`;
+
+                updateDisplayCount();
+
+                this.classList.add('popped', 'reserved');
+                this.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> Bed Reserved Successfully!';
+                simCancelBtn.style.display = 'inline-flex';
+                setTimeout(() => this.classList.remove('popped'), 500);
+            }
         });
     }
 
     if (simCancelBtn) {
         simCancelBtn.addEventListener('click', function () {
+            if (!unitSelect) return;
+            const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
+            let currentCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
+
+            currentCount += 1;
+            selectedOpt.setAttribute('data-count', currentCount);
+
+            const unitName = selectedOpt.text.split(' (')[0];
+            selectedOpt.text = `${unitName} (${currentCount} Open)`;
+
+            updateDisplayCount();
+
+            simReserveBtn.classList.remove('reserved');
             simReserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
             this.style.display = 'none';
         });
