@@ -8,11 +8,12 @@ __pycache__/
 *.py[cod]
 
 # Django
-db.sqlite3
-careconnect/media/
+
 
 # Environment variables
 .env
 
 # PyCharm
 .idea/
+db_backup_before_git.sqlite3
+db_backup_before_hospital_cleanup.sqlite3
