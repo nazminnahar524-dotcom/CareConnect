@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Log in · CareConnect{% endblock %}
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <div class="row justify-content-center align-items-center g-5">
+        <div class="col-lg-5 d-none d-lg-block">
+            <span class="badge rounded-pill px-3 py-2 mb-3" style="background:var(--cc-green-soft);color:var(--cc-green);">CareConnect</span>
+            <h1 class="fw-bold display-5 mb-3">Your healthcare,<br><span style="color:var(--cc-green);">connected.</span></h1>
+            <p class="cc-muted fs-5">Log in to search doctors, book appointments, and manage your consultations.</p>
+            <div class="d-flex gap-3 mt-4"><span class="cc-icon"><i class="fa-solid fa-user-doctor"></i></span><span class="cc-icon"><i class="fa-solid fa-calendar-check"></i></span><span class="cc-icon"><i class="fa-solid fa-shield-heart"></i></span></div>
+        </div>
+        <div class="col-md-8 col-lg-5">
+            <div class="cc-card p-4 p-md-5">
+                <div class="text-center mb-4"><span class="cc-icon mb-3"><i class="fa-solid fa-right-to-bracket"></i></span><h3 class="fw-bold mb-1">Welcome back</h3><p class="cc-muted small mb-0">Log in to your CareConnect account.</p></div>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                    <button type="submit" class="btn btn-cc w-100 rounded-pill py-2 mt-2">Log in</button>
+                </form>
+                <div class="text-center mt-4 small cc-muted">Don't have an account? <a href="{% url 'signup' %}" class="fw-bold" style="color:var(--cc-green);">Create one</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
