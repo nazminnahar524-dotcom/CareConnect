@@ -4,487 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>{% block title %}CareConnect Dashboard{% endblock %}</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
     <style>
         :root {
-            --cc-primary: #1b3b32;       /* Deep Forest Green from Ref */
-            --cc-primary-dark: #122822;  /* Darker Sidebar Base */
-            --cc-accent: #d4af37;        /* Warm Gold Accent */
-            --cc-soft-green: #284e42;    /* Hover State for Sidebar */
-            --cc-bg: #f2f6f4;            /* Soft Dashboard Backdrop */
-            --cc-card: #ffffff;          /* Card Background */
-            --cc-text: #1b2924;          /* Main Text Color */
-            --cc-muted: #74827c;         /* Muted Text */
-            --cc-border: #e2ece7;        /* Light Border */
+            --cc-primary: #1b3b32; --cc-primary-dark: #122822; --cc-accent: #d4af37;
+            --cc-soft: #eaf8f2; --cc-bg: #f2f6f4; --cc-card: #ffffff;
+            --cc-text: #1b2924; --cc-muted: #74827c; --cc-border: #e2ece7;
         }
-
-        body {
-            margin: 0;
-            background: var(--cc-bg);
-            color: var(--cc-text);
-            font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-            font-size: 13.5px;
-            overflow-x: hidden;
-        }
-
+        body { margin: 0; background: var(--cc-bg); color: var(--cc-text); font-family: Inter, system-ui, -apple-system, sans-serif; font-size: 13.5px; overflow-x: hidden; }
         a { text-decoration: none; }
-
-        /* Dashboard Shell Layout */
-        .dashboard-wrapper {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* Sidebar (Collapsible via 3-Dot Toggle) */
-        .dashboard-sidebar {
-            width: 280px;
-            background: var(--cc-primary-dark);
-            color: #ffffff;
-            padding: 24px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1060;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 4px 0 25px rgba(0,0,0,0.1);
-        }
-
-        .dashboard-sidebar.collapsed {
-            transform: translateX(-100%);
-        }
-
-        /* Main Content Area */
-        .dashboard-main {
-            flex-grow: 1;
-            margin-left: 280px;
-            display: flex;
-            flex-direction: column;
-            transition: margin-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            min-width: 0;
-        }
-
-        .dashboard-main.expanded {
-            margin-left: 0 !important;
-        }
-
-        /* User Profile Badge inside Sidebar */
-        .sidebar-profile {
-            text-align: center;
-            padding-bottom: 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            margin-bottom: 20px;
-        }
-
-        .sidebar-avatar {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 2.5px solid var(--cc-accent);
-            object-fit: cover;
-            background: #2a4d42;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: var(--cc-accent);
-            margin: 0 auto 12px;
-        }
-
-        /* Sidebar Navigation Links */
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .sidebar-nav .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            color: #b0c2bc;
-            font-weight: 600;
-            padding: 12px 16px;
-            border-radius: 14px;
-            transition: all 0.25s ease;
-            font-size: 13px;
-        }
-
-        .sidebar-nav .nav-link i {
-            color: var(--cc-accent);
-            font-size: 15px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .sidebar-nav .nav-link:hover,
-        .sidebar-nav .nav-link.active {
-            background: var(--cc-soft-green);
-            color: #ffffff;
-            transform: translateX(4px);
-        }
-
-        /* Top Header Navbar */
-        .dashboard-header {
-            background: #ffffff;
-            border-bottom: 1px solid var(--cc-border);
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 72px;
-            position: sticky;
-            top: 0;
-            z-index: 1040;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
-        }
-
-        .toggle-sidebar-btn {
-            background: #f8faf9;
-            border: 1px solid var(--cc-border);
-            color: var(--cc-primary);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .toggle-sidebar-btn:hover {
-            background: var(--cc-primary);
-            color: #fff;
-            border-color: var(--cc-primary);
-        }
-
-        /* Search and Autocomplete */
-        .cc-search-wrapper {
-            position: relative;
-            max-width: 420px;
-            width: 100%;
-        }
-
-        .cc-search .form-control {
-            background: #f8faf9;
-            border-color: var(--cc-border);
-            border-radius: 50rem;
-            padding-left: 20px;
-            font-size: 13px;
-            height: 42px;
-            transition: all 0.2s ease;
-        }
-
-        .cc-search .form-control:focus {
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(27, 59, 50, 0.12);
-            border-color: var(--cc-primary);
-        }
-
-        .cc-search .btn {
-            background: var(--cc-primary);
-            color: #fff;
-            border-radius: 50rem;
-            padding: 0 18px;
-            margin-left: -40px;
-            z-index: 5;
-            border: none;
-        }
-
-        .search-results-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border-radius: 14px;
-            border: 1px solid var(--cc-border);
-            box-shadow: 0 16px 36px rgba(0,0,0,.12);
-            margin-top: 8px;
-            z-index: 1050;
-            display: none;
-            overflow-y: auto;
-            max-height: 320px;
-        }
-
-        .search-result-item {
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--cc-text);
-            transition: background .2s ease;
-            cursor: pointer;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
+        .cc-top { background: #fff; border-bottom: 1px solid var(--cc-border); min-height: 72px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03); position: sticky; top: 0; z-index: 1040; }
+        .cc-brand { font-weight: 800; color: #18241f !important; letter-spacing: -.4px; font-size: 18px; }
+        .cc-mark { width: 36px; height: 36px; border-radius: 11px; background: var(--cc-soft); display: inline-flex; align-items: center; justify-content: center; color: var(--cc-primary); margin-right: 8px; transition: transform .3s ease; }
+        .cc-brand:hover .cc-mark { transform: scale(1.1) rotate(6deg); }
+        .cc-search-wrapper { position: relative; max-width: 400px; width: 100%; }
+        .cc-search .form-control { background: #f8faf9; border-color: var(--cc-border); border-radius: 50rem; padding-left: 20px; font-size: 13px; height: 40px; }
+        .cc-search .btn { background: var(--cc-primary); color: #fff; border-radius: 50rem; padding: 0 16px; margin-left: -38px; z-index: 5; border: none; }
+        .search-results-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border-radius: 14px; border: 1px solid var(--cc-border); box-shadow: 0 16px 36px rgba(0,0,0,.12); margin-top: 6px; z-index: 1050; display: none; overflow-y: auto; max-height: 320px; }
+        .search-result-item { padding: 10px 14px; display: flex; align-items: center; gap: 12px; color: var(--cc-text); transition: background .2s ease; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
         .search-result-item:last-child { border-bottom: none; }
-        .search-result-item:hover { background: #f0f6f4; }
-
-        .search-item-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: #eaf3f0;
-            color: var(--cc-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            flex-shrink: 0;
-        }
-
-        /* Action Buttons */
-        .cc-user {
-            background: #f8faf9;
-            border: 1px solid var(--cc-border);
-            border-radius: 50rem;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--cc-primary);
-            transition: background 0.2s;
-        }
-
-        .cc-user:hover {
-            background: #eaf3f0;
-        }
-
-        .btn-cc {
-            background: var(--cc-primary);
-            border-color: var(--cc-primary);
-            color: #fff;
-            border-radius: 50rem;
-            font-weight: 650;
-            padding: 8px 22px;
-        }
-
-        .btn-cc:hover {
-            background: #122822;
-            color: #fff;
-        }
-
-        .btn-outline-cc {
-            color: var(--cc-primary);
-            border-color: var(--cc-primary);
-            border-radius: 50rem;
-            font-weight: 650;
-            padding: 8px 22px;
-        }
-
-        .btn-outline-cc:hover {
-            background: var(--cc-primary);
-            color: #fff;
-        }
-
-        /* Balanced Page Content Area Margins */
-        .cc-page {
-            flex-grow: 1;
-            padding: 24px 28px;
-            max-width: 1560px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* Modern Footer */
-        .cc-footer {
-            background: var(--cc-primary-dark);
-            color: #c0d7ca;
-            padding: 36px 28px 20px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            margin-top: auto;
-        }
-
-        .cc-footer-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .cc-footer-logo {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--cc-accent);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .cc-footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .cc-footer-links li { margin-bottom: 8px; }
-        .cc-footer-links a {
-            color: #a3b8b0;
-            font-size: 13px;
-            transition: color 0.2s;
-        }
-        .cc-footer-links a:hover { color: #fff; }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 991px) {
-            .dashboard-sidebar {
-                transform: translateX(-100%);
-            }
-            .dashboard-sidebar.mobile-open {
-                transform: translateX(0);
-            }
-            .dashboard-main {
-                margin-left: 0 !important;
-            }
-            .cc-page {
-                padding: 16px;
-            }
-        }
+        .search-result-item:hover { background: var(--cc-soft); }
+        .search-item-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--cc-soft); color: var(--cc-primary); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+        .cc-tabs { background: #fff; border-bottom: 1px solid var(--cc-border); }
+        .cc-tabs .nav-link { color: #52615b; font-weight: 650; padding: 12px 16px; border-bottom: 2px solid transparent; transition: .2s; font-size: 13px; }
+        .cc-tabs .nav-link i { color: var(--cc-accent); margin-right: 4px; }
+        .cc-tabs .nav-link.active, .cc-tabs .nav-link:hover { color: var(--cc-primary); border-bottom-color: var(--cc-primary); }
+        .cc-user { background: #f8faf9; border: 1px solid var(--cc-border); border-radius: 50rem; padding: 6px 14px; font-size: 12.5px; font-weight: 700; color: var(--cc-primary); }
+        .btn-cc { background: var(--cc-primary); border-color: var(--cc-primary); color: #fff; border-radius: 50rem; font-weight: 650; padding: 8px 20px; }
+        .btn-cc:hover { background: var(--cc-primary-dark); color: #fff; }
+        .btn-outline-cc { color: var(--cc-primary); border-color: var(--cc-primary); border-radius: 50rem; font-weight: 650; padding: 8px 20px; }
+        .btn-outline-cc:hover { background: var(--cc-primary); color: #fff; }
+        .cc-page { max-width: 1560px; margin: 0 auto; padding: 24px 28px; min-height: calc(100vh - 220px); }
+        .cc-footer { background: var(--cc-primary-dark); color: #c0d7ca; padding: 36px 28px 20px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: auto; }
+        .cc-footer-brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+        .cc-footer-logo { width: 38px; height: 38px; border-radius: 10px; background: rgba(212, 175, 55, 0.15); color: var(--cc-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 16px; }
+        @media (max-width: 991px) { .cc-page { padding: 16px; } }
     </style>
-
     {% block extra_css %}{% endblock %}
 </head>
-
 <body>
 
-<div class="dashboard-wrapper">
-
-    <!-- Sidebar (Collapsible via 3-Dot Toggle) -->
-    <aside class="dashboard-sidebar" id="dashboardSidebar">
-        <div>
-            <!-- Profile / Brand Area -->
-            <div class="sidebar-profile">
-                <div class="sidebar-avatar">
-                    <i class="fa-solid fa-user-doctor"></i>
-                </div>
-                <h6 class="fw-bold mb-1 text-white" style="font-size: 15px;">
-                    {% if user.is_authenticated %}{{ user.username }}{% else %}CareConnect{% endif %}
-                </h6>
-                <span class="text-muted" style="font-size: 11.5px; color: #8fa69e !important;">
-                    {% if user.is_authenticated %}Healthcare Portal{% else %}Welcome Guest{% endif %}
-                </span>
-            </div>
-
-            <!-- Navigation Links -->
-            <ul class="sidebar-nav">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                       href="{% url 'home' %}">
-                        <i class="fa-solid fa-house"></i> Dashboard
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}"
-                       href="{% url 'doctor_list' %}">
-                        <i class="fa-solid fa-user-doctor"></i> Doctors
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}"
-                       href="{% url 'my_appointments' %}">
-                        <i class="fa-regular fa-calendar-check"></i> Appointments
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}"
-                       href="{% url 'pharmacy_list' %}">
-                        <i class="fa-solid fa-prescription-bottle-medical"></i> Pharmacies
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {% if 'hospital' in request.resolver_match.url_name %}active{% endif %}"
-                       href="{% url 'hospital_list' %}">
-                        <i class="fa-solid fa-hospital"></i> Hospitals
-                    </a>
-                </li>
-
-
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}"
-                       href="{% url 'nearby_donors' %}">
-                        <i class="fa-solid fa-hand-holding-heart"></i> Blood Donors
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Sidebar Footer / Active Users Badge -->
-        <div class="pt-3 border-top border-secondary border-opacity-25">
-            <div class="d-flex align-items-center justify-content-between text-muted small" style="font-size: 11px;">
-                <span>ACTIVE PORTAL</span>
-                <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-2">Online</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Content Panel -->
-    <div class="dashboard-main" id="dashboardMain">
-
-        <!-- Top Header Bar with 3-Dot Toggle -->
-        <header class="dashboard-header">
-            <div class="d-flex align-items-center gap-3">
-                <!-- 3-Dot Toggle Button -->
-                <button class="toggle-sidebar-btn" id="sidebarToggleBtn" title="Toggle Navigation Menu">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </button>
-
-                <!-- Brand Title -->
-                <a class="navbar-brand fw-extrabold d-flex align-items-center gap-2 m-0 text-dark"
-                   href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}" style="font-size: 18px; font-weight: 800;">
-                    <span class="p-2 rounded-3 bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                        <i class="fa-solid fa-heart-pulse"></i>
-                    </span>
-                    Care<span style="color: var(--cc-primary)">Connect</span>
-                </a>
-            </div>
-
-            {% if user.is_authenticated %}
-            <!-- Instant Live Search Bar -->
-            <div class="cc-search-wrapper d-none d-md-block">
+<nav class="navbar navbar-expand-xl cc-top">
+    <div class="container-fluid px-3 px-xl-4">
+        <a class="navbar-brand cc-brand d-flex align-items-center me-3" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'login' %}{% endif %}">
+            <span class="cc-mark"><i class="fa-solid fa-heart-pulse"></i></span>
+            Care<span style="color: var(--cc-primary)">Connect</span>
+        </a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#ccNav" aria-controls="ccNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="ccNav">
+            {% if user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' %}
+            <div class="cc-search-wrapper ms-xl-3 me-auto my-2 my-xl-0">
                 <form action="{% url 'doctor_list' %}" method="get" class="input-group cc-search" id="searchForm">
-                    <input class="form-control"
-                           id="searchInput"
-                           name="q"
-                           value="{{ request.GET.q|default:'' }}"
-                           placeholder="Search doctors, hospitals, specialties..."
-                           autocomplete="off">
-                    <button class="btn" type="submit">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
+                    <input class="form-control" id="searchInput" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search doctors, hospitals, specialties..." autocomplete="off">
+                    <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
                 <div class="search-results-dropdown" id="searchResults"></div>
             </div>
-
-            <!-- User Actions Dropdown -->
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 mt-2 mt-xl-0">
                 <div class="dropdown">
                     <button class="cc-user dropdown-toggle border-0" data-bs-toggle="dropdown" type="button">
-                        <i class="fa-regular fa-circle-user me-1" style="color:var(--cc-primary)"></i>
-                        Hi, {{ user.username }}
+                        <i class="fa-regular fa-circle-user me-1" style="color:var(--cc-primary)"></i> Hi, {{ user.username }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
                         <li><a class="dropdown-item rounded-2" href="{% url 'my_appointments' %}">My Appointments</a></li>
@@ -499,72 +82,56 @@
                 </div>
             </div>
             {% else %}
-            <div class="d-flex gap-2">
+            <div class="ms-auto d-flex gap-2 mt-3 mt-xl-0">
                 <a class="btn btn-outline-cc btn-sm px-3" href="{% url 'login' %}">Log in</a>
                 <a class="btn btn-cc btn-sm px-3" href="{% url 'signup' %}">Sign up</a>
             </div>
             {% endif %}
-        </header>
+        </div>
+    </div>
+</nav>
 
-        <!-- Main Page Content Body -->
-        <main class="cc-page">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} border-0 shadow-sm mb-4 rounded-3">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-
-            {% block content %}{% endblock %}
-        </main>
-
-        <!-- Footer (Last Line Removed) -->
-        <footer class="cc-footer">
-            <div class="container-fluid px-3">
-                <div class="row gy-3 align-items-center justify-content-between">
-                    <div class="col-md-6">
-                        <div class="cc-footer-brand">
-                            <span class="cc-footer-logo"><i class="fa-solid fa-heart-pulse"></i></span>
-                            CareConnect
-                        </div>
-                        <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">
-                            Your health, our priority. Find trusted healthcare services and manage consultations in one place.
-                        </p>
-                    </div>
-                    <div class="col-md-5 text-md-end">
-                        <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">
-                            ©️ {% now "Y" %} <strong>CareConnect</strong>. All rights reserved.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
+{% if user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' %}
+<div class="cc-tabs">
+    <div class="container-fluid px-3 px-xl-4">
+        <ul class="nav">
+            <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'doctor_list' %}active{% endif %}" href="{% url 'doctor_list' %}"><i class="fa-solid fa-user-doctor"></i> Doctors</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'my_appointments' %}active{% endif %}" href="{% url 'my_appointments' %}"><i class="fa-regular fa-calendar-check"></i> Appointments</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'pharmacy_list' or request.resolver_match.url_name == 'pharmacy_detail' %}active{% endif %}" href="{% url 'pharmacy_list' %}"><i class="fa-solid fa-prescription-bottle-medical"></i> Pharmacies</a></li>
+            <li class="nav-item"><a class="nav-link {% if 'hospital' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'hospital_list' %}"><i class="fa-solid fa-hospital"></i> Hospitals</a></li>
+            <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'nearby_donors' %}active{% endif %}" href="{% url 'nearby_donors' %}"><i class="fa-solid fa-hand-holding-heart"></i> Blood Donors</a></li>
+        </ul>
     </div>
 </div>
+{% endif %}
 
-<!-- Bootstrap JavaScript -->
+<main class="cc-page">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} border-0 shadow-sm mb-4 rounded-3">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="cc-footer">
+    <div class="container-fluid px-3">
+        <div class="row gy-3 align-items-center justify-content-between">
+            <div class="col-md-6">
+                <div class="cc-footer-brand"><span class="cc-footer-logo"><i class="fa-solid fa-heart-pulse"></i></span> CareConnect</div>
+                <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">Your health, our priority. Find trusted healthcare services and manage consultations in one place[cite: 6].</p>
+            </div>
+            <div class="col-md-5 text-md-end">
+                <p class="text-muted small mb-0" style="color: #a3b8b0 !important;">©️ {% now "Y" %} <strong>CareConnect</strong>. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Functional 3-Dot Sidebar Toggle with Sliding Transition
-    const sidebarToggleBtn = document.getElementById("sidebarToggleBtn");
-    const dashboardSidebar = document.getElementById("dashboardSidebar");
-    const dashboardMain = document.getElementById("dashboardMain");
-
-    if (sidebarToggleBtn && dashboardSidebar && dashboardMain) {
-        sidebarToggleBtn.addEventListener("click", function () {
-            if (window.innerWidth <= 991) {
-                dashboardSidebar.classList.toggle("mobile-open");
-            } else {
-                dashboardSidebar.classList.toggle("collapsed");
-                dashboardMain.classList.toggle("expanded");
-            }
-        });
-    }
-
-    // Search autocomplete database
     const searchDatabase = [
         { name: "Hospitals Page", type: "Page", icon: "fa-hospital", url: "{% url 'hospital_list' %}" },
         { name: "Labaid Specialized Hospital", type: "Hospital Detail", icon: "fa-building-ngo", url: "{% url 'hospital_list' %}?q=labaid" },
@@ -577,75 +144,30 @@ document.addEventListener("DOMContentLoaded", function () {
         { name: "Blood Donors Network", type: "Page", icon: "fa-hand-holding-heart", url: "{% url 'nearby_donors' %}" },
         { name: "My Appointments", type: "Page", icon: "fa-calendar-check", url: "{% url 'my_appointments' %}" }
     ];
-
-    const searchInput = document.getElementById("searchInput");
-    const searchResults = document.getElementById("searchResults");
-
+    const searchInput = document.getElementById("searchInput"), searchResults = document.getElementById("searchResults");
     if (searchInput && searchResults) {
         searchInput.addEventListener("input", function () {
             const query = this.value.trim().toLowerCase();
             searchResults.innerHTML = "";
-
-            if (query.length < 1) {
-                searchResults.style.display = "none";
-                return;
-            }
-
-            const filtered = searchDatabase.filter(item =>
-                item.name.toLowerCase().includes(query)
-            );
-
+            if (query.length < 1) { searchResults.style.display = "none"; return; }
+            const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(query));
             if (filtered.length > 0) {
                 filtered.forEach(item => {
                     const itemElem = document.createElement("a");
-                    itemElem.href = item.url;
-                    itemElem.className = "search-result-item text-decoration-none";
-
-                    const iconBox = document.createElement("div");
-                    iconBox.className = "search-item-icon";
-
-                    const icon = document.createElement("i");
-                    icon.className = "fa-solid " + item.icon;
-                    iconBox.appendChild(icon);
-
-                    const details = document.createElement("div");
-                    const name = document.createElement("div");
-                    name.className = "fw-bold text-dark";
-                    name.style.fontSize = "13px";
-                    name.textContent = item.name;
-
-                    const type = document.createElement("span");
-                    type.className = "text-muted";
-                    type.style.fontSize = "11px";
-                    type.textContent = item.type;
-
-                    details.appendChild(name);
-                    details.appendChild(type);
-                    itemElem.appendChild(iconBox);
-                    itemElem.appendChild(details);
+                    itemElem.href = item.url; itemElem.className = "search-result-item text-decoration-none";
+                    itemElem.innerHTML = `<div class="search-item-icon"><i class="fa-solid ${item.icon}"></i></div><div><div class="fw-bold text-dark" style="font-size:13px">${item.name}</div><span class="text-muted" style="font-size:11px">${item.type}</span></div>`;
                     searchResults.appendChild(itemElem);
                 });
-
                 searchResults.style.display = "block";
             } else {
-                const noResults = document.createElement("div");
-                noResults.className = "p-3 text-center text-muted small";
-                noResults.textContent = 'No direct matches found for "' + query + '". Press Enter to search doctors.';
-                searchResults.appendChild(noResults);
+                searchResults.innerHTML = `<div class="p-3 text-center text-muted small">No direct matches found for "${query}". Press Enter to search doctors.</div>`;
                 searchResults.style.display = "block";
             }
         });
-
-        document.addEventListener("click", function (event) {
-            if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
-                searchResults.style.display = "none";
-            }
-        });
+        document.addEventListener("click", e => { if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) searchResults.style.display = "none"; });
     }
 });
 </script>
-
 {% block extra_js %}{% endblock %}
-
 </body>
 </html>
