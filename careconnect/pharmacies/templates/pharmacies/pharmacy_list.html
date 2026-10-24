@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Find Your Pharmacy | CareConnect{% endblock %}
@@ -342,7 +343,7 @@ button {
     white-space: nowrap;
 }
 
-/* Scroll inside the results, not the entire page. */
+/* Scroll inside results */
 
 #careconnectList,
 #nearbyList {
@@ -783,32 +784,7 @@ button {
 {% block content %}
 <div class="container">
 
-    <a href="/" class="back-btn">← Back to Home</a>
-
-    <section class="page-header">
-        <div class="page-title-row">
-            <div class="page-title">
-                <div class="eyebrow">Care Directory</div>
-                <h1>Find Your Pharmacy</h1>
-                <p>
-                    Search pharmacies, check available services and find
-                    one near you.
-                </p>
-            </div>
-
-            <div class="stats">
-                <div class="stat-box">
-                    <strong>{{ pharmacies|length }}</strong>
-                    <span>Pharmacies Found</span>
-                </div>
-
-                <div class="stat-box">
-                    <strong>24/7</strong>
-                    <span>Care Support</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- NEARBY LOCATION PANEL: FIRST BELOW COMMON NAVBAR -->
 
     <section class="nearby-panel" id="nearbyPanel">
         <div class="nearby-top">
@@ -842,9 +818,38 @@ button {
             {% csrf_token %}
         </div>
 
-        <div class="location-status" id="locationStatus" role="status"
-             aria-live="polite">
+        <div class="location-status" id="locationStatus"
+             role="status" aria-live="polite">
             Click "Nearby Pharmacies" to share your live location.
+        </div>
+    </section>
+
+    <a href="/" class="back-btn">← Back to Home</a>
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+        <div class="page-title-row">
+            <div class="page-title">
+                <div class="eyebrow">Care Directory</div>
+                <h1>Find Your Pharmacy</h1>
+                <p>
+                    Search pharmacies, check available services and find
+                    one near you.
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <strong>{{ pharmacies|length }}</strong>
+                    <span>Pharmacies Found</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>24/7</strong>
+                    <span>Care Support</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1063,6 +1068,7 @@ button {
 
     </div>
 </div>
+
 <script>
     function escapeHtml(value) {
         if (value === null || value === undefined) {
@@ -1100,7 +1106,11 @@ button {
                 const radius = radiusElement.value;
 
                 status.textContent =
-                    "Location detected. Finding nearby pharmacies...";
+                    "Live location detected! Latitude: " +
+                    latitude.toFixed(6) +
+                    ", Longitude: " +
+                    longitude.toFixed(6) +
+                    ". Finding nearby pharmacies...";
 
                 const csrfInput = document.querySelector(
                     "#csrfTokenContainer input[name='csrfmiddlewaretoken']"
@@ -1155,7 +1165,12 @@ button {
                                 </p>
                             </div>`;
 
-                        status.textContent = "No nearby pharmacies found.";
+                        status.textContent =
+                            "Your live location — Latitude: " +
+                            latitude.toFixed(6) +
+                            ", Longitude: " +
+                            longitude.toFixed(6) +
+                            ". No nearby pharmacies found. Try a larger radius.";
                         return;
                     }
 
@@ -1229,10 +1244,14 @@ button {
                     nearbyList.innerHTML = resultHtml;
 
                     status.textContent =
-                        "Found " + results.length +
+                        "Your live location — Latitude: " +
+                        latitude.toFixed(6) +
+                        ", Longitude: " +
+                        longitude.toFixed(6) +
+                        ". Found " + results.length +
                         " pharmacy/pharmacies within " +
                         (Number(data.radius || radius) / 1000).toFixed(1) +
-                        " km of your location.";
+                        " km.";
                 })
                 .catch(function(error) {
                     console.error("Nearby pharmacy error:", error);
@@ -1281,7 +1300,8 @@ button {
             }
         );
     }
-        function showAllPharmacies() {
+
+    function showAllPharmacies() {
         document.getElementById("careconnectList").style.display = "block";
         document.getElementById("nearbyList").style.display = "none";
         document.getElementById("listTitle").textContent =
@@ -1315,8 +1335,8 @@ button {
 
     function savePharmacy(pharmacyId) {
         /*
-         * This placeholder needs your existing SavedPharmacy backend.
-         * It does not save anything to the database yet.
+         * Existing placeholder retained.
+         * Connect this to your SavedPharmacy backend if needed.
          */
         alert(
             "The Save button needs to be connected to the existing " +
