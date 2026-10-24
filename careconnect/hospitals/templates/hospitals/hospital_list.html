@@ -15,15 +15,9 @@
     }
 
     @keyframes pulseGlow {
-        0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.5); }
-        70% { box-shadow: 0 0 0 12px rgba(25, 135, 84, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-    }
-
-    @keyframes pulseRedGlow {
-        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
-        70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
     @keyframes radarSweep {
@@ -33,7 +27,7 @@
 
     @keyframes floatMove {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-6px); }
+        50% { transform: translateY(-5px); }
         100% { transform: translateY(0px); }
     }
 
@@ -77,6 +71,22 @@
         border: 1px solid #bbf7d0;
         border-radius: 24px;
         box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08);
+    }
+
+    /* Elegant Glassmorphism Results & Sorting Bar */
+    .results-banner-elegant {
+        background: radial-gradient(circle at 10% 20%, rgba(52, 211, 153, 0.18) 0%, transparent 60%),
+                    linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+        border: 1.5px solid #a7f3d0;
+        border-radius: 22px;
+        box-shadow: 0 12px 32px rgba(16, 185, 129, 0.08);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .results-banner-elegant:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 38px rgba(16, 185, 129, 0.15);
+        border-color: #34d399;
     }
 
     /* Hospital Cards Elevate & Moveable Physics */
@@ -454,11 +464,16 @@
 
         <!-- Right Results Panel -->
         <div class="col-lg-9">
-            <!-- Header & Sorting Bar -->
-            <div class="card border-0 shadow-sm bg-white p-3.5 mb-4 rounded-4" style="border: 1px solid #e2ebe7 !important;">
+            <!-- ELEGANT REDESIGNED RESULTS & SORTING BANNER -->
+            <div class="card border-0 p-3.5 mb-4 results-banner-elegant">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <div>
-                        <span class="text-muted small fw-bold">Found <span class="text-success fs-6 fw-bold">{{ results_count }}</span> accredited hospitals</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="p-2 bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 32px; height: 32px;">
+                            <i class="bi bi-patch-check-fill fs-6"></i>
+                        </span>
+                        <span class="text-dark fw-bold" style="font-size: 0.95rem;">
+                            Found <span class="text-success fs-5 fw-extrabold">{{ results_count }}</span> accredited hospitals
+                        </span>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <label class="small text-muted fw-bold text-nowrap"><i class="bi bi-sort-down me-1"></i> Sort By:</label>
@@ -470,7 +485,7 @@
                             <input type="hidden" name="ambulance" value="{{ has_ambulance }}">
                             <input type="hidden" name="pharmacy" value="{{ has_pharmacy }}">
 
-                            <select name="sort" class="form-select form-select-sm bg-light rounded-pill px-3 py-1.5 fw-semibold border-0 shadow-sm" onchange="document.getElementById('sortForm').submit();">
+                            <select name="sort" class="form-select form-select-sm bg-white rounded-pill px-3.5 py-2 fw-bold border border-success border-opacity-25 shadow-sm text-success" onchange="document.getElementById('sortForm').submit();">
                                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
                                 <option value="beds_desc" {% if sort_by == 'beds_desc' %}selected{% endif %}>Bed Capacity (High-Low)</option>
                                 <option value="doctors_desc" {% if sort_by == 'doctors_desc' %}selected{% endif %}>Doctor Count (High-Low)</option>
