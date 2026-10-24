@@ -374,9 +374,6 @@
 
                                 <!-- Clean Bed Capacity Text Display -->
                                 <div class="mb-3 d-flex justify-content-between align-items-center">
-                                    <span class="small text-secondary">
-                                        <i class="bi bi-door-open-fill text-success me-1"></i><strong>Bed Capacity:</strong> {{ hospital.total_beds|default:"300" }} Beds
-                                    </span>
                                     <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 fw-bold small">
                                         <span class="pulse-live-dot me-1"></span>Active
                                     </span>
@@ -385,9 +382,7 @@
                                 <p class="card-text mb-1 small text-secondary">
                                     <i class="bi bi-telephone-fill text-primary me-1"></i> <strong>Helpline:</strong> {{ hospital.helpline|default:hospital.emergency_contact|default:"09612-345678" }}
                                 </p>
-                                <p class="card-text mb-3 small text-secondary">
-                                    <i class="bi bi-person-badge-fill text-info me-1"></i> <strong>Available Doctors:</strong> <span class="fw-bold text-dark">{{ hospital.total_doctors|default:"24" }}</span>
-                                </p>
+
 
                                 <!-- Colorful Floating Facility Badges -->
                                 <div class="d-flex flex-wrap gap-1.5 mb-4">
