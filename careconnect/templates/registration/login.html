@@ -1,25 +1,152 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Log in · CareConnect{% endblock %}
+
 {% block content %}
-<div class="container py-4 py-lg-5">
-    <div class="row justify-content-center align-items-center g-5">
-        <div class="col-lg-5 d-none d-lg-block">
-            <span class="badge rounded-pill px-3 py-2 mb-3" style="background:var(--cc-green-soft);color:var(--cc-green);">CareConnect</span>
-            <h1 class="fw-bold display-5 mb-3">Your healthcare,<br><span style="color:var(--cc-green);">connected.</span></h1>
-            <p class="cc-muted fs-5">Log in to search doctors, book appointments, and manage your consultations.</p>
-            <div class="d-flex gap-3 mt-4"><span class="cc-icon"><i class="fa-solid fa-user-doctor"></i></span><span class="cc-icon"><i class="fa-solid fa-calendar-check"></i></span><span class="cc-icon"><i class="fa-solid fa-shield-heart"></i></span></div>
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Moving gradient shimmer effect for CareConnect */
+    @keyframes textShimmer {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .shimmer-brand-title {
+        font-size: 3.2rem;
+        font-weight: 900;
+        background: linear-gradient(270deg, #059669, #10b981, #34d399, #047857);
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: textShimmer 6s ease infinite;
+        letter-spacing: -1px;
+        line-height: 1.1;
+    }
+
+    .login-card-modern {
+        background: #ffffff;
+        border: 1px solid #e2ebe7;
+        border-radius: 28px;
+        box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.12);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-card-modern:hover {
+        box-shadow: 0 24px 48px -12px rgba(16, 185, 129, 0.2);
+    }
+
+    .feature-icon-pill {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: #ecfdf5;
+        color: #059669;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .feature-icon-pill:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .btn-cc-login {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: #ffffff;
+        font-weight: 700;
+        border: none;
+        border-radius: 50rem;
+        padding: 12px 24px;
+        box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-cc-login:hover {
+        background: linear-gradient(135deg, #047857 0%, #022c22 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(5, 150, 105, 0.35);
+        color: #ffffff;
+    }
+
+    /* Crispy forms polish inside login */
+    .asteriskField {
+        color: #ef4444;
+    }
+</style>
+
+<div class="container py-5 animate-fade-in">
+    <div class="row justify-content-center align-items-center g-5 min-vh-75">
+        <!-- Left Hero Banner with Big Shimmering CareConnect -->
+        <div class="col-lg-6 d-none d-lg-block pe-lg-5">
+            <span class="badge rounded-pill px-3 py-2 mb-3 fw-bold" style="background:#ecfdf5; color:#059669; font-size: 0.85rem;">
+                <i class="bi bi-shield-fill-check me-1"></i> Secure Medical Portal
+            </span>
+
+            <!-- Big, Bold Shimmering Title -->
+            <h1 class="shimmer-brand-title mb-3">CareConnect</h1>
+
+            <h2 class="fw-bold display-6 mb-3 text-dark" style="letter-spacing: -0.5px;">
+                Your healthcare,<br><span style="color: #059669;">connected seamlessly.</span>
+            </h2>
+
+            <p class="text-muted fs-5 mb-4" style="line-height: 1.6;">
+                Log in to search trusted doctors, book instant appointments, and manage all your healthcare consultations in one secure place.
+            </p>
+
+            <div class="d-flex align-items-center gap-3 mt-4">
+                <div class="feature-icon-pill" title="Verified Doctors"><i class="fa-solid fa-user-doctor"></i></div>
+                <div class="feature-icon-pill" title="Instant Appointments"><i class="fa-solid fa-calendar-check"></i></div>
+                <div class="feature-icon-pill" title="Secure Medical Records"><i class="fa-solid fa-shield-heart"></i></div>
+            </div>
         </div>
+
+        <!-- Right Login Card Form -->
         <div class="col-md-8 col-lg-5">
-            <div class="cc-card p-4 p-md-5">
-                <div class="text-center mb-4"><span class="cc-icon mb-3"><i class="fa-solid fa-right-to-bracket"></i></span><h3 class="fw-bold mb-1">Welcome back</h3><p class="cc-muted small mb-0">Log in to your CareConnect account.</p></div>
+            <div class="login-card-modern p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="feature-icon-pill mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem; border-radius: 20px;">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1 text-dark">Welcome Back</h3>
+                    <p class="text-muted small mb-0">Log in to your CareConnect account to continue.</p>
+                </div>
+
                 <form method="post" novalidate>
                     {% csrf_token %}
                     {{ form|crispy }}
                     {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-                    <button type="submit" class="btn btn-cc w-100 rounded-pill py-2 mt-2">Log in</button>
+                    <button type="submit" class="btn btn-cc-login w-100 py-3 mt-3">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+                    </button>
                 </form>
-                <div class="text-center mt-4 small cc-muted">Don't have an account? <a href="{% url 'signup' %}" class="fw-bold" style="color:var(--cc-green);">Create one</a></div>
+
+                <div class="text-center mt-4 small text-muted">
+                    Don't have an account? <a href="{% url 'signup' %}" class="fw-bold text-decoration-none" style="color: #059669;">Create one</a>
+                </div>
             </div>
         </div>
     </div>

@@ -675,18 +675,18 @@
                 <div class="mb-3">
                     <label class="form-label small fw-bold text-white-50 mb-2">Select Target Unit:</label>
                     <select id="unitSelect" class="form-select form-select-sm bg-white text-dark fw-bold rounded-pill border-0 shadow-sm px-3 py-2">
-                        <option value="ward" data-count="15">General Ward Bed (15 Open)</option>
+                        <option value="ward" data-count="15" data-original="15">General Ward Bed (15 Open)</option>
                         {% if hospital.has_icu %}
-                        <option value="icu" data-count="10">ICU Unit (10 Open)</option>
+                        <option value="icu" data-count="10" data-original="10">ICU Unit (10 Open)</option>
                         {% endif %}
                         {% if hospital.has_ccu %}
-                        <option value="ccu" data-count="7">CCU Unit (7 Open)</option>
+                        <option value="ccu" data-count="7" data-original="7">CCU Unit (7 Open)</option>
                         {% endif %}
                         {% if hospital.has_nicu %}
-                        <option value="nicu" data-count="5">NICU Unit (5 Open)</option>
+                        <option value="nicu" data-count="5" data-original="5">NICU Unit (5 Open)</option>
                         {% endif %}
                         {% if hospital.has_emergency %}
-                        <option value="er" data-count="8">Emergency ER Bed (8 Open)</option>
+                        <option value="er" data-count="8" data-original="8">Emergency ER Bed (8 Open)</option>
                         {% endif %}
                     </select>
                 </div>
@@ -743,7 +743,7 @@
             .openPopup();
     });
 
-    // Interactive ER Reservation Simulator with Dynamic Count Decrement
+    // Interactive ER Reservation Simulator with Proper Decrement / Increment Logic
     const unitSelect = document.getElementById('unitSelect');
     const selectedUnitLabel = document.getElementById('selectedUnitLabel');
     const selectedUnitCount = document.getElementById('selectedUnitCount');
@@ -757,11 +757,18 @@
         selectedUnitLabel.textContent = selectedOpt.text.split(' (')[0];
         const count = selectedOpt.getAttribute('data-count');
         selectedUnitCount.textContent = count + ' Open';
-        selectedProgressBar.style.width = Math.min(count * 6, 100) + '%';
+        const original = selectedOpt.getAttribute('data-original') || 20;
+        selectedProgressBar.style.width = Math.min((count / original) * 100, 100) + '%';
     }
 
     if (unitSelect) {
-        unitSelect.addEventListener('change', updateDisplayCount);
+        unitSelect.addEventListener('change', function () {
+            // Reset reservation state when switching units
+            simReserveBtn.classList.remove('reserved');
+            simReserveBtn.innerHTML = '<i class="bi bi-heart-fill text-danger"></i> Quick Reserve Emergency Bed';
+            simCancelBtn.style.display = 'none';
+            updateDisplayCount();
+        });
     }
 
     if (simReserveBtn) {
@@ -771,10 +778,10 @@
             let currentCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
 
             if (currentCount > 0 && !this.classList.contains('reserved')) {
-                currentCount -= 1;
-                selectedOpt.setAttribute('daa-count', currentCount);
+                currentCount -= 1; // Correctly decreases by 1
+                selectedOpt.setAttribute('data-count', currentCount);
 
-                // Update dropdown option label text
+                // Update dropdown option label text cleanly
                 const unitName = selectedOpt.text.split(' (')[0];
                 selectedOpt.text = `${unitName} (${currentCount} Open)`;
 
@@ -794,7 +801,7 @@
             const selectedOpt = unitSelect.options[unitSelect.selectedIndex];
             let currentCount = parseInt(selectedOpt.getAttribute('data-count'), 10);
 
-            currentCount += 1;
+            currentCount += 1; // Restores count back by 1 on cancellation
             selectedOpt.setAttribute('data-count', currentCount);
 
             const unitName = selectedOpt.text.split(' (')[0];
@@ -807,5 +814,8 @@
             this.style.display = 'none';
         });
     }
+
+    // Initial load sync
+    updateDisplayCount();
 </script>
 {% endblock %}
