@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Find Your Pharmacy | CareConnect{% endblock %}
@@ -108,7 +109,7 @@ button {
     box-shadow: 0 7px 24px rgba(24, 74, 54, .045);
 }
 
-/* PAGE TITLE AND STATS */
+/* PAGE TITLE */
 
 .page-header {
     padding: 24px;
@@ -211,19 +212,52 @@ button {
     flex-shrink: 0;
 }
 
-.radius-select {
-    min-width: 130px;
+.location-status {
+    display: block;
+    margin-top: 16px;
+    padding: 15px 17px;
+    border: 1px solid #16845b;
+    border-left: 5px solid #16845b;
+    border-radius: 12px;
+    background: #e8f6ef;
+    color: #123f35;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    box-shadow: 0 4px 14px rgba(22, 132, 91, .08);
 }
 
-.location-status {
-    margin-top: 14px;
-    padding: 11px 13px;
-    border-radius: 9px;
-    background: #eff8f3;
-    color: #47715e;
+.location-status strong {
+    display: block;
+    color: #116b49;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.location-coordinates {
+    display: block;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid #c5e6d4;
+    border-radius: 8px;
+    background: #fff;
+    color: #116b49;
+    font-family: Consolas, monospace;
     font-size: 12px;
-    line-height: 1.7;
+    font-weight: 700;
     overflow-wrap: anywhere;
+}
+
+.location-result {
+    display: block;
+    margin-top: 8px;
+    color: #356b53;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.radius-select {
+    min-width: 130px;
 }
 
 /* THREE COLUMNS */
@@ -262,16 +296,6 @@ button {
     color: #234c40;
     font-size: 13px;
     font-weight: 800;
-}
-
-.filter-input,
-.filter-select {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    min-height: 44px;
-    font-size: 13px;
-    outline: none;
 }
 
 .filter-input:focus,
@@ -342,8 +366,6 @@ button {
     white-space: nowrap;
 }
 
-/* Scroll inside the results, not the entire page. */
-
 #careconnectList,
 #nearbyList {
     width: 100%;
@@ -377,7 +399,7 @@ button {
     border-radius: 10px;
 }
 
-/* PHARMACY CARD */
+/* PHARMACY CARDS */
 
 .pharmacy-card {
     width: 100%;
@@ -783,32 +805,7 @@ button {
 {% block content %}
 <div class="container">
 
-    <a href="/" class="back-btn">← Back to Home</a>
-
-    <section class="page-header">
-        <div class="page-title-row">
-            <div class="page-title">
-                <div class="eyebrow">Care Directory</div>
-                <h1>Find Your Pharmacy</h1>
-                <p>
-                    Search pharmacies, check available services and find
-                    one near you.
-                </p>
-            </div>
-
-            <div class="stats">
-                <div class="stat-box">
-                    <strong>{{ pharmacies|length }}</strong>
-                    <span>Pharmacies Found</span>
-                </div>
-
-                <div class="stat-box">
-                    <strong>24/7</strong>
-                    <span>Care Support</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- NEARBY LOCATION PANEL -->
 
     <section class="nearby-panel" id="nearbyPanel">
         <div class="nearby-top">
@@ -842,9 +839,42 @@ button {
             {% csrf_token %}
         </div>
 
-        <div class="location-status" id="locationStatus" role="status"
-             aria-live="polite">
-            Click "Nearby Pharmacies" to share your live location.
+        <div class="location-status" id="locationStatus"
+             role="status" aria-live="polite">
+            <strong>📍 Your Live Location</strong>
+            <span class="location-result">
+                Click "Nearby Pharmacies" and allow location access to
+                find pharmacies near you.
+            </span>
+        </div>
+    </section>
+
+    <a href="/" class="back-btn">← Back to Home</a>
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+        <div class="page-title-row">
+            <div class="page-title">
+                <div class="eyebrow">Care Directory</div>
+                <h1>Find Your Pharmacy</h1>
+                <p>
+                    Search pharmacies, check available services and find
+                    one near you.
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <strong>{{ pharmacies|length }}</strong>
+                    <span>Pharmacies Found</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>24/7</strong>
+                    <span>Care Support</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1063,6 +1093,7 @@ button {
 
     </div>
 </div>
+
 <script>
     function escapeHtml(value) {
         if (value === null || value === undefined) {
@@ -1077,6 +1108,19 @@ button {
             .replace(/'/g, "&#039;");
     }
 
+    function showLocationStatus(latitude, longitude, message, heading) {
+        const status = document.getElementById("locationStatus");
+
+        status.innerHTML = `
+            <strong>${escapeHtml(heading || "📍 Your Live Location")}</strong>
+            <span class="location-coordinates">
+                Latitude: ${Number(latitude).toFixed(6)}<br>
+                Longitude: ${Number(longitude).toFixed(6)}
+            </span>
+            <span class="location-result">${escapeHtml(message)}</span>
+        `;
+    }
+
     function getMyLocation() {
         const status = document.getElementById("locationStatus");
         const nearbyList = document.getElementById("nearbyList");
@@ -1086,12 +1130,21 @@ button {
         const resultCount = document.getElementById("resultCount");
 
         if (!navigator.geolocation) {
-            status.textContent =
-                "Live location is not supported by this browser.";
+            status.innerHTML = `
+                <strong>⚠ Location Unavailable</strong>
+                <span class="location-result">
+                    Live location is not supported by this browser.
+                </span>
+            `;
             return;
         }
 
-        status.textContent = "Requesting your live location...";
+        status.innerHTML = `
+            <strong>📍 Detecting Your Live Location</strong>
+            <span class="location-result">
+                Please allow location access in your browser.
+            </span>
+        `;
 
         navigator.geolocation.getCurrentPosition(
             function(position) {
@@ -1099,8 +1152,12 @@ button {
                 const longitude = position.coords.longitude;
                 const radius = radiusElement.value;
 
-                status.textContent =
-                    "Location detected. Finding nearby pharmacies...";
+                showLocationStatus(
+                    latitude,
+                    longitude,
+                    "Finding nearby pharmacies...",
+                    "📍 Your Live Location"
+                );
 
                 const csrfInput = document.querySelector(
                     "#csrfTokenContainer input[name='csrfmiddlewaretoken']"
@@ -1153,9 +1210,19 @@ button {
                                     No pharmacies were found within the
                                     selected distance. Try a larger radius.
                                 </p>
-                            </div>`;
+                                <button type="button" class="primary-btn"
+                                        onclick="showAllPharmacies()">
+                                    Show All Pharmacies
+                                </button>
+                            </div>
+                        `;
 
-                        status.textContent = "No nearby pharmacies found.";
+                        showLocationStatus(
+                            latitude,
+                            longitude,
+                            "No nearby pharmacies found. Try a larger radius.",
+                            "📍 Your Live Location"
+                        );
                         return;
                     }
 
@@ -1175,7 +1242,7 @@ button {
                             : '<span class="unverified">Unverified</span>';
 
                         const tags = `
-                            <span class="tag blue">📍 ${distanceText}</span>
+                            <span class="tag blue">📍 ${escapeHtml(distanceText)}</span>
                             ${pharmacy.is_24_7
                                 ? '<span class="tag green">24/7</span>' : ''}
                             ${pharmacy.emergency
@@ -1223,16 +1290,21 @@ button {
                                         </a>
                                     </div>
                                 </div>
-                            </article>`;
+                            </article>
+                        `;
                     });
 
                     nearbyList.innerHTML = resultHtml;
 
-                    status.textContent =
-                        "Found " + results.length +
-                        " pharmacy/pharmacies within " +
+                    showLocationStatus(
+                        latitude,
+                        longitude,
+                        "✓ Found " + results.length +
+                        " nearby pharmacy/pharmacies within " +
                         (Number(data.radius || radius) / 1000).toFixed(1) +
-                        " km of your location.";
+                        " km.",
+                        "✓ Live Location Detected"
+                    );
                 })
                 .catch(function(error) {
                     console.error("Nearby pharmacy error:", error);
@@ -1253,26 +1325,35 @@ button {
                                     onclick="showAllPharmacies()">
                                 Show All Pharmacies
                             </button>
-                        </div>`;
+                        </div>
+                    `;
 
-                    status.textContent =
-                        "Could not load nearby pharmacies. Please try again.";
+                    showLocationStatus(
+                        latitude,
+                        longitude,
+                        "Could not load nearby pharmacies. Please try again.",
+                        "⚠ Location Detected, Search Failed"
+                    );
                 });
             },
             function(error) {
+                let message;
+
                 if (error.code === 1) {
-                    status.textContent =
+                    message =
                         "Location permission denied. Allow location access and try again.";
                 } else if (error.code === 2) {
-                    status.textContent =
-                        "Your location could not be determined.";
+                    message = "Your location could not be determined.";
                 } else if (error.code === 3) {
-                    status.textContent =
-                        "Location request timed out. Please try again.";
+                    message = "Location request timed out. Please try again.";
                 } else {
-                    status.textContent =
-                        "Unable to get your live location.";
+                    message = "Unable to get your live location.";
                 }
+
+                status.innerHTML = `
+                    <strong>⚠ Unable to Get Location</strong>
+                    <span class="location-result">${escapeHtml(message)}</span>
+                `;
             },
             {
                 enableHighAccuracy: true,
@@ -1281,15 +1362,21 @@ button {
             }
         );
     }
-        function showAllPharmacies() {
+
+    function showAllPharmacies() {
         document.getElementById("careconnectList").style.display = "block";
         document.getElementById("nearbyList").style.display = "none";
         document.getElementById("listTitle").textContent =
             "Available Pharmacies";
         document.getElementById("resultCount").textContent =
             "{{ pharmacies|length }} results";
-        document.getElementById("locationStatus").textContent =
-            "Showing pharmacies from your CareConnect database.";
+        document.getElementById("locationStatus").innerHTML = `
+            <strong>📍 Your Live Location</strong>
+            <span class="location-result">
+                Showing pharmacies from your CareConnect database.
+                Click Nearby Pharmacies to search by your location.
+            </span>
+        `;
     }
 
     function openNearbyPharmacyProfile(
@@ -1315,8 +1402,8 @@ button {
 
     function savePharmacy(pharmacyId) {
         /*
-         * This placeholder needs your existing SavedPharmacy backend.
-         * It does not save anything to the database yet.
+         * Existing placeholder retained.
+         * This does not save data unless connected to a backend.
          */
         alert(
             "The Save button needs to be connected to the existing " +
