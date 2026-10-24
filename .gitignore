@@ -15,5 +15,3 @@ __pycache__/
 
 # PyCharm
 .idea/
-db_backup_before_git.sqlite3
-db_backup_before_hospital_cleanup.sqlite3
