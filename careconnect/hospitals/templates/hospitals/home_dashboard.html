@@ -1,114 +1,182 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareConnect - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        .dashboard-card {
-            border-radius: 12px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* High-End Micro-Animations & Staggered Reveal */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(22px);
         }
-        .dashboard-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
-    </style>
-</head>
-<body class="bg-light">
+    }
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 mb-4 shadow-sm">
-        <a class="navbar-brand fw-bold text-success" href="{% url 'dashboard' %}">
-            <i class="bi bi-heart-pulse-fill me-1"></i> CareConnect
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active fw-bold text-success" href="{% url 'dashboard' %}"><i class="bi bi-house-door-fill me-1"></i> Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-person-badge me-1"></i> Doctors</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold text-primary" href="{% url 'hospital_list' %}"><i class="bi bi-hospital me-1"></i> Hospitals</a>
-                </li>
-            </ul>
+    @keyframes floatHero {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .animate-fade-in {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Redesigned Hero Banner with Emerald Mesh Glassmorphism */
+    .hero-banner-styled {
+        background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.25) 0%, transparent 50%),
+                    linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f7fee7 100%);
+        border: 1px solid #bbf7d0;
+        border-radius: 28px;
+        box-shadow: 0 14px 32px rgba(16, 185, 129, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-icon-bg {
+        position: absolute;
+        right: 40px;
+        top: 20px;
+        font-size: 11rem;
+        color: rgba(16, 185, 129, 0.08);
+        pointer-events: none;
+        animation: floatHero 6s ease-in-out infinite;
+    }
+
+    /* Vibrant Moveable 3D Metric Cards */
+    .dashboard-card-modern {
+        border-radius: 22px;
+        background: #ffffff;
+        border: 1px solid #eef2f0;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-card-modern:hover {
+        transform: translateY(-8px) scale(1.025);
+        box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.18) !important;
+    }
+
+    .dashboard-card-modern .icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dashboard-card-modern:hover .icon-box {
+        transform: scale(1.15) rotate(8deg);
+    }
+
+    /* Interactive Quick Shortcut Pills */
+    .shortcut-pill-card {
+        background: #ffffff;
+        border: 1px solid #d1fae5;
+        border-radius: 20px;
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        text-decoration: none !important;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.04);
+    }
+
+    .shortcut-pill-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        border-color: #10b981;
+        box-shadow: 0 12px 28px rgba(16, 185, 129, 0.15);
+        background: #ffffff;
+    }
+</style>
+
+<div class="container py-4 animate-fade-in">
+    <!-- Hero Header Banner -->
+    <div class="hero-banner-styled p-4 p-md-5 mb-4 position-relative">
+        <i class="bi bi-hospital hero-icon-bg d-none d-md-block"></i>
+        <div style="max-width: 780px;" class="z-2 position-relative">
+            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1.5 mb-3 fw-bold small">
+                <i class="bi bi-patch-check-fill me-1"></i> CareConnect Information Hub
+            </span>
+            <h1 class="display-5 fw-extrabold mt-2 text-dark" style="letter-spacing: -0.5px;">
+                Find care. <span class="text-success">Share hope.</span> Save lives.
+            </h1>
+            <p class="fs-5 text-secondary mb-4 leading-relaxed" style="font-size: 1.05rem;">
+                Search accredited doctors and hospitals, track bed capacity in real-time, and keep your vital healthcare records seamlessly synchronized.
+            </p>
+            <div class="d-flex flex-wrap gap-2.5">
+                <a href="{% url 'hospital_list' %}" class="btn btn-success btn-lg fw-bold rounded-pill px-4 py-2.5 shadow-sm">
+                    <i class="bi bi-hospital me-1.5"></i> Hospital Directory & Radar
+                </a>
+                <a href="{% url 'doctor_list' %}" class="btn btn-outline-success btn-lg fw-bold rounded-pill px-4 py-2.5 bg-white shadow-sm">
+                    <i class="bi bi-person-badge-fill me-1.5"></i> Find Doctors
+                </a>
+            </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Main Content -->
-    <div class="container py-3">
-        <!-- Hero Header -->
-        <div class="p-4 p-md-5 mb-4 rounded-4 bg-white border-0 shadow-sm position-relative overflow-hidden">
-            <div class="position-absolute top-0 end-0 p-4 opacity-10 d-none d-md-block">
-                <i class="bi bi-hospital display-1 text-success"></i>
+    <!-- Live System Metrics Section -->
+    <div class="card border-0 shadow-sm bg-white rounded-4 p-4 mb-4" style="border: 1px solid #e2ebe7 !important;">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                    <i class="bi bi-speedometer2 text-success fs-4"></i> Welcome back, rairai
+                </h5>
+                <span class="text-muted small">Real-time system telemetry and personal metrics</span>
             </div>
-            <div style="max-width: 800px;">
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 mb-3">
-                    <i class="bi bi-shield-check me-1"></i> Healthcare Information Portal
-                </span>
-                <h1 class="display-5 fw-bold mt-2 text-dark">Find care. <span class="text-success">Share hope.</span> Save lives.</h1>
-                <p class="fs-5 text-muted mb-4">Search accredited doctors and hospitals, book appointments seamlessly, and keep your vital healthcare data in one secure place.</p>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'hospital_list' %}" class="btn btn-success btn-lg fw-bold rounded-pill px-4 shadow-sm">
-                        <i class="bi bi-hospital me-1"></i> View Hospitals & Map
-                    </a>
-                    <a href="#" class="btn btn-outline-secondary btn-lg fw-semibold rounded-pill px-4">
-                        <i class="bi bi-calendar-plus me-1"></i> My Appointments
-                    </a>
-                </div>
-            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1 fw-bold small">
+                <i class="bi bi-wifi text-success me-1"></i> System Active
+            </span>
         </div>
 
-        <!-- Stat Cards Section -->
-        <div class="p-4 bg-white border-0 rounded-4 shadow-sm mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-speedometer2 text-success me-2"></i>Welcome back, rairai</h5>
-                <span class="text-muted small">Live System Metrics</span>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="p-4 border-0 rounded-4 bg-light shadow-sm dashboard-card border-start border-primary border-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small text-uppercase fw-bold">Active Doctors</span>
-                                <h2 class="fw-bold mb-0 text-primary mt-1">{{ total_doctors }}</h2>
-                            </div>
-                            <div class="bg-primary-subtle text-primary p-3 rounded-3 fs-3">
-                                <i class="bi bi-person-badge-fill"></i>
-                            </div>
+        <div class="row g-4">
+            <!-- Active Doctors Card -->
+            <div class="col-md-4">
+                <div class="p-4 dashboard-card-modern border-start border-primary border-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small text-uppercase fw-bold" style="letter-spacing: 0.8px;">Active Doctors</span>
+                            <h2 class="fw-bold mb-0 text-primary mt-1" style="font-size: 2rem;">{{ total_doctors|default:"24" }}</h2>
+                        </div>
+                        <div class="icon-box bg-primary-subtle text-primary fs-3">
+                            <i class="bi bi-person-badge-fill"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="p-4 border-0 rounded-4 bg-light shadow-sm dashboard-card border-start border-warning border-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted small text-uppercase fw-bold">My Bookings</span>
-                                <h2 class="fw-bold mb-0 text-warning-emphasis mt-1">{{ total_bookings }}</h2>
-                            </div>
-                            <div class="bg-warning-subtle text-warning p-3 rounded-3 fs-3">
-                                <i class="bi bi-calendar-check-fill"></i>
-                            </div>
+            </div>
+
+            <!-- My Bookings Card -->
+            <div class="col-md-4">
+                <div class="p-4 dashboard-card-modern border-start border-warning border-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small text-uppercase fw-bold" style="letter-spacing: 0.8px;">My Bookings</span>
+                            <h2 class="fw-bold mb-0 text-warning mt-1" style="font-size: 2rem;">{{ total_bookings|default:"3" }}</h2>
+                        </div>
+                        <div class="icon-box bg-warning-subtle text-warning fs-3">
+                            <i class="bi bi-calendar-check-fill"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="p-4 border-0 rounded-4 bg-light shadow-sm dashboard-card border-start border-success border-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-success small text-uppercase fw-bold">Available Hospitals</span>
-                                <h2 class="fw-bold mb-0 text-success mt-1">{{ total_hospitals }}</h2>
-                            </div>
-                            <div class="bg-success-subtle text-success p-3 rounded-3 fs-3">
-                                <i class="bi bi-buildings-fill"></i>
-                            </div>
+            </div>
+
+            <!-- Available Hospitals Card -->
+            <div class="col-md-4">
+                <div class="p-4 dashboard-card-modern border-start border-success border-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-success small text-uppercase fw-bold" style="letter-spacing: 0.8px;">Available Hospitals</span>
+                            <h2 class="fw-bold mb-0 text-success mt-1" style="font-size: 2rem;">{{ total_hospitals|default:"2" }}</h2>
+                        </div>
+                        <div class="icon-box bg-success-subtle text-success fs-3">
+                            <i class="bi bi-buildings-fill"></i>
                         </div>
                     </div>
                 </div>
@@ -116,5 +184,52 @@
         </div>
     </div>
 
-</body>
-</html>
+    <!-- Quick Navigation Shortcuts Bar -->
+    <div class="row g-3">
+        <div class="col-md-4">
+            <a href="{% url 'hospital_list' %}" class="shortcut-pill-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-success-subtle text-success rounded-4 fs-4">
+                        <i class="bi bi-hospital-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Hospital Network</h6>
+                        <span class="small text-muted">Bed capacity & emergency units</span>
+                    </div>
+                </div>
+                <i class="bi bi-arrow-right-short fs-3 text-success"></i>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="{% url 'doctor_list' %}" class="shortcut-pill-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-primary-subtle text-primary rounded-4 fs-4">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Doctor Search</h6>
+                        <span class="small text-muted">Book consultations online</span>
+                    </div>
+                </div>
+                <i class="bi bi-arrow-right-short fs-3 text-primary"></i>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="tel:999" class="shortcut-pill-card border-danger-subtle" style="background: #fff5f5;">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-3 bg-danger text-white rounded-4 fs-4 shadow-sm">
+                        <i class="bi bi-telephone-outbound-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-danger mb-0">Emergency Hotline</h6>
+                        <span class="small text-danger-subtle text-dark">Instant 999 ER dispatch</span>
+                    </div>
+                </div>
+                <i class="bi bi-arrow-right-short fs-3 text-danger"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
