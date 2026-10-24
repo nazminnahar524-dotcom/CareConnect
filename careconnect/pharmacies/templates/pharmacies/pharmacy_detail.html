@@ -1,710 +1,271 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>{{ pharmacy.name }} | CareConnect</title>
-
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-    <link
-        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
-    >
-
-    <style>
-        :root {
-            --primary: #16845b;
-            --primary-dark: #116b49;
-            --primary-light: #e8f6ef;
-            --heading: #123f35;
-            --text: #263f35;
-            --muted: #698176;
-            --border: #dcebe3;
-            --background: #f4f9f6;
-            --white: #ffffff;
-            --line: #edf3ef;
-            --shadow: 0 7px 24px rgba(24, 74, 54, 0.045);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            min-height: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            min-height: 100vh;
-            font-family: "Nunito Sans", "Segoe UI", Arial, sans-serif;
-            background: var(--background);
-            color: var(--text);
-            font-size: 15px;
-            line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        a {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* ================= HEADER ================= */
-
-        .top-header {
-            min-height: 66px;
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 30px;
-            gap: 16px;
-        }
-
-        .logo {
-            font-size: 27px;
-            font-weight: 900;
-            letter-spacing: -0.8px;
-            line-height: 1.3;
-            color: var(--primary);
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-icon {
-            width: 39px;
-            height: 39px;
-            border-radius: 12px;
-            background: #eff5f1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-        }
-
-        /* ================= PAGE CONTAINER ================= */
-
-        .container {
-            width: calc(100% - 48px);
-            max-width: 1250px;
-            margin: 28px auto 54px;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            color: #527568;
-            font-size: 14px;
-            font-weight: 800;
-            line-height: 1.5;
-            margin-bottom: 18px;
-            transition: color .2s ease;
-        }
-
-        .back-btn:hover {
-            color: var(--primary);
-        }
-
-        /* ================= CARD BASE ================= */
-
-        .profile-card,
-        .info-card,
-        .map-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 17px;
-            box-shadow: var(--shadow);
-            min-width: 0;
-        }
-
-        .profile-card {
-            padding: 30px;
-            margin-bottom: 22px;
-        }
-
-        /* ================= PROFILE HEADER ================= */
-
-        .profile-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 24px;
-        }
-
-        .profile-top > div:first-child {
-            min-width: 0;
-            flex: 1;
-        }
-
-        .profile-name {
-            color: var(--heading);
-            font-size: 34px;
-            font-weight: 900;
-            letter-spacing: -0.9px;
-            line-height: 1.3;
-            margin-bottom: 10px;
-            overflow-wrap: anywhere;
-        }
-
-        .profile-address {
-            color: var(--muted);
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1.85;
-            overflow-wrap: anywhere;
-        }
-
-        .verified,
-        .unverified {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            padding: 8px 13px;
-            border-radius: 24px;
-            font-size: 12px;
-            font-weight: 900;
-            line-height: 1.5;
-            white-space: nowrap;
-        }
-
-        .verified {
-            background: #e8faf1;
-            color: #08784c;
-        }
-
-        .unverified {
-            background: #f1f5f2;
-            color: #687b70;
-        }
-
-        .distance-box {
-            margin-top: 20px;
-            padding: 14px 17px;
-            background: var(--primary-light);
-            border: 1px solid #d0eadb;
-            border-radius: 11px;
-            color: var(--primary-dark);
-            font-size: 14px;
-            line-height: 1.8;
-            overflow-wrap: anywhere;
-        }
-
-        /* ================= ACTION BUTTONS ================= */
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 11px;
-            margin-top: 23px;
-        }
-
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            text-decoration: none;
-            padding: 12px 17px;
-            min-height: 44px;
-            border: 1px solid transparent;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 900;
-            line-height: 1.5;
-            transition:
-                background .2s ease,
-                color .2s ease,
-                border-color .2s ease,
-                transform .2s ease;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .primary-btn {
-            background: var(--primary);
-            color: white;
-        }
-
-        .primary-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .secondary-btn,
-        .call-btn {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .secondary-btn:hover,
-        .call-btn:hover {
-            background: #d9f0e3;
-        }
-
-        /* ================= DETAILS GRID ================= */
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            align-items: stretch;
-            gap: 20px;
-        }
-
-        .info-card {
-            padding: 25px;
-            min-width: 0;
-        }
-
-        .info-card h2,
-        .map-card h2 {
-            color: var(--heading);
-            font-size: 21px;
-            font-weight: 900;
-            letter-spacing: -0.35px;
-            line-height: 1.45;
-            margin-bottom: 17px;
-        }
-
-        /* ================= INFORMATION ROWS ================= */
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            padding: 13px 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 15px;
-            line-height: 1.7;
-            min-width: 0;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .info-label {
-            color: var(--muted);
-            font-size: 14px;
-            font-weight: 600;
-            flex: 0 1 42%;
-            min-width: 0;
-            overflow-wrap: anywhere;
-        }
-
-        .info-value {
-            color: var(--heading);
-            font-size: 14px;
-            font-weight: 900;
-            text-align: right;
-            flex: 1 1 58%;
-            min-width: 0;
-            overflow-wrap: anywhere;
-            word-break: normal;
-        }
-
-        .info-value a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .info-value a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
-        }
-
-        /* ================= SERVICES ================= */
-
-        .service-list {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            gap: 9px;
-        }
-
-        .service-tag {
-            display: inline-flex;
-            align-items: center;
-            background: #f0f5f2;
-            color: #587366;
-            padding: 9px 12px;
-            border-radius: 9px;
-            font-size: 13px;
-            font-weight: 800;
-            line-height: 1.55;
-            overflow-wrap: anywhere;
-        }
-
-        .service-tag.active {
-            background: #e8faf1;
-            color: #08784c;
-        }
-
-        /* ================= OPEN / CLOSED STATUS ================= */
-
-        .open-status {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 7px 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 900;
-            line-height: 1.5;
-            white-space: nowrap;
-        }
-
-        .open {
-            background: #e8faf1;
-            color: #08784c;
-        }
-
-        .closed {
-            background: #fff0f0;
-            color: #b42318;
-        }
-
-        .unknown {
-            background: #f1f5f2;
-            color: #687b70;
-        }
-
-        /* ================= MAP ================= */
-
-        .map-card {
-            padding: 25px;
-            margin-top: 22px;
-        }
-
-        #pharmacyMap {
-            width: 100%;
-            height: 420px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #eef5f0;
-            z-index: 1;
-        }
-
-        .map-info {
-            margin-top: 14px;
-            padding: 13px 15px;
-            background: #f0f8f3;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.75;
-            overflow-wrap: anywhere;
-        }
-
-        .map-info strong {
-            color: var(--heading);
-            font-weight: 900;
-        }
-
-        .no-map {
-            background: #f8fbf9;
-            border: 1px dashed #b8d8c6;
-            padding: 42px 20px;
-            text-align: center;
-            color: var(--muted);
-            border-radius: 11px;
-            font-size: 15px;
-            line-height: 1.8;
-        }
-
-        .no-map strong {
-            color: var(--heading);
-            font-size: 17px;
-            font-weight: 900;
-        }
-
-        .no-map p {
-            margin-top: 7px;
-            font-size: 14px;
-        }
-
-        /* ================= TABLET ================= */
-
-        @media (max-width: 900px) {
-            .container {
-                width: calc(100% - 36px);
-            }
-
-            .profile-card {
-                padding: 25px;
-            }
-
-            .profile-name {
-                font-size: 30px;
-            }
-
-            .details-grid {
-                gap: 16px;
-            }
-
-            .info-card,
-            .map-card {
-                padding: 21px;
-            }
-
-            .info-card h2,
-            .map-card h2 {
-                font-size: 19px;
-            }
-
-            .info-row {
-                gap: 12px;
-            }
-
-            .info-label,
-            .info-value {
-                font-size: 13px;
-            }
-        }
-
-        /* ================= MOBILE ================= */
-
-        @media (max-width: 650px) {
-            .top-header {
-                min-height: 60px;
-                padding: 11px 16px;
-            }
-
-            .logo {
-                font-size: 23px;
-            }
-
-            .header-right {
-                gap: 7px;
-            }
-
-            .header-icon {
-                width: 34px;
-                height: 34px;
-                border-radius: 10px;
-                font-size: 15px;
-            }
-
-            .container {
-                width: calc(100% - 28px);
-                margin-top: 20px;
-                margin-bottom: 32px;
-            }
-
-            .back-btn {
-                font-size: 13px;
-                margin-bottom: 14px;
-            }
-
-            .profile-card {
-                padding: 20px;
-                margin-bottom: 16px;
-                border-radius: 14px;
-            }
-
-            .profile-top {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 13px;
-            }
-
-            .profile-name {
-                font-size: 27px;
-                letter-spacing: -0.55px;
-                line-height: 1.35;
-            }
-
-            .profile-address {
-                font-size: 14px;
-                line-height: 1.8;
-            }
-
-            .verified,
-            .unverified {
-                font-size: 11px;
-                padding: 7px 11px;
-            }
-
-            .distance-box {
-                margin-top: 16px;
-                padding: 12px;
-                font-size: 13px;
-            }
-
-            .actions {
-                gap: 9px;
-                margin-top: 19px;
-            }
-
-            .action-btn {
-                min-height: 43px;
-                padding: 11px 13px;
-                font-size: 13px;
-            }
-
-            .details-grid {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 15px;
-            }
-
-            .info-card,
-            .map-card {
-                padding: 20px;
-                border-radius: 14px;
-            }
-
-            .info-card h2,
-            .map-card h2 {
-                font-size: 19px;
-                margin-bottom: 13px;
-            }
-
-            .info-row {
-                gap: 12px;
-                padding: 12px 0;
-            }
-
-            .info-label {
-                flex: 0 1 40%;
-                font-size: 13px;
-            }
-
-            .info-value {
-                flex: 1 1 60%;
-                font-size: 13px;
-            }
-
-            .service-list {
-                gap: 8px;
-            }
-
-            .service-tag {
-                padding: 8px 10px;
-                font-size: 12px;
-            }
-
-            .open-status {
-                font-size: 11px;
-                padding: 6px 8px;
-            }
-
-            .map-card {
-                margin-top: 16px;
-            }
-
-            #pharmacyMap {
-                height: 340px;
-            }
-
-            .map-info {
-                font-size: 13px;
-                padding: 11px;
-            }
-        }
-
-        /* ================= SMALL MOBILE ================= */
-
-        @media (max-width: 380px) {
-            .container {
-                width: calc(100% - 20px);
-            }
-
-            .profile-card,
-            .info-card,
-            .map-card {
-                padding: 16px;
-            }
-
-            .profile-name {
-                font-size: 24px;
-            }
-
-            .info-card h2,
-            .map-card h2 {
-                font-size: 18px;
-            }
-
-            .info-row {
-                gap: 8px;
-            }
-
-            .info-label {
-                flex-basis: 38%;
-                font-size: 12px;
-            }
-
-            .info-value {
-                flex-basis: 62%;
-                font-size: 12px;
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                width: 100%;
-            }
-
-            #pharmacyMap {
-                height: 290px;
-            }
-        }
-
-        /* ================= ACCESSIBILITY ================= */
-
-        .action-btn:focus-visible,
-        .back-btn:focus-visible,
-        .info-value a:focus-visible {
-            outline: 3px solid rgba(22, 132, 91, .35);
-            outline-offset: 3px;
-        }
-    </style>
-</head>
-
-<body>
-
-<header class="top-header">
-    <div class="logo">CareConnect</div>
-
-    <div class="header-right">
-        <div class="header-icon" aria-label="Notifications">🔔</div>
-        <div class="header-icon" aria-label="Messages">💬</div>
-        <div class="header-icon" aria-label="Profile">👤</div>
-    </div>
-</header>
-
-<main class="container">
+{% extends "base.html" %}
+
+{% block title %}{{ pharmacy.name }} | CareConnect{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+:root {
+    --primary: #16845b;
+    --primary-dark: #116b49;
+    --primary-light: #e8f6ef;
+    --heading: #123f35;
+    --text: #263f35;
+    --muted: #698176;
+    --border: #dcebe3;
+    --background: #f4f9f6;
+    --white: #fff;
+    --line: #edf3ef;
+    --shadow: 0 7px 24px rgba(24,74,54,.045);
+}
+
+.detail-container {
+    width: calc(100% - 40px);
+    max-width: 1250px;
+    margin: 28px auto 54px;
+    color: var(--text);
+    font-family: "Nunito Sans", "Segoe UI", Arial, sans-serif;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #527568;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.back-btn:hover { color: var(--primary); }
+
+.profile-card, .info-card, .map-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    box-shadow: var(--shadow);
+    min-width: 0;
+}
+
+.profile-card {
+    padding: 30px;
+    margin-bottom: 22px;
+}
+
+.profile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.profile-name {
+    color: var(--heading);
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    margin-bottom: 10px;
+}
+
+.profile-address {
+    color: var(--muted);
+    line-height: 1.85;
+    overflow-wrap: anywhere;
+}
+
+.verified, .unverified {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 8px 13px;
+    border-radius: 24px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.verified, .service-tag.active, .open {
+    background: #e8faf1;
+    color: #08784c;
+}
+
+.unverified, .service-tag, .unknown {
+    background: #f1f5f2;
+    color: #687b70;
+}
+
+.distance-box {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: var(--primary-light);
+    border: 1px solid #d0eadb;
+    border-radius: 11px;
+    color: var(--primary-dark);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 23px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 12px 17px;
+    min-height: 44px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 900;
+    border: 1px solid transparent;
+    transition: .2s ease;
+}
+
+.action-btn:hover { transform: translateY(-1px); }
+
+.primary-btn { background: var(--primary); color: white; }
+.primary-btn:hover { background: var(--primary-dark); }
+.secondary-btn, .call-btn { background: var(--primary-light); color: var(--primary-dark); }
+.secondary-btn:hover, .call-btn:hover { background: #d9f0e3; }
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+.info-card, .map-card { padding: 25px; }
+
+.info-card h2, .map-card h2 {
+    color: var(--heading);
+    font-size: 21px;
+    font-weight: 900;
+    margin-bottom: 17px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+    line-height: 1.7;
+    min-width: 0;
+}
+
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+.info-label {
+    color: var(--muted);
+    flex: 0 1 42%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+}
+
+.info-value {
+    color: var(--heading);
+    flex: 1 1 58%;
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.info-value a { color: var(--primary); text-decoration: none; }
+.info-value a:hover { text-decoration: underline; }
+
+.service-list { display: flex; flex-wrap: wrap; gap: 9px; }
+
+.service-tag {
+    display: inline-flex;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.open-status {
+    display: inline-block;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.closed { background: #fff0f0; color: #b42318; }
+
+.map-card { margin-top: 22px; }
+
+#pharmacyMap {
+    width: 100%;
+    height: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #eef5f0;
+    z-index: 1;
+}
+
+.map-info, .no-map {
+    margin-top: 14px;
+    padding: 14px;
+    background: #f0f8f3;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.no-map { text-align: center; padding: 35px 20px; }
+.no-map strong { color: var(--heading); font-size: 17px; }
+.no-map p { margin-top: 7px; }
+
+@media (max-width: 900px) {
+    .profile-card, .info-card, .map-card { padding: 22px; }
+    .profile-name { font-size: 30px; }
+    .details-grid { gap: 16px; }
+}
+
+@media (max-width: 650px) {
+    .detail-container {
+        width: calc(100% - 28px);
+        margin-top: 20px;
+        margin-bottom: 32px;
+    }
+
+    .profile-card, .info-card, .map-card {
+        padding: 19px;
+        border-radius: 14px;
+    }
+
+    .profile-top { flex-direction: column; gap: 13px; }
+    .profile-name { font-size: 27px; }
+    .details-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+    .info-card h2, .map-card h2 { font-size: 19px; }
+    .info-row { gap: 10px; }
+    .info-label, .info-value { font-size: 13px; }
+    .action-btn { padding: 11px 13px; font-size: 13px; }
+    #pharmacyMap { height: 340px; }
+}
+
+@media (max-width: 380px) {
+    .detail-container { width: calc(100% - 20px); }
+    .profile-name { font-size: 24px; }
+    .info-row { gap: 8px; }
+    .actions { flex-direction: column; }
+    .action-btn { width: 100%; }
+    #pharmacyMap { height: 290px; }
+}
+</style>
+{% endblock %}
+{% block content %}
+<main class="detail-container">
 
     <a href="{% url 'pharmacy_list' %}" class="back-btn">
         ← Back to Pharmacies
@@ -717,14 +278,8 @@
 
                 <div class="profile-address">
                     📍 {{ pharmacy.address }}
-
-                    {% if pharmacy.area %}
-                        , {{ pharmacy.area }}
-                    {% endif %}
-
-                    {% if pharmacy.district %}
-                        , {{ pharmacy.district }}
-                    {% endif %}
+                    {% if pharmacy.area %}, {{ pharmacy.area }}{% endif %}
+                    {% if pharmacy.district %}, {{ pharmacy.district }}{% endif %}
                 </div>
             </div>
 
@@ -751,23 +306,19 @@
             {% endif %}
 
             {% if google_maps_url %}
-                <a
-                    href="{{ google_maps_url }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="action-btn primary-btn"
-                >
+                <a href="{{ google_maps_url }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="action-btn primary-btn">
                     🗺 Get Directions
                 </a>
             {% endif %}
 
             {% if pharmacy.website %}
-                <a
-                    href="{{ pharmacy.website }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="action-btn secondary-btn"
-                >
+                <a href="{{ pharmacy.website }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="action-btn secondary-btn">
                     🌐 Visit Website
                 </a>
             {% endif %}
@@ -775,8 +326,6 @@
     </section>
 
     <div class="details-grid">
-
-        <!-- PHARMACY INFORMATION -->
 
         <section class="info-card">
             <h2>Pharmacy Information</h2>
@@ -822,8 +371,6 @@
             {% endif %}
         </section>
 
-        <!-- CONTACT INFORMATION -->
-
         <section class="info-card">
             <h2>Contact Information</h2>
 
@@ -845,11 +392,9 @@
                 <div class="info-row">
                     <span class="info-label">Website</span>
                     <span class="info-value">
-                        <a
-                            href="{{ pharmacy.website }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >Visit Website ↗</a>
+                        <a href="{{ pharmacy.website }}"
+                           target="_blank"
+                           rel="noopener noreferrer">Visit Website ↗</a>
                     </span>
                 </div>
             {% endif %}
@@ -859,8 +404,6 @@
                 <span class="info-value">{{ pharmacy.address }}</span>
             </div>
         </section>
-
-        <!-- SERVICES AND FACILITIES -->
 
         <section class="info-card">
             <h2>Services &amp; Facilities</h2>
@@ -896,14 +439,11 @@
             </div>
         </section>
 
-        <!-- WORKING HOURS -->
-
         <section class="info-card">
             <h2>Working Hours</h2>
 
             <div class="info-row">
                 <span class="info-label">Current Status</span>
-
                 <span class="info-value">
                     {% if is_open_now is True %}
                         <span class="open-status open">● Open Now</span>
@@ -946,8 +486,6 @@
 
     </div>
 
-    <!-- PHARMACY MAP -->
-
     <section class="map-card">
         <h2>Pharmacy Location</h2>
 
@@ -960,81 +498,67 @@
             </div>
         {% else %}
             <div class="no-map">
-                <div style="font-size: 30px; margin-bottom: 10px;">📍</div>
-
+                <div style="font-size:30px; margin-bottom:10px;">📍</div>
                 <strong>Location coordinates unavailable</strong>
-
-                <p>
-                    A map cannot be displayed until coordinates are added
-                    for this pharmacy.
-                </p>
+                <p>A map cannot be displayed until coordinates are added for this pharmacy.</p>
             </div>
         {% endif %}
     </section>
 
 </main>
-
+{% endblock %}
+{% block extra_js %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 {% if pharmacy.latitude is not None and pharmacy.longitude is not None %}
 <script>
-    const pharmacyLatitude = Number("{{ pharmacy.latitude|escapejs }}");
-    const pharmacyLongitude = Number("{{ pharmacy.longitude|escapejs }}");
-
+document.addEventListener("DOMContentLoaded", function () {
+    const latitude = Number("{{ pharmacy.latitude|escapejs }}");
+    const longitude = Number("{{ pharmacy.longitude|escapejs }}");
     const mapElement = document.getElementById("pharmacyMap");
 
     if (
-        mapElement &&
-        Number.isFinite(pharmacyLatitude) &&
-        Number.isFinite(pharmacyLongitude) &&
-        pharmacyLatitude >= -90 &&
-        pharmacyLatitude <= 90 &&
-        pharmacyLongitude >= -180 &&
-        pharmacyLongitude <= 180
+        !mapElement ||
+        !Number.isFinite(latitude) ||
+        !Number.isFinite(longitude) ||
+        latitude < -90 ||
+        latitude > 90 ||
+        longitude < -180 ||
+        longitude > 180
     ) {
-        const map = L.map("pharmacyMap").setView(
-            [pharmacyLatitude, pharmacyLongitude],
-            16
-        );
-
-        L.tileLayer(
-            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-            {
-                maxZoom: 19,
-                attribution: "Tiles &copy; Esri"
-            }
-        ).addTo(map);
-
-        const pharmacyMarker = L.marker([
-            pharmacyLatitude,
-            pharmacyLongitude
-        ]).addTo(map);
-
-        const popup = document.createElement("div");
-        popup.style.minWidth = "180px";
-
-        const pharmacyName = document.createElement("strong");
-        pharmacyName.textContent = "{{ pharmacy.name|escapejs }}";
-
-        const address = document.createElement("div");
-        address.style.fontSize = "13px";
-        address.style.color = "#698176";
-        address.style.marginTop = "4px";
-        address.textContent = "{{ pharmacy.address|escapejs }}";
-
-        popup.appendChild(pharmacyName);
-        popup.appendChild(address);
-
-        pharmacyMarker.bindPopup(popup).openPopup();
-
-        setTimeout(function () {
-            map.invalidateSize();
-        }, 200);
-    } else if (mapElement) {
-        mapElement.textContent = "Invalid pharmacy coordinates.";
+        if (mapElement) {
+            mapElement.textContent = "Invalid pharmacy coordinates.";
+        }
+        return;
     }
+
+    const map = L.map(mapElement).setView([latitude, longitude], 16);
+
+    L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+        {
+            maxZoom: 19,
+            attribution: "Tiles &copy; Esri"
+        }
+    ).addTo(map);
+
+    const marker = L.marker([latitude, longitude]).addTo(map);
+
+    const popup = document.createElement("div");
+    const name = document.createElement("strong");
+    const address = document.createElement("div");
+
+    name.textContent = "{{ pharmacy.name|escapejs }}";
+    address.textContent = "{{ pharmacy.address|escapejs }}";
+    address.style.fontSize = "13px";
+    address.style.marginTop = "4px";
+
+    popup.appendChild(name);
+    popup.appendChild(address);
+
+    marker.bindPopup(popup).openPopup();
+    map.invalidateSize();
+});
 </script>
 {% endif %}
-
-</body>
-</html>
+{% endblock %}
