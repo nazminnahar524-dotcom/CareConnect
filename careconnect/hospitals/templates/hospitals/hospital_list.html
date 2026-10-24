@@ -159,41 +159,6 @@
     .btn-cute-call:hover i {
         animation: cuteRing 0.6s ease infinite;
     }
-    /* Interactive Live Capacity Widget */
-    .live-status-widget {
-        background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.25) 0%, transparent 50%),
-                    linear-gradient(135deg, #022c22 0%, #064e3b 50%, #047857 100%);
-        color: #ffffff;
-        border-radius: 24px;
-        padding: 20px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 40px -10px rgba(4, 120, 87, 0.45);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    .quick-action-pill {
-        background: rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(10px);
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        padding: 12px;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: #ffffff;
-    }
-    .quick-action-pill:hover {
-        background: #ffffff;
-        border-color: #34d399;
-        transform: translateX(6px);
-        color: #064e3b;
-    }
-
-    .quick-action-pill:hover .text-muted {
-        color: #064e3b !important;
-    }
-
     /* Pulsing Status Dot */
     .pulse-live-dot {
         width: 9px;
@@ -282,7 +247,7 @@
 
     <!-- Main Directory Layout -->
     <div class="row">
-        <!-- Sidebar Filter Panel & Live Console Widget -->
+        <!-- Sidebar Filter Panel -->
         <div class="col-lg-3 mb-4">
             <!-- Directory Filters -->
             <div class="card border-0 filter-panel-styled p-4 mb-4">
@@ -342,51 +307,6 @@
                         <a href="{% url 'hospital_list' %}" class="btn btn-outline-success btn-sm py-2 rounded-pill fw-bold"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters</a>
                     </div>
                 </form>
-            </div>
-
-            <!-- Live Bed Tracker & Quick Dispatch Widget -->
-            <div class="live-status-widget mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-white text-dark rounded-pill px-2.5 py-1 fw-bold small shadow-sm">
-                        <span class="pulse-live-dot me-1"></span> ER Live Dispatch
-                    </span>
-                    <span class="small text-white-50" style="font-size: 11px;">Real-Time</span>
-                </div>
-
-                <h6 class="fw-bold mb-1 text-white"><i class="bi bi-lightning-charge-fill text-warning me-1"></i>Bed Availability Monitor</h6>
-                <p class="small text-white-50 mb-3" style="font-size: 12px; line-height: 1.4;">Instant status for critical bed allocation across accredited Dhaka branches.</p>
-
-                <div class="d-flex flex-column gap-2 mb-2">
-                    <a href="{% url 'doctor_list' %}" class="quick-action-pill text-decoration-none">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="bg-success text-white rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px;">
-                                <i class="bi bi-telephone-plus-fill" style="font-size: 12px;"></i>
-                            </div>
-                            <span class="fw-bold small">Instant Consultation</span>
-                        </div>
-                        <i class="bi bi-arrow-right-short fs-5 text-white-50"></i>
-                    </a>
-
-                    <a href="{% url 'pharmacy_list' %}" class="quick-action-pill text-decoration-none">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="bg-primary text-white rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px;">
-                                <i class="bi bi-capsule" style="font-size: 12px;"></i>
-                            </div>
-                            <span class="fw-bold small">Order Medicines</span>
-                        </div>
-                        <i class="bi bi-arrow-right-short fs-5 text-white-50"></i>
-                    </a>
-
-                    <a href="{% url 'nearby_donors' %}" class="quick-action-pill text-decoration-none">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="bg-danger text-white rounded-circle p-1.5 d-flex align-items-center justify-content-center shadow-sm" style="width: 28px; height: 28px;">
-                                <i class="bi bi-heart-pulse-fill" style="font-size: 12px;"></i>
-                            </div>
-                            <span class="fw-bold small">Blood Donors Radar</span>
-                        </div>
-                        <i class="bi bi-arrow-right-short fs-5 text-white-50"></i>
-                    </a>
-                </div>
             </div>
 
             <!-- Emergency Hotline Card -->
