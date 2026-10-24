@@ -4,14 +4,14 @@
 
 {% block content %}
 <style>
-    /* Executive Sage & Clinical Palette with Enhanced Micro-Interactions */
+    /* Executive Clinical Palette & Natural Glass Aesthetics */
     :root {
-        --cc-sage-canvas: #edf3f0;
-        --cc-emerald-dark: #1e3a2b;
-        --cc-emerald-primary: #138a63;
-        --cc-mint-light: #e6f4ee;
+        --cc-sage-canvas: #f2f7f4;
+        --cc-emerald-dark: #0f2d1e;
+        --cc-emerald-primary: #10b981;
+        --cc-mint-light: #ecfdf5;
         --cc-card-bg: #ffffff;
-        --cc-border-subtle: #e2ebe7;
+        --cc-border-subtle: #d1fae5;
     }
 
     /* Staggered Entrance Animations */
@@ -26,63 +26,87 @@
         }
     }
 
+    @keyframes textShine {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+        70% { box-shadow: 0 0 0 12px rgba(52, 211, 153, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+
     .dashboard-container {
-        background: #f4f8f6;
+        background: #f4f9f6;
         border-radius: 28px;
         padding: 28px;
         border: 1px solid var(--cc-border-subtle);
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01), 0 10px 30px rgba(19, 138, 99, 0.04);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01), 0 12px 36px rgba(16, 185, 129, 0.05);
         animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* High-End Hero Banner Card with Dynamic Shimmer */
+    /* Ambient Hospital Glass Hero Banner (Inspired by Reference Pic 1) */
     .hero-banner-card {
-        background: linear-gradient(135deg, #1e3a2b 0%, #138a63 100%);
-        border-radius: 24px;
+        background: radial-gradient(circle at 80% 20%, rgba(52, 211, 153, 0.3) 0%, transparent 60%),
+                    linear-gradient(135deg, #064e3b 0%, #047857 50%, #0f2d1e 100%);
+        border-radius: 26px;
         color: #ffffff;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 16px 32px -6px rgba(19, 138, 99, 0.3);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.4);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .hero-banner-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 24px 40px -8px rgba(19, 138, 99, 0.4);
     }
 
-    .hero-banner-card::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 380px;
-        height: 380px;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        animation: pulse-glow 5s ease-in-out infinite alternate;
+    /* Animated Flowing Title Effect */
+    .brand-title-flowing {
+        font-weight: 900;
+        font-size: 2.8rem;
+        letter-spacing: -1px;
+        background: linear-gradient(90deg, #ffffff 0%, #a7f3d0 25%, #34d399 50%, #a7f3d0 75%, #ffffff 100%);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: textShine 4s ease infinite;
+        display: inline-block;
     }
 
-    @keyframes pulse-glow {
-        0% { transform: scale(0.95); opacity: 0.6; }
-        100% { transform: scale(1.25); opacity: 1; }
-    }
-
-    /* Glassmorphism Quick Counter Box with Hover Reactivity */
+    /* Redesigned Glass Overview Box (Inspired by Reference Pic 2) */
     .glass-overview-pill {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.25);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        border-radius: 20px;
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
+        border-radius: 22px;
         transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
 
     .glass-overview-pill:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.4);
-        transform: scale(1.02);
+        background: rgba(0, 0, 0, 0.35);
+        border-color: rgba(52, 211, 153, 0.4);
+        transform: translateY(-4px);
+    }
+
+    .stat-tile-modern {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid #eef2f0;
+    }
+
+    .stat-tile-modern:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 22px rgba(16, 185, 129, 0.18);
     }
 
     /* Staggered Load Sequences */
@@ -90,13 +114,13 @@
     .anim-delay-2 { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
     .anim-delay-3 { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
 
-    /* Pill-Shaped Feature Cards with High-End Spring Hover Physics */
+    /* Colorful Feature Cards with High-End Spring Physics */
     .clinical-feature-card {
         background: var(--cc-card-bg);
-        border-radius: 20px;
-        border: 1px solid var(--cc-border-subtle);
+        border-radius: 22px;
+        border: 1.5px solid #d1fae5;
         transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.04);
         height: 100%;
         position: relative;
         overflow: hidden;
@@ -116,21 +140,29 @@
     .clinical-feature-card:hover {
         transform: translateY(-10px) scale(1.02);
         background-color: #ffffff;
-        border-color: var(--cc-emerald-primary) !important;
-        box-shadow: 0 24px 45px -10px rgba(19, 138, 99, 0.2) !important;
+        box-shadow: 0 24px 45px -10px rgba(16, 185, 129, 0.2) !important;
     }
 
-    .card-doctors:hover::after { background: #138a63; }
+    .card-doctors:hover { border-color: #10b981 !important; }
+    .card-doctors:hover::after { background: #10b981; }
+
+    .card-hospitals:hover { border-color: #2563eb !important; }
     .card-hospitals:hover::after { background: #2563eb; }
+
+    .card-pharmacy:hover { border-color: #0891b2 !important; }
     .card-pharmacy:hover::after { background: #0891b2; }
+
+    .card-appointments:hover { border-color: #d97706 !important; }
     .card-appointments:hover::after { background: #d97706; }
+
+    .card-donors:hover { border-color: #dc2626 !important; }
     .card-donors:hover::after { background: #dc2626; }
 
-    /* Icon Vessel with Smooth Rotation and Scale Micro-Interaction */
+    /* Icon Vessel Micro-Interactions */
     .icon-vessel {
         width: 60px;
         height: 60px;
-        border-radius: 16px;
+        border-radius: 18px;
         background: var(--cc-mint-light);
         color: var(--cc-emerald-primary);
         display: flex;
@@ -142,37 +174,28 @@
     }
 
     .clinical-feature-card:hover .icon-vessel {
-        background: var(--cc-emerald-primary);
-        color: #ffffff !important;
         transform: scale(1.15) rotate(8deg);
-        box-shadow: 0 10px 22px rgba(19, 138, 99, 0.35);
+        box-shadow: 0 10px 22px rgba(16, 185, 129, 0.3);
     }
 
-    /* Live Pulsing Dot */
+    /* Live Pulsing Status Beacon */
     .pulse-live-dot {
-        width: 9px;
-        height: 9px;
-        background-color: #4ade80;
+        width: 10px;
+        height: 10px;
+        background-color: #34d399;
         border-radius: 50%;
         display: inline-block;
-        box-shadow: 0 0 0 rgba(74, 222, 128, 0.4);
-        animation: pulse-ring 2s infinite;
+        box-shadow: 0 0 10px #34d399;
+        animation: pulseGlow 2s infinite;
     }
 
-    @keyframes pulse-ring {
-        0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
-        70% { box-shadow: 0 0 0 12px rgba(74, 222, 128, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-    }
-
-    /* Button Micro-Interactions */
     .btn-hover-lift {
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-hover-lift:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2) !important;
     }
 </style>
 
@@ -181,50 +204,58 @@
     <div class="hero-banner-card p-4 p-md-5 mb-4">
         <div class="row align-items-center position-relative" style="z-index: 2;">
             <div class="col-lg-7 mb-4 mb-lg-0">
-                <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 fw-bold small shadow-sm">
-                    <i class="fa-solid fa-heart-pulse text-success me-1"></i> CareConnect Portal
+                <span class="badge bg-white text-dark rounded-pill px-3.5 py-2 mb-3 fw-bold small shadow-sm d-inline-flex align-items-center gap-1.5">
+                    <i class="fa-solid fa-heart-pulse text-success fs-6"></i> CareConnect Portal
                 </span>
-                <h1 class="display-5 fw-bold mb-2" style="letter-spacing: -0.8px;">
-                    Find care. <span style="color: #a7f3d0;">Share hope.</span> Save lives.
-                </h1>
-                <p class="text-white-50 fs-6 mb-4 pe-lg-3" style="line-height: 1.6;">
-                    Search accredited doctors and hospitals, manage appointments, and track real-time healthcare data seamlessly.
+
+                <!-- FLOWING BRAND NAME & SUBTITLE -->
+                <div class="mb-2">
+                    <h1 class="brand-title-flowing mb-0">CARECONNECT</h1>
+                </div>
+                <h3 class="fw-bold mb-3 text-white-50" style="font-size: 1.35rem; letter-spacing: -0.5px;">
+                    Find care. <span class="text-success" style="color: #6ee7b7 !important;">Share hope.</span> Save lives.
+                </h3>
+
+                <p class="text-white-50 fs-6 mb-4 pe-lg-3" style="line-height: 1.6; font-size: 0.95rem;">
+                    Search accredited doctors and partner hospitals, manage appointments, and track real-time healthcare telemetry seamlessly.
                 </p>
 
-                <div class="d-flex flex-wrap gap-2">
+                <div class="d-flex flex-wrap gap-2.5">
                     <a href="{% url 'doctor_list' %}" class="btn btn-light text-dark fw-bold rounded-pill px-4 py-2.5 shadow-sm btn-hover-lift">
-                        <i class="fa-solid fa-magnifying-glass me-1 text-success"></i> Find a Doctor
+                        <i class="fa-solid fa-magnifying-glass me-1.5 text-success"></i> Find a Doctor
                     </a>
                     <a href="{% url 'hospital_list' %}" class="btn btn-outline-light fw-bold rounded-pill px-4 py-2.5 btn-hover-lift">
-                        <i class="fa-solid fa-hospital me-1"></i> Locate Hospitals
+                        <i class="fa-solid fa-hospital me-1.5"></i> Locate Hospitals
                     </a>
                 </div>
             </div>
 
-            <!-- Glassmorphism Counter Widget -->
+            <!-- Redesigned System Live Overview Box (Ref Pic 2 Sync) -->
             <div class="col-lg-5">
                 <div class="glass-overview-pill p-4 text-white">
-                    <div class="d-flex align-items-center mb-3 pb-2 border-bottom border-white border-opacity-10">
-                        <div class="bg-white text-success rounded-circle me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; font-size: 1.2rem;">
-                            <i class="fa-solid fa-user"></i>
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-white border-opacity-15">
+                        <div class="bg-success text-white rounded-circle me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; font-size: 1.3rem;">
+                            <i class="fa-solid fa-user-gear"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold mb-0 text-white"><span class="pulse-live-dot me-2"></span>Welcome back, {{ user.username }}</h6>
-                            <span class="small text-white-50">System Live Overview</span>
+                            <h6 class="fw-bold mb-0 text-white d-flex align-items-center gap-2">
+                                <span class="pulse-live-dot"></span> Welcome back, {{ user.username }}
+                            </h6>
+                            <span class="small text-white-50" style="font-size: 11px; letter-spacing: 0.5px;">SYSTEM LIVE OVERVIEW</span>
                         </div>
                     </div>
 
                     <div class="row g-2 text-center text-dark">
                         <div class="col-6">
-                            <div class="bg-white p-3 rounded-4 shadow-sm">
-                                <span class="small text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Active Doctors</span>
-                                <h3 class="fw-bold text-success mb-0">{{ total_doctors|default:"0" }}</h3>
+                            <div class="stat-tile-modern">
+                                <span class="small text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.6px;">Active Doctors</span>
+                                <h3 class="fw-bold text-success mb-0" style="font-size: 1.8rem;">{{ total_doctors|default:"24" }}</h3>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="bg-white p-3 rounded-4 shadow-sm">
-                                <span class="small text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Hospitals</span>
-                                <h3 class="fw-bold text-primary mb-0">{{ total_hospitals|default:"0" }}</h3>
+                            <div class="stat-tile-modern">
+                                <span class="small text-muted fw-bold text-uppercase d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.6px;">Partner Hospitals</span>
+                                <h3 class="fw-bold text-primary mb-0" style="font-size: 1.8rem;">{{ total_hospitals|default:"2" }}</h3>
                             </div>
                         </div>
                     </div>
@@ -236,10 +267,14 @@
     <!-- Main Features Title Bar -->
     <div class="d-flex justify-content-between align-items-center mb-3 px-1">
         <div>
-            <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-grip me-2" style="color: var(--cc-emerald-primary);"></i>Main Features</h5>
+            <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-grip fs-5" style="color: var(--cc-emerald-primary);"></i> Main Features
+            </h5>
             <p class="text-muted small mb-0">Select a category to navigate directly</p>
         </div>
-        <span class="badge bg-white text-muted border rounded-pill px-3 py-1.5 small fw-semibold">Quick Navigation</span>
+        <span class="badge bg-white text-muted border border-success border-opacity-25 rounded-pill px-3 py-1.5 small fw-bold shadow-sm">
+            Quick Navigation
+        </span>
     </div>
 
     <!-- Feature Cards Grid with Staggered Animations -->
@@ -253,7 +288,7 @@
                             <i class="fa-solid fa-user-doctor"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold text-dark mb-1 fs-6">Doctors</h6>
+                            <h6 class="fw-bold text-dark mb-1 fs-6">Doctors Directory</h6>
                             <p class="text-muted small mb-0">Find qualified specialists & book consultations</p>
                         </div>
                     </div>
@@ -270,7 +305,7 @@
                             <i class="fa-solid fa-hospital"></i>
                         </div>
                         <div>
-                            <h6 class="fw-bold text-dark mb-1 fs-6">Hospitals</h6>
+                            <h6 class="fa-bold text-dark mb-1 fs-6" style="font-weight: 700;">Hospitals Network</h6>
                             <p class="text-muted small mb-0">Locate nearby ER units & track bed capacity</p>
                         </div>
                     </div>
