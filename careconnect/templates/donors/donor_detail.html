@@ -54,6 +54,11 @@
                     </div>
                 </div>
 
+                <div class="d-flex gap-2 mb-3">
+                    <a href="{% url 'edit_donor' donor.id %}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                    <a href="{% url 'delete_donor' donor.id %}" class="btn btn-outline-danger btn-sm">Delete Profile</a>
+                </div>
+
                 <hr>
 
                 <h5 class="fw-bold mb-3">About Donor</h5>

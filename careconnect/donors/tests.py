@@ -9,7 +9,7 @@ from django.urls import reverse
 from PIL import Image
 
 from .admin import DonorAdmin
-from .models import Donor
+from .models import DonationHistory, Donor
 
 
 class NearbyDonorAddressFilterTests(TestCase):
@@ -269,3 +269,82 @@ class DonorRegistrationTests(TestCase):
             reverse('donor_detail', args=[new_donor.pk])
         )
         self.assertEqual(detail_response.status_code, 200)
+
+
+class DonorProfileCrudTests(TestCase):
+    def setUp(self):
+        self.donor = Donor.objects.create(
+            full_name='Adnan Donor',
+            gender='Male',
+            blood_group='O+',
+            phone_number='01700000009',
+            district='Dhaka',
+            upazila='Dhanmondi',
+            area='Dhanmondi',
+        )
+        self.edit_url = reverse('edit_donor', args=[self.donor.pk])
+        self.delete_url = reverse('delete_donor', args=[self.donor.pk])
+
+    def test_donor_detail_offers_edit_and_delete_actions(self):
+        response = self.client.get(
+            reverse('donor_detail', args=[self.donor.pk])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.edit_url)
+        self.assertContains(response, self.delete_url)
+
+    def test_edit_form_is_prefilled_and_updates_donor(self):
+        response = self.client.get(self.edit_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context['form'].initial['full_name'],
+            self.donor.full_name,
+        )
+
+        response = self.client.post(self.edit_url, {
+            'full_name': 'Updated Donor Name',
+            'blood_group': 'A+',
+            'gender': 'Female',
+            'age': '30',
+            'district': 'Chattogram',
+            'upazila': 'Pahartali',
+            'area': 'New Area',
+            'phone_number': '01711111111',
+            'whatsapp_number': '01711111111',
+            'email': 'updated@example.com',
+            'occupation': 'Teacher',
+            'languages': 'Bangla, English',
+            'about_me': 'Updated profile.',
+            'is_available': 'on',
+        })
+
+        self.assertRedirects(
+            response,
+            reverse('donor_detail', args=[self.donor.pk]),
+        )
+        self.donor.refresh_from_db()
+        self.assertEqual(self.donor.full_name, 'Updated Donor Name')
+        self.assertEqual(self.donor.blood_group, 'A+')
+        self.assertEqual(self.donor.district, 'Chattogram')
+
+    def test_delete_requires_confirmation_and_post_deletes_profile(self):
+        DonationHistory.objects.create(
+            donor=self.donor,
+            date='2025-01-01',
+            blood_group='O+',
+            location='Dhaka',
+        )
+
+        response = self.client.get(self.delete_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Are you sure')
+        self.assertTrue(Donor.objects.filter(pk=self.donor.pk).exists())
+
+        response = self.client.post(self.delete_url)
+
+        self.assertRedirects(response, reverse('nearby_donors'))
+        self.assertFalse(Donor.objects.filter(pk=self.donor.pk).exists())
+        self.assertFalse(DonationHistory.objects.exists())

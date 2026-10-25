@@ -82,7 +82,43 @@ def register_donor(request):
     else:
         form = DonorRegistrationForm()
 
-    return render(request, 'donors/register_donor.html', {'form': form})
+    return render(request, 'donors/register_donor.html', {
+        'form': form,
+        'page_title': 'Register as a Blood Donor',
+        'submit_label': 'Submit & Become a Donor',
+    })
+
+
+def edit_donor(request, donor_id):
+    donor = get_object_or_404(Donor, id=donor_id)
+    if request.method == 'POST':
+        form = DonorRegistrationForm(request.POST, request.FILES, instance=donor)
+        if form.is_valid():
+            donor = form.save()
+            messages.success(request, 'Donor profile updated successfully.')
+            if donor.is_available:
+                return redirect('donor_detail', donor_id=donor.id)
+            return redirect('nearby_donors')
+    else:
+        form = DonorRegistrationForm(instance=donor)
+
+    return render(request, 'donors/register_donor.html', {
+        'form': form,
+        'page_title': 'Edit Donor Profile',
+        'submit_label': 'Update Donor Profile',
+        'donor': donor,
+    })
+
+
+def delete_donor(request, donor_id):
+    donor = get_object_or_404(Donor, id=donor_id)
+    if request.method == 'POST':
+        donor_name = donor.full_name
+        donor.delete()
+        messages.success(request, f'{donor_name}\'s donor profile was deleted.')
+        return redirect('nearby_donors')
+
+    return render(request, 'donors/confirm_delete.html', {'donor': donor})
 
 
 def donor_detail(request, donor_id):
