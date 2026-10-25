@@ -76,6 +76,82 @@ class NearbyDonorAddressFilterTests(TestCase):
         self.assertContains(response, 'Location not set', count=2)
         self.assertContains(response, 'Mirpur A Positive')
         self.assertContains(response, 'Chattogram O Positive')
+        self.assertContains(response, 'Search location, e.g. Uttara')
+        self.assertContains(response, 'Use my current location')
+        self.assertContains(response, 'nominatim.openstreetmap.org/search')
+
+    def test_selected_viewer_location_is_used_for_distance(self):
+        response = self.client.get(
+            reverse('nearby_donors'),
+            {'lat': '24.8949', 'lng': '91.8687'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['location_is_default'])
+        distant_donor = next(
+            donor for donor in response.context['donors']
+            if donor.full_name == 'Mirpur O Positive'
+        )
+        self.assertGreater(distant_donor.distance, 0)
+        self.assertContains(
+            response,
+            'Distances are shown from your current location for this session.',
+        )
+
+    def test_viewer_location_is_kept_out_of_url_and_filter_values_are_preserved(self):
+        response = self.client.post(
+            reverse('nearby_donors'),
+            {
+                'location_action': 'set',
+                'latitude': '24.8949',
+                'longitude': '91.8687',
+                'location_label': 'Uttara, Dhaka, Bangladesh',
+                'blood_group': 'O+',
+                'address': 'Mirpur',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertNotIn('lat=', response['Location'])
+        self.assertNotIn('lng=', response['Location'])
+        self.assertIn('blood_group=O%2B', response['Location'])
+        self.assertIn('address=Mirpur', response['Location'])
+
+        page = self.client.get(response['Location'])
+        self.assertEqual(page.status_code, 200)
+        self.assertEqual(page.context['user_lat'], 24.8949)
+        self.assertEqual(page.context['user_lng'], 91.8687)
+        self.assertEqual(page.context['location_label'], 'Uttara, Dhaka, Bangladesh')
+        self.assertEqual(page.context['selected_blood_group'], 'O+')
+        self.assertEqual(page.context['selected_address'], 'Mirpur')
+
+        clear_response = self.client.post(
+            reverse('nearby_donors'),
+            {
+                'location_action': 'clear',
+                'blood_group': 'O+',
+                'address': 'Mirpur',
+            },
+        )
+        self.assertEqual(clear_response.status_code, 302)
+        self.assertNotIn('lat=', clear_response['Location'])
+        default_page = self.client.get(clear_response['Location'])
+        self.assertTrue(default_page.context['location_is_default'])
+        self.assertEqual(default_page.context['selected_blood_group'], 'O+')
+        self.assertEqual(default_page.context['selected_address'], 'Mirpur')
+
+    def test_invalid_viewer_coordinates_safely_use_default_distance_origin(self):
+        response = self.client.get(
+            reverse('nearby_donors'),
+            {'lat': '91', 'lng': '181', 'radius': 'nan'},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['location_is_default'])
+        self.assertEqual(response.context['user_lat'], 23.7461)
+        self.assertEqual(response.context['user_lng'], 90.3742)
+        self.assertEqual(response.context['radius'], 20050.0)
+        self.assertContains(response, 'Distances are shown from Dhanmondi, Dhaka.')
 
     def test_donor_cards_support_hover_and_animated_detail_navigation(self):
         response = self.client.get(reverse('nearby_donors'))
@@ -196,7 +272,11 @@ class DonorRegistrationTests(TestCase):
         self.assertContains(response, 'donor-location-map')
         self.assertContains(response, 'Use my current location')
         self.assertContains(response, 'navigator.geolocation')
+        self.assertContains(response, 'server.arcgisonline.com')
         self.assertContains(response, 'OpenStreetMap')
+        self.assertContains(response, 'Click anywhere on the map')
+        self.assertContains(response, 'Choose your location on the map or use your current location before saving.')
+        self.assertNotContains(response, 'name="latitude" required')
 
     def test_valid_registration_creates_donor_and_redirects(self):
         response = self.client.post(self.registration_url, self.valid_data)

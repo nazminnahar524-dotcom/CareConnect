@@ -202,6 +202,63 @@
                 <h5 class="fw-bold mb-0">{{ total_donors }} Donors Found</h5>
                 <span class="text-muted small">Sort by: <strong>Nearest</strong></span>
             </div>
+            <div class="alert alert-light border d-flex flex-wrap justify-content-between align-items-center gap-2 py-2 mb-3">
+                <span class="small" id="distance-origin-status" aria-live="polite">
+                    {% if location_is_default %}
+                        Distances are shown from {{ location_label }}.
+                    {% else %}
+                        Distances are shown from {{ location_label }} for this session.
+                    {% endif %}
+                </span>
+                <div class="d-flex flex-wrap align-items-start gap-2">
+                    {% if not location_is_default %}
+                        <form method="post" action="{% url 'nearby_donors' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="location_action" value="clear">
+                            <input type="hidden" name="blood_group" value="{{ selected_blood_group }}">
+                            <input type="hidden" name="gender" value="{{ selected_gender }}">
+                            <input type="hidden" name="address" value="{{ selected_address }}">
+                            <input type="hidden" name="radius" value="{{ selected_radius }}">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Reset distance location</button>
+                        </form>
+                    {% endif %}
+                    <form method="post" action="{% url 'nearby_donors' %}" id="viewer-location-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="location_action" value="set">
+                        <input type="hidden" name="latitude" id="viewer-latitude">
+                        <input type="hidden" name="longitude" id="viewer-longitude">
+                        <input type="hidden" name="location_label" id="viewer-location-label" value="your current location">
+                        <input type="hidden" name="blood_group" value="{{ selected_blood_group }}">
+                        <input type="hidden" name="gender" value="{{ selected_gender }}">
+                        <input type="hidden" name="address" value="{{ selected_address }}">
+                        <input type="hidden" name="radius" value="{{ selected_radius }}">
+                        <button type="button" class="btn btn-outline-success btn-sm" id="use-viewer-location">
+                            Use my current location
+                        </button>
+                    </form>
+                    <form id="search-distance-location" class="d-flex flex-wrap gap-2" role="search">
+                        <label class="visually-hidden" for="distance-location-query">Search a location for distance calculation</label>
+                        <input
+                            type="search"
+                            class="form-control form-control-sm"
+                            id="distance-location-query"
+                            placeholder="Search location, e.g. Uttara"
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" class="btn btn-outline-success btn-sm" id="search-distance-location-button">
+                            Search location
+                        </button>
+                        <div class="w-100">
+                            <div id="distance-location-status" class="small text-muted" aria-live="polite"></div>
+                            <div id="distance-location-results" class="list-group mt-1" role="listbox"></div>
+                            <small class="form-text text-muted">
+                                Location search is provided by OpenStreetMap Nominatim. The search text is sent to OpenStreetMap to find matching places in Bangladesh.
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             <div class="row g-3">
                 {% for donor in donors %}
@@ -266,6 +323,133 @@
 
 {% block extra_js %}
 <script>
+    const viewerLocationButton = document.getElementById('use-viewer-location');
+    const distanceOriginStatus = document.getElementById('distance-origin-status');
+    const viewerLocationForm = document.getElementById('viewer-location-form');
+    if (viewerLocationButton && distanceOriginStatus && viewerLocationForm) {
+        viewerLocationButton.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                distanceOriginStatus.textContent = 'This browser does not support location. Please allow location access or continue from Dhanmondi, Dhaka.';
+                return;
+            }
+
+            viewerLocationButton.disabled = true;
+            distanceOriginStatus.textContent = 'Requesting your location permission...';
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    document.getElementById('viewer-latitude').value = position.coords.latitude;
+                    document.getElementById('viewer-longitude').value = position.coords.longitude;
+                    document.getElementById('viewer-location-label').value = 'your current location';
+                    viewerLocationForm.requestSubmit();
+                },
+                (error) => {
+                    viewerLocationButton.disabled = false;
+                    const messages = {
+                        1: 'Location permission was denied. Distances remain from Dhanmondi, Dhaka.',
+                        2: 'Your location could not be determined. Distances remain from Dhanmondi, Dhaka.',
+                        3: 'Location request timed out. Please try again.'
+                    };
+                    distanceOriginStatus.textContent =
+                        messages[error.code] || 'Could not get your location. Distances remain from Dhanmondi, Dhaka.';
+                },
+                {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000}
+            );
+        });
+    }
+
+    const locationSearchForm = document.getElementById('search-distance-location');
+    if (locationSearchForm) {
+        const queryInput = document.getElementById('distance-location-query');
+        const searchButton = document.getElementById('search-distance-location-button');
+        const searchStatus = document.getElementById('distance-location-status');
+        const resultsContainer = document.getElementById('distance-location-results');
+        const resultForm = document.getElementById('viewer-location-form');
+        let lastSearchTime = 0;
+
+        locationSearchForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const query = queryInput.value.trim();
+            if (!query) {
+                searchStatus.textContent = 'Enter an area or place name to search.';
+                return;
+            }
+
+            const waitTime = 1100 - (Date.now() - lastSearchTime);
+            if (waitTime > 0) {
+                searchStatus.textContent = 'Please wait a moment before searching again.';
+                return;
+            }
+
+            lastSearchTime = Date.now();
+            searchButton.disabled = true;
+            resultsContainer.replaceChildren();
+            searchStatus.textContent = 'Searching locations in Bangladesh...';
+
+            try {
+                const params = new URLSearchParams({
+                    format: 'jsonv2',
+                    q: query,
+                    countrycodes: 'bd',
+                    limit: '5',
+                    addressdetails: '1',
+                    'accept-language': 'en'
+                });
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/search?${params.toString()}`,
+                    {headers: {Accept: 'application/json'}}
+                );
+                if (!response.ok) {
+                    throw new Error(`Location search failed (${response.status}).`);
+                }
+
+                const results = await response.json();
+                if (!Array.isArray(results) || results.length === 0) {
+                    searchStatus.textContent = 'No locations found. Try a nearby area or district name.';
+                    return;
+                }
+
+                searchStatus.textContent = 'Choose the correct location:';
+                results.forEach((result) => {
+                    const latitude = Number.parseFloat(result.lat);
+                    const longitude = Number.parseFloat(result.lon);
+                    if (
+                        !Number.isFinite(latitude) ||
+                        !Number.isFinite(longitude) ||
+                        latitude < 20.5 ||
+                        latitude > 26.7 ||
+                        longitude < 88 ||
+                        longitude > 92.8
+                    ) {
+                        return;
+                    }
+
+                    const option = document.createElement('button');
+                    option.type = 'button';
+                    option.className = 'list-group-item list-group-item-action small text-start';
+                    option.setAttribute('role', 'option');
+                    option.textContent = result.display_name;
+                    option.addEventListener('click', () => {
+                        document.getElementById('viewer-latitude').value = latitude;
+                        document.getElementById('viewer-longitude').value = longitude;
+                        document.getElementById('viewer-location-label').value =
+                            result.display_name.split(',').slice(0, 3).join(',').trim();
+                        resultForm.requestSubmit();
+                    });
+                    resultsContainer.append(option);
+                });
+
+                if (!resultsContainer.childElementCount) {
+                    searchStatus.textContent = 'No valid Bangladesh locations found. Try another search.';
+                }
+            } catch (error) {
+                searchStatus.textContent = 'Location search is temporarily unavailable. Try your current location or try again later.';
+                console.error(error);
+            } finally {
+                searchButton.disabled = false;
+            }
+        });
+    }
+
     document.querySelectorAll('[data-detail-transition]').forEach((link) => {
         link.addEventListener('click', (event) => {
             if (

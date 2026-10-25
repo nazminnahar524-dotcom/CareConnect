@@ -5,10 +5,12 @@ from .models import DonationHistory, Donor
 class DonorRegistrationForm(forms.ModelForm):
     latitude = forms.FloatField(
         label='Location latitude',
+        required=False,
         widget=forms.HiddenInput(attrs={'id': 'id_latitude'}),
     )
     longitude = forms.FloatField(
         label='Location longitude',
+        required=False,
         widget=forms.HiddenInput(attrs={'id': 'id_longitude'}),
     )
 
@@ -46,15 +48,30 @@ class DonorRegistrationForm(forms.ModelForm):
 
     def clean_latitude(self):
         latitude = self.cleaned_data['latitude']
-        if not -90 <= latitude <= 90:
+        if latitude is not None and not -90 <= latitude <= 90:
             raise forms.ValidationError('Enter a latitude between -90 and 90.')
         return latitude
 
     def clean_longitude(self):
         longitude = self.cleaned_data['longitude']
-        if not -180 <= longitude <= 180:
+        if longitude is not None and not -180 <= longitude <= 180:
             raise forms.ValidationError('Enter a longitude between -180 and 180.')
         return longitude
+
+    def clean(self):
+        cleaned_data = super().clean()
+        latitude = cleaned_data.get('latitude')
+        longitude = cleaned_data.get('longitude')
+        if latitude is None or longitude is None:
+            self.add_error(
+                'latitude',
+                'Choose a location on the map or use your current location.',
+            )
+            self.add_error(
+                'longitude',
+                'Choose a location on the map or use your current location.',
+            )
+        return cleaned_data
 
 
 class DonationHistoryForm(forms.ModelForm):

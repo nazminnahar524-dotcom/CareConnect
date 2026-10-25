@@ -1,9 +1,16 @@
 import math
+from urllib.parse import urlencode
+
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib import messages
 from .models import DonationHistory, Donor
 from .forms import DonationHistoryForm, DonorRegistrationForm
+
+
+VIEWER_LATITUDE_SESSION_KEY = 'nearby_donor_viewer_latitude'
+VIEWER_LONGITUDE_SESSION_KEY = 'nearby_donor_viewer_longitude'
+VIEWER_LOCATION_LABEL_SESSION_KEY = 'nearby_donor_viewer_location_label'
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
@@ -11,22 +18,96 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    a = min(1.0, max(0.0, a))
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
 
 def nearby_donors(request):
+    if request.method == 'POST':
+        if request.POST.get('location_action') == 'clear':
+            request.session.pop(VIEWER_LATITUDE_SESSION_KEY, None)
+            request.session.pop(VIEWER_LONGITUDE_SESSION_KEY, None)
+            request.session.pop(VIEWER_LOCATION_LABEL_SESSION_KEY, None)
+        elif request.POST.get('location_action') == 'set':
+            try:
+                selected_latitude = float(request.POST.get('latitude', ''))
+                selected_longitude = float(request.POST.get('longitude', ''))
+                if (
+                    not math.isfinite(selected_latitude)
+                    or not math.isfinite(selected_longitude)
+                    or not -90 <= selected_latitude <= 90
+                    or not -180 <= selected_longitude <= 180
+                ):
+                    raise ValueError
+            except ValueError:
+                messages.error(
+                    request,
+                    'Could not use that location. Please try selecting it again.',
+                )
+            else:
+                request.session[VIEWER_LATITUDE_SESSION_KEY] = selected_latitude
+                request.session[VIEWER_LONGITUDE_SESSION_KEY] = selected_longitude
+                location_label = request.POST.get('location_label', '').strip()
+                request.session[VIEWER_LOCATION_LABEL_SESSION_KEY] = (
+                    location_label[:120] or 'your current location'
+                )
+
+        filters = {
+            key: request.POST.get(key, '')
+            for key in ('blood_group', 'gender', 'address')
+            if request.POST.get(key)
+        }
+        if request.POST.get('radius'):
+            filters['radius'] = request.POST['radius']
+        query_string = urlencode(filters)
+        return redirect(
+            f"{reverse('nearby_donors')}?{query_string}"
+            if query_string else 'nearby_donors'
+        )
+
     blood_group = request.GET.get('blood_group', '')
     gender = request.GET.get('gender', '')
     address = request.GET.get('address', '').strip()
 
-    # User current or default location (Dhanmondi, Dhaka)
+    session_latitude = request.session.get(VIEWER_LATITUDE_SESSION_KEY)
+    session_longitude = request.session.get(VIEWER_LONGITUDE_SESSION_KEY)
+    query_has_location = 'lat' in request.GET or 'lng' in request.GET
     try:
-        user_lat = float(request.GET.get('lat', 23.7461))
-        user_lng = float(request.GET.get('lng', 90.3742))
-        radius = float(request.GET.get('radius', 20050.0))
+        if query_has_location:
+            user_lat = float(request.GET.get('lat', ''))
+            user_lng = float(request.GET.get('lng', ''))
+        elif session_latitude is not None and session_longitude is not None:
+            user_lat = float(session_latitude)
+            user_lng = float(session_longitude)
+        else:
+            raise ValueError
+        if (
+            not math.isfinite(user_lat)
+            or not math.isfinite(user_lng)
+            or not -90 <= user_lat <= 90
+            or not -180 <= user_lng <= 180
+        ):
+            raise ValueError
+        location_is_default = False
+        if query_has_location or session_latitude is None:
+            location_label = 'your current location'
+        else:
+            location_label = request.session.get(
+                VIEWER_LOCATION_LABEL_SESSION_KEY,
+                'your current location',
+            )
     except ValueError:
-        user_lat, user_lng, radius = 23.7461, 90.3742, 10.0
+        user_lat, user_lng = 23.7461, 90.3742
+        location_is_default = True
+        location_label = 'Dhanmondi, Dhaka'
+
+    try:
+        radius = float(request.GET.get('radius', 20050.0))
+        if not math.isfinite(radius) or radius <= 0:
+            raise ValueError
+    except ValueError:
+        radius = 20050.0
 
     donors = Donor.objects.filter(is_available=True)
     available_donors_count = donors.count()
@@ -64,6 +145,9 @@ def nearby_donors(request):
         'donors': donor_list,
         'user_lat': user_lat,
         'user_lng': user_lng,
+        'location_is_default': location_is_default,
+        'location_label': location_label,
+        'selected_radius': radius,
         'radius': radius,
         'total_donors': len(donor_list),
         'available_donors_count': available_donors_count,

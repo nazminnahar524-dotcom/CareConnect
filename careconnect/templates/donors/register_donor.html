@@ -4,9 +4,16 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
     #donor-location-map {
-        height: 340px;
+        height: 380px;
+        min-height: 320px;
         border-radius: .5rem;
         z-index: 0;
+    }
+
+    .donor-location-map-shell {
+        overflow: hidden;
+        border: 1px solid #dce8e2;
+        border-radius: .5rem;
     }
 </style>
 {% endblock %}
@@ -81,7 +88,7 @@
                         <div class="col-md-12">
                             <label class="form-label fw-semibold">Pin your donor location *</label>
                             <p class="small text-muted mb-2">
-                                Choose your location on the map or use your current location. This is used to estimate distance to donors; your pin is not shown publicly.
+                                Click anywhere on the map to place a pin, or drag the pin to adjust it. You can also use your browser location. The pin is used to calculate distances and is not displayed on your public profile.
                             </p>
                             {{ form.latitude }}
                             {{ form.longitude }}
@@ -93,10 +100,12 @@
                                     Click the map to place your pin.
                                 </span>
                             </div>
-                            <div id="donor-location-map" aria-label="Select your donor location on the map"></div>
+                            <div class="donor-location-map-shell">
+                                <div id="donor-location-map" aria-label="Select your donor location on the map"></div>
+                            </div>
                             <small class="form-text text-muted">
-                                Selecting your current location requires browser permission. You can move the pin to a nearby public place for privacy.
-                                Map tiles are provided by OpenStreetMap.
+                                Your browser asks permission before sharing your current location. You may place the pin at a nearby public place instead.
+                                Map tiles are provided by Esri and OpenStreetMap.
                             </small>
                         </div>
 
@@ -161,37 +170,54 @@
         if (!latitudeInput || !longitudeInput || !mapElement) {
             return;
         }
+        const form = mapElement.closest('form');
 
         let map;
         let marker;
+        const formatLocation = (latitude, longitude) =>
+            `Selected location: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+
+        const saveLocation = (latitude, longitude) => {
+            latitudeInput.value = latitude.toFixed(6);
+            longitudeInput.value = longitude.toFixed(6);
+            status.textContent = formatLocation(latitude, longitude);
+        };
+
+        const setLocation = (latitude, longitude, zoomMap = false) => {
+            saveLocation(latitude, longitude);
+            if (!map) {
+                return;
+            }
+            if (marker) {
+                marker.setLatLng([latitude, longitude]);
+            } else {
+                marker = L.marker([latitude, longitude], {draggable: true}).addTo(map);
+                marker.on('dragend', () => {
+                    const position = marker.getLatLng();
+                    setLocation(position.lat, position.lng);
+                });
+            }
+            if (zoomMap) {
+                map.setView([latitude, longitude], 15);
+            }
+        };
+
         if (window.L) {
-            const defaultCenter = [23.7461, 90.3742];
+            const defaultCenter = [23.685, 90.3563];
             const savedLatitude = Number.parseFloat(latitudeInput.value);
             const savedLongitude = Number.parseFloat(longitudeInput.value);
             const hasSavedLocation = Number.isFinite(savedLatitude) && Number.isFinite(savedLongitude);
             map = L.map(mapElement).setView(
                 hasSavedLocation ? [savedLatitude, savedLongitude] : defaultCenter,
-                hasSavedLocation ? 14 : 11
+                hasSavedLocation ? 14 : 7
             );
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+                {
                 maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            const setLocation = (latitude, longitude) => {
-                latitudeInput.value = latitude.toFixed(6);
-                longitudeInput.value = longitude.toFixed(6);
-                if (marker) {
-                    marker.setLatLng([latitude, longitude]);
-                } else {
-                    marker = L.marker([latitude, longitude], {draggable: true}).addTo(map);
-                    marker.on('dragend', () => {
-                        const position = marker.getLatLng();
-                        setLocation(position.lat, position.lng);
-                    });
+                attribution: '&copy; Esri &mdash; Sources: Esri, TomTom, Garmin, FAO, NOAA, USGS, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, and the GIS User Community'
                 }
-                status.textContent = `Selected: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
-            };
+            ).addTo(map);
 
             if (hasSavedLocation) {
                 setLocation(savedLatitude, savedLongitude);
@@ -200,7 +226,7 @@
                 setLocation(event.latlng.lat, event.latlng.lng);
             });
         } else {
-            status.textContent = 'The map could not load. Try again or use your current location.';
+            status.textContent = 'Map tiles could not load. You can still use your current location.';
         }
 
         locationButton.addEventListener('click', () => {
@@ -213,13 +239,10 @@
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const {latitude, longitude} = position.coords;
-                    if (map && window.L) {
-                        map.setView([latitude, longitude], 15);
-                        map.fire('click', {latlng: L.latLng(latitude, longitude)});
+                    if (map) {
+                        setLocation(latitude, longitude, true);
                     } else {
-                        latitudeInput.value = latitude.toFixed(6);
-                        longitudeInput.value = longitude.toFixed(6);
-                        status.textContent = `Selected: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                        saveLocation(latitude, longitude);
                     }
                 },
                 (error) => {
@@ -233,6 +256,16 @@
                 {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000}
             );
         });
+
+        if (form) {
+            form.addEventListener('submit', (event) => {
+                if (!latitudeInput.value || !longitudeInput.value) {
+                    event.preventDefault();
+                    status.textContent = 'Choose your location on the map or use your current location before saving.';
+                    mapElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+                }
+            });
+        }
     });
 </script>
 {% endblock %}

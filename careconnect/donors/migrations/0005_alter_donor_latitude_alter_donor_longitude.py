@@ -11,14 +11,6 @@ def clear_default_coordinates(apps, schema_editor):
     ).update(latitude=None, longitude=None)
 
 
-def restore_default_coordinates(apps, schema_editor):
-    Donor = apps.get_model('donors', 'Donor')
-    Donor.objects.filter(
-        latitude__isnull=True,
-        longitude__isnull=True,
-    ).update(latitude=23.7461, longitude=90.3742)
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -36,5 +28,5 @@ class Migration(migrations.Migration):
             name='longitude',
             field=models.FloatField(blank=True, null=True),
         ),
-        migrations.RunPython(clear_default_coordinates, restore_default_coordinates),
+        migrations.RunPython(clear_default_coordinates, migrations.RunPython.noop),
     ]
