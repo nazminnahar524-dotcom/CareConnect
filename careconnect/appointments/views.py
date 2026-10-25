@@ -20,7 +20,7 @@ TIME_SLOTS = [
 
 
 def appointment_end_datetime(appointment):
-    """Return the appointment's scheduled end datetime."""
+
     try:
         end_text = appointment.time_slot.split(" - ")[-1].strip()
         end_time = datetime.strptime(end_text, "%I:%M %p").time()

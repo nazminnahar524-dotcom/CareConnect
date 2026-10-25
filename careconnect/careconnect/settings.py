@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'hospitals',
     'donors',
-    'blood_requests',
+
     'user_profile',
 ]
 
