@@ -3,9 +3,8 @@ from django.db import models
 
 
 class Pharmacy(models.Model):
-    # =========================
+
     # BASIC INFORMATION
-    # =========================
 
     name = models.CharField(max_length=200)
 
@@ -19,9 +18,9 @@ class Pharmacy(models.Model):
         blank=True
     )
 
-    # =========================
+
     # ADDRESS
-    # =========================
+
 
     address = models.TextField()
 
@@ -40,9 +39,9 @@ class Pharmacy(models.Model):
         blank=True
     )
 
-    # =========================
+
     # LOCATION
-    # =========================
+
 
     latitude = models.DecimalField(
         max_digits=9,
@@ -58,9 +57,8 @@ class Pharmacy(models.Model):
         null=True
     )
 
-    # =========================
     # CONTACT
-    # =========================
+
 
     phone = models.CharField(
         max_length=30,
@@ -75,9 +73,9 @@ class Pharmacy(models.Model):
         blank=True
     )
 
-    # =========================
+
     # OPENING HOURS
-    # =========================
+
 
     opening_time = models.TimeField(
         blank=True,
@@ -132,9 +130,8 @@ class Pharmacy(models.Model):
         unique=True
     )
 
-    # =========================
     # TIMESTAMPS
-    # =========================
+
 
     created_at = models.DateTimeField(
         auto_now_add=True
