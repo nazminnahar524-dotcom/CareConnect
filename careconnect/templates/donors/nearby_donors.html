@@ -231,7 +231,12 @@
                         <small class="text-muted mb-2">{{ donor.gender }}, {{ donor.age|default:"N/A" }} yrs</small>
 
                         <p class="text-muted small mb-2">
-                            📍 {{ donor.area }} • <strong>{{ donor.distance }} km away</strong>
+                            📍 {{ donor.area }} •
+                            {% if donor.distance is not None %}
+                                <strong>{{ donor.distance }} km away</strong>
+                            {% else %}
+                                <strong>Location not set</strong>
+                            {% endif %}
                         </p>
 
                         <div class="d-flex align-items-center gap-2 mb-3">

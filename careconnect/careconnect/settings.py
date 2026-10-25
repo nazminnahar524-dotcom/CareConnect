@@ -20,8 +20,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'hospitals',
     'donors',
-    'medicines',
     'blood_requests',
+    'user_profile',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
@@ -88,3 +88,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

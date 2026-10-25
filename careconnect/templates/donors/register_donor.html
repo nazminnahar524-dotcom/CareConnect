@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+    #donor-location-map {
+        height: 340px;
+        border-radius: .5rem;
+        z-index: 0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card p-4 border-0 shadow-sm rounded-3">
-                <h3 class="fw-bold text-success mb-2">Register as a Blood Donor</h3>
-                <p class="text-muted mb-4">Fill out the form below to join our donor list and help save lives.</p>
+                {% if donor %}
+                    <a href="{% url 'donor_detail' donor.id %}" class="btn btn-sm btn-outline-secondary align-self-start mb-3">Back to Donor Profile</a>
+                {% endif %}
+                <h3 class="fw-bold text-success mb-2">{{ page_title|default:"Register as a Blood Donor" }}</h3>
+                <p class="text-muted mb-4">
+                    {% if donor %}Update the donor's information below.{% else %}Fill out the form below to join our donor list and help save lives.{% endif %}
+                </p>
 
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -62,6 +78,28 @@
                             {{ form.area }}
                         </div>
 
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Pin your donor location *</label>
+                            <p class="small text-muted mb-2">
+                                Choose your location on the map or use your current location. This is used to estimate distance to donors; your pin is not shown publicly.
+                            </p>
+                            {{ form.latitude }}
+                            {{ form.longitude }}
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <button type="button" id="use-current-location" class="btn btn-outline-success btn-sm">
+                                    Use my current location
+                                </button>
+                                <span id="location-status" class="small text-muted" aria-live="polite">
+                                    Click the map to place your pin.
+                                </span>
+                            </div>
+                            <div id="donor-location-map" aria-label="Select your donor location on the map"></div>
+                            <small class="form-text text-muted">
+                                Selecting your current location requires browser permission. You can move the pin to a nearby public place for privacy.
+                                Map tiles are provided by OpenStreetMap.
+                            </small>
+                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Phone Number *</label>
                             {{ form.phone_number }}
@@ -100,7 +138,7 @@
                         </div>
 
                         <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-success w-100 fw-semibold py-2">Submit & Become a Donor</button>
+                            <button type="submit" class="btn btn-success w-100 fw-semibold py-2">{{ submit_label|default:"Submit & Become a Donor" }}</button>
                         </div>
                     </div>
                 </form>
@@ -108,4 +146,93 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const latitudeInput = document.getElementById('id_latitude');
+        const longitudeInput = document.getElementById('id_longitude');
+        const status = document.getElementById('location-status');
+        const locationButton = document.getElementById('use-current-location');
+        const mapElement = document.getElementById('donor-location-map');
+
+        if (!latitudeInput || !longitudeInput || !mapElement) {
+            return;
+        }
+
+        let map;
+        let marker;
+        if (window.L) {
+            const defaultCenter = [23.7461, 90.3742];
+            const savedLatitude = Number.parseFloat(latitudeInput.value);
+            const savedLongitude = Number.parseFloat(longitudeInput.value);
+            const hasSavedLocation = Number.isFinite(savedLatitude) && Number.isFinite(savedLongitude);
+            map = L.map(mapElement).setView(
+                hasSavedLocation ? [savedLatitude, savedLongitude] : defaultCenter,
+                hasSavedLocation ? 14 : 11
+            );
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const setLocation = (latitude, longitude) => {
+                latitudeInput.value = latitude.toFixed(6);
+                longitudeInput.value = longitude.toFixed(6);
+                if (marker) {
+                    marker.setLatLng([latitude, longitude]);
+                } else {
+                    marker = L.marker([latitude, longitude], {draggable: true}).addTo(map);
+                    marker.on('dragend', () => {
+                        const position = marker.getLatLng();
+                        setLocation(position.lat, position.lng);
+                    });
+                }
+                status.textContent = `Selected: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+            };
+
+            if (hasSavedLocation) {
+                setLocation(savedLatitude, savedLongitude);
+            }
+            map.on('click', (event) => {
+                setLocation(event.latlng.lat, event.latlng.lng);
+            });
+        } else {
+            status.textContent = 'The map could not load. Try again or use your current location.';
+        }
+
+        locationButton.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                status.textContent = 'This browser does not support location. Please select a point on the map.';
+                return;
+            }
+
+            status.textContent = 'Requesting your location permission...';
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const {latitude, longitude} = position.coords;
+                    if (map && window.L) {
+                        map.setView([latitude, longitude], 15);
+                        map.fire('click', {latlng: L.latLng(latitude, longitude)});
+                    } else {
+                        latitudeInput.value = latitude.toFixed(6);
+                        longitudeInput.value = longitude.toFixed(6);
+                        status.textContent = `Selected: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                    }
+                },
+                (error) => {
+                    const messages = {
+                        1: 'Location permission was denied. Select a point on the map instead.',
+                        2: 'Your location could not be determined. Try selecting a point on the map.',
+                        3: 'Location request timed out. Please try again or select a point on the map.'
+                    };
+                    status.textContent = messages[error.code] || 'Could not get your location. Select a point on the map.';
+                },
+                {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000}
+            );
+        });
+    });
+</script>
 {% endblock %}

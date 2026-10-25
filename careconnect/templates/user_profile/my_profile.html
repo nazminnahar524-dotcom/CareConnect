@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - CareConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success border-0 shadow-sm mb-4 rounded-3">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- READ SECTION: Profile Info Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <div class="d-flex align-items-center gap-4 flex-wrap">
+                    {% if profile.profile_photo %}
+                        <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" class="rounded-circle border" style="width: 90px; height: 90px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center fw-bold fs-2" style="width: 90px; height: 90px;">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <h4 class="fw-bold mb-1 text-dark">{{ user.get_full_name|default:user.username }}</h4>
+                        <p class="text-muted mb-1 small"><i class="fa-regular fa-envelope me-1"></i> {{ user.email|default:"No email provided" }}</p>
+                        <p class="text-muted mb-0 small"><i class="fa-solid fa-phone me-1"></i> {{ profile.phone_number|default:"No phone provided" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPDATE SECTION: Edit Form -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-user-pen me-2"></i>Edit Profile Information</h5>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Username</label>
+                            {{ u_form.username }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Email Address</label>
+                            {{ u_form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">First Name</label>
+                            {{ u_form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Last Name</label>
+                            {{ u_form.last_name }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Profile Photo</label>
+                            {{ p_form.profile_photo }}
+                            {% if profile.profile_photo %}
+                                <div class="mt-2 d-flex align-items-center flex-wrap gap-3">
+                                    <span class="text-muted small">Current: <a href="{{ profile.profile_photo.url }}" target="_blank">View Photo</a></span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="remove_photo" id="removePhotoCheck">
+                                        <label class="form-check-label text-danger small fw-semibold" for="removePhotoCheck">
+                                            Remove Photo
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">Phone Number</label>
+                            {{ p_form.phone_number }}
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold small">Address</label>
+                            {{ p_form.address }}
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold small">About / Bio</label>
+                            {{ p_form.bio }}
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-success fw-bold px-4 py-2 rounded-pill">Save Profile Changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- DELETE SECTION -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-light border-start border-danger border-4">
+                <h6 class="fw-bold text-danger mb-1">Delete User Account</h6>
+                <p class="text-muted small mb-3">Your account and profile will be permanently deleted.</p>
+                <form method="POST" onsubmit="return confirm('Are you sure you want to delete your account?');">
+                    {% csrf_token %}
+                    <button type="submit" name="delete_account" class="btn btn-outline-danger btn-sm fw-bold rounded-pill px-4">Delete My Account</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

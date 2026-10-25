@@ -38,9 +38,8 @@ class Donor(models.Model):
     last_donated = models.DateField(null=True, blank=True)
     is_available = models.BooleanField(default=True)
 
-    # Location coordinates for Map integration (Pharmacies app pattern)
-    latitude = models.FloatField(default=23.7461)  # Default: Dhanmondi, Dhaka
-    longitude = models.FloatField(default=90.3742)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

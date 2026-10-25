@@ -12,7 +12,6 @@ urlpatterns = [
     path('doctors/', include('doctors.urls')),
     path('appointments/', include('appointments.urls')),  # <--- Add this back
     path('pharmacies/', include('pharmacies.urls')),
-    path('medicines/', include('medicines.urls')),
     path('donors/', include('donors.urls')),
     path('hospitals/', include('hospitals.urls')),
 
@@ -20,7 +19,8 @@ urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.login_view, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path("blood-requests/", include("blood_requests.urls")),
+    path('', include('user_profile.urls')),
+
 ]
 
 if settings.DEBUG:

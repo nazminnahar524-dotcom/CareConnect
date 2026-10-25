@@ -1,926 +1,811 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Your Pharmacy | CareConnect</title>
-
-    <style>
-        :root {
-            --green: #16845b;
-            --green-dark: #123f35;
-            --green-light: #e8f6ef;
-            --green-soft: #f4f9f6;
-            --border: #dcebe3;
-            --muted: #698176;
-            --white: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            min-height: 100%;
-            overflow-x: clip;
-        }
-
-        body {
-            min-height: 100vh;
-            background: var(--green-soft);
-            color: var(--green-dark);
-            font-family: "Nunito Sans", "Segoe UI", Arial, sans-serif;
-            font-size: 14px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        button, input, select {
-            font: inherit;
-        }
-
-        button, a, select {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* HEADER */
-
-        .top-header {
-            min-height: 66px;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            color: var(--green);
-            font-size: 23px;
-            font-weight: 900;
-            white-space: nowrap;
-        }
-
-        .header-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex: 1;
-        }
-
-        .location-box,
-        .header-search,
-        .radius-select,
-        .filter-input,
-        .filter-select {
-            min-height: 42px;
-            padding: 10px 12px;
-            border: 1px solid #d5e4dc;
-            border-radius: 9px;
-            background: #fff;
-            color: #234c40;
-        }
-
-        .location-box {
-            background: var(--green-light);
-            border-color: transparent;
-            white-space: nowrap;
-        }
-
-        .header-search {
-            width: 230px;
-        }
-
-        .header-icons {
-            display: flex;
-            gap: 9px;
-        }
-
-        .header-icon {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: var(--green-light);
-        }
-
-        .primary-btn,
-        .filter-submit,
-        .location-btn,
-        .nearby-trigger {
-            border: 1px solid var(--green);
-            border-radius: 9px;
-            background: var(--green);
-            color: white;
-            padding: 11px 15px;
-            font-size: 13px;
-            font-weight: 800;
-            transition: background .2s, border-color .2s;
-        }
-
-        .primary-btn:hover,
-        .filter-submit:hover,
-        .location-btn:hover,
-        .nearby-trigger:hover {
-            background: var(--green-dark);
-            border-color: var(--green-dark);
-        }
-
-        /* PAGE */
-
-        .container {
-            width: calc(100% - 48px);
-            max-width: 1600px;
-            margin: 24px auto 40px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            margin-bottom: 14px;
-            color: #39705a;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .back-btn:hover,
-        .filter-reset:hover {
-            color: var(--green);
-        }
-
-        .page-header,
-        .nearby-panel,
-        .filter-card,
-        .pharmacy-card,
-        .side-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 17px;
-            box-shadow: 0 7px 24px rgba(24, 74, 54, .045);
-        }
-
-        /* PAGE TITLE AND STATS */
-
-        .page-header {
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .page-title-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-        }
-
-        .eyebrow {
-            margin-bottom: 7px;
-            color: #648174;
-            font-size: 10px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .page-title h1 {
-            margin-bottom: 7px;
-            color: #103f34;
-            font-size: 30px;
-            font-weight: 900;
-            letter-spacing: -.6px;
-            line-height: 1.25;
-        }
-
-        .page-title p {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .stats {
-            display: flex;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .stat-box {
-            min-width: 120px;
-            padding: 13px 16px;
-            border-radius: 12px;
-            background: #eff8f3;
-            text-align: center;
-        }
-
-        .stat-box strong {
-            display: block;
-            margin-bottom: 3px;
-            color: var(--green-dark);
-            font-size: 23px;
-            font-weight: 900;
-        }
-
-        .stat-box span {
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-        /* NEARBY SEARCH */
-
-        .nearby-panel {
-            padding: 20px 22px;
-            margin-bottom: 22px;
-        }
-
-        .nearby-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 22px;
-        }
-
-        .nearby-info {
-            min-width: 0;
-        }
-
-        .nearby-info h3 {
-            margin-bottom: 6px;
-            color: var(--green-dark);
-            font-size: 17px;
-            font-weight: 900;
-        }
-
-        .nearby-info p {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .nearby-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .radius-select {
-            min-width: 130px;
-        }
-
-        .location-status {
-            margin-top: 14px;
-            padding: 11px 13px;
-            border-radius: 9px;
-            background: #eff8f3;
-            color: #47715e;
-            font-size: 12px;
-            line-height: 1.7;
-            overflow-wrap: anywhere;
-        }
-
-        /* THREE COLUMNS */
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: minmax(235px, 260px)
-                                   minmax(0, 1fr)
-                                   minmax(220px, 260px);
-            align-items: start;
-            gap: 22px;
-            width: 100%;
-        }
-
-        /* FILTER */
-
-        .filter-card {
-            min-width: 0;
-            padding: 22px;
-        }
-
-        .filter-card h3 {
-            margin-bottom: 23px;
-            color: var(--green-dark);
-            font-size: 20px;
-            font-weight: 900;
-        }
-
-        .filter-group {
-            margin-bottom: 20px;
-        }
-
-        .filter-group > label:not(.check-row) {
-            display: block;
-            margin-bottom: 9px;
-            color: #234c40;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .filter-input,
-        .filter-select {
-            display: block;
-            width: 100%;
-            min-width: 0;
-            min-height: 44px;
-            font-size: 13px;
-            outline: none;
-        }
-
-        .filter-input:focus,
-        .filter-select:focus,
-        .header-search:focus,
-        .radius-select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px rgba(22, 132, 91, .10);
-        }
-
-        .check-row {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            margin-bottom: 12px;
-            color: #526f61;
-            font-size: 13px;
-            line-height: 1.5;
-            cursor: pointer;
-        }
-
-        .check-row input {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-            accent-color: var(--green);
-        }
-
-        .filter-submit {
-            width: 100%;
-            min-height: 43px;
-        }
-
-        .filter-reset {
-            display: block;
-            padding: 12px 8px 3px;
-            color: var(--muted);
-            text-align: center;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* RESULTS */
-
-        .list-section {
-            min-width: 0;
-            width: 100%;
-        }
-
-        .list-heading-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin: 2px 0 14px;
-        }
-
-        .list-heading-row h2 {
-            color: var(--green-dark);
-            font-size: 21px;
-            font-weight: 900;
-            line-height: 1.4;
-        }
-
-        .result-count {
-            color: var(--muted);
-            font-size: 12px;
-            white-space: nowrap;
-        }
-
-        /*
-         * Scroll inside the results, not the entire page.
-         * The list remains usable on smaller screens too.
-         */
-
-        #careconnectList,
-        #nearbyList {
-            width: 100%;
-            height: 500px;
-            max-height: 500px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 1px 7px 8px 1px;
-            scrollbar-gutter: stable;
-            overscroll-behavior-y: contain;
-        }
-
-        #nearbyList {
-            display: none;
-        }
-
-        #careconnectList::-webkit-scrollbar,
-        #nearbyList::-webkit-scrollbar {
-            width: 7px;
-        }
-
-        #careconnectList::-webkit-scrollbar-track,
-        #nearbyList::-webkit-scrollbar-track {
-            background: #edf4ef;
-            border-radius: 10px;
-        }
-
-        #careconnectList::-webkit-scrollbar-thumb,
-        #nearbyList::-webkit-scrollbar-thumb {
-            background: #b5c8bc;
-            border-radius: 10px;
-        }
-
-        /* PHARMACY CARD */
-
-        .pharmacy-card {
-            width: 100%;
-            min-width: 0;
-            padding: 21px;
-            margin-bottom: 16px;
-            overflow-wrap: anywhere;
-            transition: border-color .2s, box-shadow .2s, transform .2s;
-        }
-
-        .pharmacy-card:hover {
-            border-color: #b8d9c9;
-            box-shadow: 0 10px 24px rgba(18, 61, 49, .07);
-            transform: translateY(-1px);
-        }
-
-        .pharmacy-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 14px;
-        }
-
-        .pharmacy-top > div:first-child {
-            min-width: 0;
-            flex: 1;
-        }
-
-        .pharmacy-name {
-            margin-bottom: 6px;
-            color: var(--green-dark);
-            font-size: 19px;
-            font-weight: 900;
-            letter-spacing: -.25px;
-            line-height: 1.45;
-            overflow-wrap: anywhere;
-        }
-
-        .pharmacy-address {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.7;
-            overflow-wrap: anywhere;
-        }
-
-        .verified,
-        .unverified {
-            display: inline-block;
-            padding: 6px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .verified {
-            background: #e6f7ed;
-            color: #147447;
-        }
-
-        .unverified {
-            background: #f1f5f2;
-            color: #687b70;
-        }
-
-        .pharmacy-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            margin-top: 14px;
-        }
-
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            max-width: 100%;
-            padding: 7px 9px;
-            border-radius: 7px;
-            background: #f0f5f2;
-            color: #47705d;
-            font-size: 11px;
-            font-weight: 800;
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-        }
-
-        .tag.green {
-            background: #e6f7ed;
-            color: #147447;
-        }
-
-        .tag.blue {
-            background: #e8f6ef;
-            color: #12664d;
-        }
-
-        .pharmacy-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            margin-top: 17px;
-            padding-top: 15px;
-            border-top: 1px solid #e8f0eb;
-        }
-
-        .phone {
-            min-width: 0;
-            color: #526f61;
-            font-size: 12px;
-            line-height: 1.7;
-            overflow-wrap: anywhere;
-        }
-
-        .pharmacy-actions {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .details-btn,
-        .save-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 42px;
-            padding: 10px 13px;
-            border-radius: 9px;
-            font-size: 12px;
-            font-weight: 800;
-            text-align: center;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: background .2s, color .2s;
-        }
-
-        .details-btn {
-            border: 1px solid var(--green);
-            background: var(--green);
-            color: #fff;
-        }
-
-        .details-btn:hover {
-            border-color: var(--green-dark);
-            background: var(--green-dark);
-            color: #fff;
-        }
-
-        .save-btn {
-            border: 1px solid var(--border);
-            background: #fff;
-            color: var(--green);
-        }
-
-        .save-btn:hover {
-            border-color: var(--green);
-            background: var(--green-light);
-        }
-
-        /* EMPTY STATE */
-
-        .empty-state {
-            padding: 35px 20px;
-            border: 1px dashed #b8d8c6;
-            border-radius: 15px;
-            background: #fff;
-            color: var(--muted);
-            text-align: center;
-            overflow-wrap: anywhere;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 9px;
-            color: #174f3d;
-            font-size: 18px;
-        }
-
-        .empty-state p {
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        /* RIGHT SIDEBAR */
-
-        .right-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            min-width: 0;
-        }
-
-        .side-card {
-            min-width: 0;
-            padding: 20px;
-        }
-
-        .side-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 43px;
-            height: 43px;
-            margin-bottom: 14px;
-            border-radius: 12px;
-            background: #e6f7ed;
-            color: var(--green);
-            font-size: 20px;
-        }
-
-        .side-card h3 {
-            margin-bottom: 8px;
-            color: var(--green-dark);
-            font-size: 17px;
-            font-weight: 900;
-            line-height: 1.45;
-        }
-
-        .side-card p {
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.8;
-            overflow-wrap: anywhere;
-        }
-
-        .side-button {
-            display: block;
-            width: 100%;
-            min-height: 42px;
-            margin-top: 15px;
-            padding: 11px;
-            border: 1px solid var(--green);
-            border-radius: 9px;
-            background: #fff;
-            color: var(--green);
-            font-size: 12px;
-            font-weight: 800;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .side-button:hover {
-            background: var(--green-light);
-        }
-
-        .side-divider {
-            margin: 14px 0;
-            border: 0;
-            border-top: 1px solid #edf3ef;
-        }
-
-        /* TABLET: FILTER + RESULTS */
-
-        @media (max-width: 1150px) {
-            .container {
-                width: calc(100% - 32px);
-            }
-
-            .content-grid {
-                grid-template-columns: minmax(210px, 245px) minmax(0, 1fr);
-                gap: 18px;
-            }
-
-            .right-sidebar {
-                display: none;
-            }
-
-            .header-center {
-                justify-content: flex-end;
-            }
-
-            .header-search {
-                display: none;
-            }
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 700px) {
-            .top-header {
-                padding: 12px 16px;
-                gap: 10px;
-            }
-
-            .logo {
-                font-size: 20px;
-            }
-
-            .header-center {
-                display: none;
-            }
-
-            .container {
-                width: calc(100% - 24px);
-                margin-top: 16px;
-                margin-bottom: 28px;
-            }
-
-            .page-header {
-                padding: 18px;
-            }
-
-            .page-title-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 17px;
-            }
-
-            .page-title h1 {
-                font-size: 26px;
-            }
-
-            .stats {
-                width: 100%;
-                gap: 9px;
-            }
-
-            .stat-box {
-                flex: 1;
-                min-width: 0;
-                padding: 12px 7px;
-            }
-
-            .stat-box strong {
-                font-size: 21px;
-            }
-
-            .stat-box span {
-                font-size: 10px;
-            }
-
-            .nearby-panel {
-                padding: 17px;
-            }
-
-            .nearby-top {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-
-            .nearby-actions {
-                flex-direction: column;
-                align-items: stretch;
-                width: 100%;
-            }
-
-            .radius-select,
-            .location-btn {
-                width: 100%;
-            }
-
-            .content-grid {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 18px;
-            }
-
-            .filter-card {
-                padding: 19px;
-            }
-
-            .list-heading-row h2 {
-                font-size: 19px;
-            }
-
-            #careconnectList,
-            #nearbyList {
-                height: 450px;
-                max-height: 450px;
-            }
-
-            .pharmacy-card {
-                padding: 17px;
-            }
-
-            .pharmacy-name {
-                font-size: 17px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .pharmacy-card {
-                padding: 14px;
-            }
-
-            .pharmacy-top {
-                gap: 8px;
-            }
-
-            .pharmacy-name {
-                font-size: 16px;
-            }
-
-            .verified,
-            .unverified {
-                padding: 5px 6px;
-                font-size: 9px;
-            }
-
-            .pharmacy-bottom {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .pharmacy-actions {
-                width: 100%;
-            }
-
-            .details-btn,
-            .save-btn {
-                flex: 1;
-                white-space: normal;
-            }
-
-            .tag {
-                font-size: 10px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<header class="top-header">
-    <div class="logo">CareConnect</div>
-
-    <div class="header-center">
-        <button type="button" class="location-box"
-                id="topLocation" onclick="getMyLocation()">
-            📍 Use My Live Location
-        </button>
-
-        <button type="button" class="nearby-trigger"
-                onclick="getMyLocation()">
-            Nearby Pharmacies
-        </button>
-
-        <input type="search" class="header-search"
-               placeholder="Search CareConnect..."
-               aria-label="Search CareConnect">
-    </div>
-
-    <div class="header-icons">
-        <div class="header-icon" aria-label="Notifications">🔔</div>
-        <div class="header-icon" aria-label="Messages">💬</div>
-        <div class="header-icon" aria-label="Profile">👤</div>
-    </div>
-</header>
-
-<main class="container">
-
-    <a href="/" class="back-btn">← Back to Home</a>
-
-    <section class="page-header">
-        <div class="page-title-row">
-            <div class="page-title">
-                <div class="eyebrow">Care Directory</div>
-                <h1>Find Your Pharmacy</h1>
-                <p>
-                    Search pharmacies, check available services and find
-                    one near you.
-                </p>
-            </div>
-
-            <div class="stats">
-                <div class="stat-box">
-                    <strong>{{ pharmacies|length }}</strong>
-                    <span>Pharmacies Found</span>
-                </div>
-
-                <div class="stat-box">
-                    <strong>24/7</strong>
-                    <span>Care Support</span>
-                </div>
-            </div>
-        </div>
-    </section>
+
+{% extends "base.html" %}
+
+{% block title %}Find Your Pharmacy | CareConnect{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --green: #16845b;
+    --green-dark: #123f35;
+    --green-light: #e8f6ef;
+    --green-soft: #f4f9f6;
+    --border: #dcebe3;
+    --muted: #698176;
+    --white: #ffffff;
+}
+
+html {
+    min-height: 100%;
+    overflow-x: clip;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button, a, select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    cursor: pointer;
+}
+
+.radius-select,
+.filter-input,
+.filter-select {
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #d5e4dc;
+    border-radius: 9px;
+    background: #fff;
+    color: #234c40;
+}
+
+.filter-input,
+.filter-select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 13px;
+    outline: none;
+}
+
+.radius-select {
+    min-width: 130px;
+}
+
+.primary-btn,
+.filter-submit,
+.location-btn {
+    border: 1px solid var(--green);
+    border-radius: 9px;
+    background: var(--green);
+    color: white;
+    padding: 11px 15px;
+    font-size: 13px;
+    font-weight: 800;
+    transition: background .2s, border-color .2s;
+}
+
+.primary-btn:hover,
+.filter-submit:hover,
+.location-btn:hover {
+    background: var(--green-dark);
+    border-color: var(--green-dark);
+}
+
+/* PAGE */
+
+.container {
+    width: calc(100% - 48px);
+    max-width: 1600px;
+    margin: 24px auto 40px;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: #39705a;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.back-btn:hover,
+.filter-reset:hover {
+    color: var(--green);
+}
+
+.page-header,
+.nearby-panel,
+.filter-card,
+.pharmacy-card,
+.side-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    box-shadow: 0 7px 24px rgba(24, 74, 54, .045);
+}
+
+/* PAGE TITLE */
+
+.page-header {
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.page-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.eyebrow {
+    margin-bottom: 7px;
+    color: #648174;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.page-title h1 {
+    margin-bottom: 7px;
+    color: #103f34;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -.6px;
+    line-height: 1.25;
+}
+
+.page-title p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.stats {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.stat-box {
+    min-width: 120px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: #eff8f3;
+    text-align: center;
+}
+
+.stat-box strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--green-dark);
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.stat-box span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* NEARBY SEARCH */
+
+.nearby-panel {
+    padding: 20px 22px;
+    margin-bottom: 22px;
+}
+
+.nearby-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+}
+
+.nearby-info {
+    min-width: 0;
+}
+
+.nearby-info h3 {
+    margin-bottom: 6px;
+    color: var(--green-dark);
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.nearby-info p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.nearby-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.location-status {
+    display: block;
+    margin-top: 16px;
+    padding: 15px 17px;
+    border: 1px solid #16845b;
+    border-left: 5px solid #16845b;
+    border-radius: 12px;
+    background: #e8f6ef;
+    color: #123f35;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    box-shadow: 0 4px 14px rgba(22, 132, 91, .08);
+}
+
+.location-status strong {
+    display: block;
+    color: #116b49;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.location-coordinates {
+    display: block;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid #c5e6d4;
+    border-radius: 8px;
+    background: #fff;
+    color: #116b49;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.location-result {
+    display: block;
+    margin-top: 8px;
+    color: #356b53;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.radius-select {
+    min-width: 130px;
+}
+
+/* THREE COLUMNS */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: minmax(235px, 260px)
+                           minmax(0, 1fr)
+                           minmax(220px, 260px);
+    align-items: start;
+    gap: 22px;
+    width: 100%;
+}
+
+/* FILTER */
+
+.filter-card {
+    min-width: 0;
+    padding: 22px;
+}
+
+.filter-card h3 {
+    margin-bottom: 23px;
+    color: var(--green-dark);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group > label:not(.check-row) {
+    display: block;
+    margin-bottom: 9px;
+    color: #234c40;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.filter-input:focus,
+.filter-select:focus,
+.radius-select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(22, 132, 91, .10);
+}
+
+.check-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    color: #526f61;
+    font-size: 13px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.check-row input {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    accent-color: var(--green);
+}
+
+.filter-submit {
+    width: 100%;
+    min-height: 43px;
+}
+
+.filter-reset {
+    display: block;
+    padding: 12px 8px 3px;
+    color: var(--muted);
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* RESULTS */
+
+.list-section {
+    min-width: 0;
+    width: 100%;
+}
+
+.list-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 2px 0 14px;
+}
+
+.list-heading-row h2 {
+    color: var(--green-dark);
+    font-size: 21px;
+    font-weight: 900;
+    line-height: 1.4;
+}
+
+.result-count {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+#careconnectList,
+#nearbyList {
+    width: 100%;
+    height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1px 7px 8px 1px;
+    scrollbar-gutter: stable;
+    overscroll-behavior-y: contain;
+}
+
+#nearbyList {
+    display: none;
+}
+
+#careconnectList::-webkit-scrollbar,
+#nearbyList::-webkit-scrollbar {
+    width: 7px;
+}
+
+#careconnectList::-webkit-scrollbar-track,
+#nearbyList::-webkit-scrollbar-track {
+    background: #edf4ef;
+    border-radius: 10px;
+}
+
+#careconnectList::-webkit-scrollbar-thumb,
+#nearbyList::-webkit-scrollbar-thumb {
+    background: #b5c8bc;
+    border-radius: 10px;
+}
+
+/* PHARMACY CARDS */
+
+.pharmacy-card {
+    width: 100%;
+    min-width: 0;
+    padding: 21px;
+    margin-bottom: 16px;
+    overflow-wrap: anywhere;
+    transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+
+.pharmacy-card:hover {
+    border-color: #b8d9c9;
+    box-shadow: 0 10px 24px rgba(18, 61, 49, .07);
+    transform: translateY(-1px);
+}
+
+.pharmacy-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.pharmacy-top > div:first-child {
+    min-width: 0;
+    flex: 1;
+}
+
+.pharmacy-name {
+    margin-bottom: 6px;
+    color: var(--green-dark);
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: -.25px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.pharmacy-address {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.verified,
+.unverified {
+    display: inline-block;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.verified {
+    background: #e6f7ed;
+    color: #147447;
+}
+
+.unverified {
+    background: #f1f5f2;
+    color: #687b70;
+}
+
+.pharmacy-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 14px;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 7px 9px;
+    border-radius: 7px;
+    background: #f0f5f2;
+    color: #47705d;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.tag.green {
+    background: #e6f7ed;
+    color: #147447;
+}
+
+.tag.blue {
+    background: #e8f6ef;
+    color: #12664d;
+}
+
+.pharmacy-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 17px;
+    padding-top: 15px;
+    border-top: 1px solid #e8f0eb;
+}
+
+.phone {
+    min-width: 0;
+    color: #526f61;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.pharmacy-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.details-btn,
+.save-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 13px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .2s, color .2s;
+}
+
+.details-btn {
+    border: 1px solid var(--green);
+    background: var(--green);
+    color: #fff;
+}
+
+.details-btn:hover {
+    border-color: var(--green-dark);
+    background: var(--green-dark);
+    color: #fff;
+}
+
+.save-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--green);
+}
+
+.save-btn:hover {
+    border-color: var(--green);
+    background: var(--green-light);
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+    padding: 35px 20px;
+    border: 1px dashed #b8d8c6;
+    border-radius: 15px;
+    background: #fff;
+    color: var(--muted);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.empty-state h3 {
+    margin-bottom: 9px;
+    color: #174f3d;
+    font-size: 18px;
+}
+
+.empty-state p {
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* RIGHT SIDEBAR */
+
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.side-card {
+    min-width: 0;
+    padding: 20px;
+}
+
+.side-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    background: #e6f7ed;
+    color: var(--green);
+    font-size: 20px;
+}
+
+.side-card h3 {
+    margin-bottom: 8px;
+    color: var(--green-dark);
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1.45;
+}
+
+.side-card p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.side-button {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    margin-top: 15px;
+    padding: 11px;
+    border: 1px solid var(--green);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+}
+
+.side-button:hover {
+    background: var(--green-light);
+}
+
+.side-divider {
+    margin: 14px 0;
+    border: 0;
+    border-top: 1px solid #edf3ef;
+}
+
+/* TABLET */
+
+@media (max-width: 1150px) {
+    .container {
+        width: calc(100% - 32px);
+    }
+
+    .content-grid {
+        grid-template-columns: minmax(210px, 245px) minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .right-sidebar {
+        display: none;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .container {
+        width: calc(100% - 24px);
+        margin-top: 16px;
+        margin-bottom: 28px;
+    }
+
+    .page-header {
+        padding: 18px;
+    }
+
+    .page-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 17px;
+    }
+
+    .page-title h1 {
+        font-size: 26px;
+    }
+
+    .stats {
+        width: 100%;
+        gap: 9px;
+    }
+
+    .stat-box {
+        flex: 1;
+        min-width: 0;
+        padding: 12px 7px;
+    }
+
+    .stat-box strong {
+        font-size: 21px;
+    }
+
+    .stat-box span {
+        font-size: 10px;
+    }
+
+    .nearby-panel {
+        padding: 17px;
+    }
+
+    .nearby-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .nearby-actions {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .radius-select,
+    .location-btn {
+        width: 100%;
+    }
+
+    .content-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .filter-card {
+        padding: 19px;
+    }
+
+    .list-heading-row h2 {
+        font-size: 19px;
+    }
+
+    #careconnectList,
+    #nearbyList {
+        height: 450px;
+        max-height: 450px;
+    }
+
+    .pharmacy-card {
+        padding: 17px;
+    }
+
+    .pharmacy-name {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 420px) {
+    .pharmacy-card {
+        padding: 14px;
+    }
+
+    .pharmacy-top {
+        gap: 8px;
+    }
+
+    .pharmacy-name {
+        font-size: 16px;
+    }
+
+    .verified,
+    .unverified {
+        padding: 5px 6px;
+        font-size: 9px;
+    }
+
+    .pharmacy-bottom {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .pharmacy-actions {
+        width: 100%;
+    }
+
+    .details-btn,
+    .save-btn {
+        flex: 1;
+        white-space: normal;
+    }
+
+    .tag {
+        font-size: 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- NEARBY LOCATION PANEL -->
 
     <section class="nearby-panel" id="nearbyPanel">
         <div class="nearby-top">
@@ -954,9 +839,42 @@
             {% csrf_token %}
         </div>
 
-        <div class="location-status" id="locationStatus" role="status"
-             aria-live="polite">
-            Click "Nearby Pharmacies" to share your live location.
+        <div class="location-status" id="locationStatus"
+             role="status" aria-live="polite">
+            <strong>📍 Your Live Location</strong>
+            <span class="location-result">
+                Click "Nearby Pharmacies" and allow location access to
+                find pharmacies near you.
+            </span>
+        </div>
+    </section>
+
+    <a href="/" class="back-btn">← Back to Home</a>
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+        <div class="page-title-row">
+            <div class="page-title">
+                <div class="eyebrow">Care Directory</div>
+                <h1>Find Your Pharmacy</h1>
+                <p>
+                    Search pharmacies, check available services and find
+                    one near you.
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <strong>{{ pharmacies|length }}</strong>
+                    <span>Pharmacies Found</span>
+                </div>
+
+                <div class="stat-box">
+                    <strong>24/7</strong>
+                    <span>Care Support</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1174,7 +1092,7 @@
         </aside>
 
     </div>
-</main>
+</div>
 
 <script>
     function escapeHtml(value) {
@@ -1190,26 +1108,43 @@
             .replace(/'/g, "&#039;");
     }
 
+    function showLocationStatus(latitude, longitude, message, heading) {
+        const status = document.getElementById("locationStatus");
+
+        status.innerHTML = `
+            <strong>${escapeHtml(heading || "📍 Your Live Location")}</strong>
+            <span class="location-coordinates">
+                Latitude: ${Number(latitude).toFixed(6)}<br>
+                Longitude: ${Number(longitude).toFixed(6)}
+            </span>
+            <span class="location-result">${escapeHtml(message)}</span>
+        `;
+    }
+
     function getMyLocation() {
         const status = document.getElementById("locationStatus");
         const nearbyList = document.getElementById("nearbyList");
         const normalList = document.getElementById("careconnectList");
         const radiusElement = document.getElementById("radiusSelect");
-        const topLocation = document.getElementById("topLocation");
         const listTitle = document.getElementById("listTitle");
         const resultCount = document.getElementById("resultCount");
 
         if (!navigator.geolocation) {
-            status.textContent =
-                "Live location is not supported by this browser.";
+            status.innerHTML = `
+                <strong>⚠ Location Unavailable</strong>
+                <span class="location-result">
+                    Live location is not supported by this browser.
+                </span>
+            `;
             return;
         }
 
-        status.textContent = "Requesting your live location...";
-
-        if (topLocation) {
-            topLocation.textContent = "Getting live location...";
-        }
+        status.innerHTML = `
+            <strong>📍 Detecting Your Live Location</strong>
+            <span class="location-result">
+                Please allow location access in your browser.
+            </span>
+        `;
 
         navigator.geolocation.getCurrentPosition(
             function(position) {
@@ -1217,12 +1152,12 @@
                 const longitude = position.coords.longitude;
                 const radius = radiusElement.value;
 
-                if (topLocation) {
-                    topLocation.textContent = "Live location detected";
-                }
-
-                status.textContent =
-                    "Location detected. Finding nearby pharmacies...";
+                showLocationStatus(
+                    latitude,
+                    longitude,
+                    "Finding nearby pharmacies...",
+                    "📍 Your Live Location"
+                );
 
                 const csrfInput = document.querySelector(
                     "#csrfTokenContainer input[name='csrfmiddlewaretoken']"
@@ -1250,6 +1185,7 @@
                             "Server returned HTTP " + response.status
                         );
                     }
+
                     return response.json();
                 })
                 .then(function(data) {
@@ -1264,9 +1200,7 @@
                     listTitle.textContent = "Nearby Pharmacies";
 
                     const results = data.results || [];
-
-                    resultCount.textContent =
-                        results.length + " results";
+                    resultCount.textContent = results.length + " results";
 
                     if (results.length === 0) {
                         nearbyList.innerHTML = `
@@ -1276,9 +1210,19 @@
                                     No pharmacies were found within the
                                     selected distance. Try a larger radius.
                                 </p>
-                            </div>`;
+                                <button type="button" class="primary-btn"
+                                        onclick="showAllPharmacies()">
+                                    Show All Pharmacies
+                                </button>
+                            </div>
+                        `;
 
-                        status.textContent = "No nearby pharmacies found.";
+                        showLocationStatus(
+                            latitude,
+                            longitude,
+                            "No nearby pharmacies found. Try a larger radius.",
+                            "📍 Your Live Location"
+                        );
                         return;
                     }
 
@@ -1298,7 +1242,7 @@
                             : '<span class="unverified">Unverified</span>';
 
                         const tags = `
-                            <span class="tag blue">📍 ${distanceText}</span>
+                            <span class="tag blue">📍 ${escapeHtml(distanceText)}</span>
                             ${pharmacy.is_24_7
                                 ? '<span class="tag green">24/7</span>' : ''}
                             ${pharmacy.emergency
@@ -1346,16 +1290,21 @@
                                         </a>
                                     </div>
                                 </div>
-                            </article>`;
+                            </article>
+                        `;
                     });
 
                     nearbyList.innerHTML = resultHtml;
 
-                    status.textContent =
-                        "Found " + results.length +
-                        " pharmacy/pharmacies within " +
+                    showLocationStatus(
+                        latitude,
+                        longitude,
+                        "✓ Found " + results.length +
+                        " nearby pharmacy/pharmacies within " +
                         (Number(data.radius || radius) / 1000).toFixed(1) +
-                        " km of your location.";
+                        " km.",
+                        "✓ Live Location Detected"
+                    );
                 })
                 .catch(function(error) {
                     console.error("Nearby pharmacy error:", error);
@@ -1369,35 +1318,42 @@
                         <div class="empty-state">
                             <h3>Unable to load pharmacies</h3>
                             <p>${escapeHtml(error.message)}</p>
-                            <p>Please try again or use the normal pharmacy list.</p>
+                            <p>
+                                Please try again or use the normal pharmacy list.
+                            </p>
                             <button type="button" class="primary-btn"
                                     onclick="showAllPharmacies()">
                                 Show All Pharmacies
                             </button>
-                        </div>`;
+                        </div>
+                    `;
 
-                    status.textContent =
-                        "Could not load nearby pharmacies. Please try again.";
+                    showLocationStatus(
+                        latitude,
+                        longitude,
+                        "Could not load nearby pharmacies. Please try again.",
+                        "⚠ Location Detected, Search Failed"
+                    );
                 });
             },
             function(error) {
-                if (topLocation) {
-                    topLocation.textContent = "📍 Use My Live Location";
-                }
+                let message;
 
                 if (error.code === 1) {
-                    status.textContent =
+                    message =
                         "Location permission denied. Allow location access and try again.";
                 } else if (error.code === 2) {
-                    status.textContent =
-                        "Your location could not be determined.";
+                    message = "Your location could not be determined.";
                 } else if (error.code === 3) {
-                    status.textContent =
-                        "Location request timed out. Please try again.";
+                    message = "Location request timed out. Please try again.";
                 } else {
-                    status.textContent =
-                        "Unable to get your live location.";
+                    message = "Unable to get your live location.";
                 }
+
+                status.innerHTML = `
+                    <strong>⚠ Unable to Get Location</strong>
+                    <span class="location-result">${escapeHtml(message)}</span>
+                `;
             },
             {
                 enableHighAccuracy: true,
@@ -1414,8 +1370,13 @@
             "Available Pharmacies";
         document.getElementById("resultCount").textContent =
             "{{ pharmacies|length }} results";
-        document.getElementById("locationStatus").textContent =
-            "Showing pharmacies from your CareConnect database.";
+        document.getElementById("locationStatus").innerHTML = `
+            <strong>📍 Your Live Location</strong>
+            <span class="location-result">
+                Showing pharmacies from your CareConnect database.
+                Click Nearby Pharmacies to search by your location.
+            </span>
+        `;
     }
 
     function openNearbyPharmacyProfile(
@@ -1441,8 +1402,8 @@
 
     function savePharmacy(pharmacyId) {
         /*
-         * Connect this button to your existing SavedPharmacy endpoint.
-         * This placeholder does not save anything to the database.
+         * Existing placeholder retained.
+         * This does not save data unless connected to a backend.
          */
         alert(
             "The Save button needs to be connected to the existing " +
@@ -1461,6 +1422,6 @@
         }
     );
 </script>
+{% endblock %}
 
-</body>
-</html>
+{% block extra_js %}{% endblock %}

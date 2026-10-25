@@ -13,11 +13,7 @@ urlpatterns = [
         views.my_appointments_view,
         name="my_appointments"
     ),
-    path(
-        "history/",
-        views.appointment_history_view,
-        name="appointment_history"
-    ),
+
     path(
         "cancel/<int:appointment_id>/",
         views.cancel_appointment,

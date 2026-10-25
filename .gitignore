@@ -8,8 +8,7 @@ __pycache__/
 *.py[cod]
 
 # Django
-db.sqlite3
-careconnect/media/
+
 
 # Environment variables
 .env

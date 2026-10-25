@@ -4,5 +4,17 @@ from . import views
 urlpatterns = [
     path('nearby/', views.nearby_donors, name='nearby_donors'),
     path('register/', views.register_donor, name='register_donor'),
+    path('<int:donor_id>/edit/', views.edit_donor, name='edit_donor'),
+    path('<int:donor_id>/delete/', views.delete_donor, name='delete_donor'),
+    path(
+        '<int:donor_id>/donations/add/',
+        views.donor_donation_history,
+        name='add_donation_history',
+    ),
+    path(
+        '<int:donor_id>/donations/<int:history_id>/edit/',
+        views.donor_donation_history,
+        name='edit_donation_history',
+    ),
     path('<int:donor_id>/', views.donor_detail, name='donor_detail'),
 ]
