@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if history %}Edit{% else %}Add{% endif %} Donation History - {{ donor.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card p-4 border-0 shadow-sm rounded-4">
+                <a href="{% url 'donor_detail' donor.id %}" class="btn btn-sm btn-outline-secondary align-self-start mb-3">Back to Donor Profile</a>
+                <h3 class="fw-bold text-success mb-2">
+                    {% if history %}Edit Donation Record{% else %}Add Donation Record{% endif %}
+                </h3>
+                <p class="text-muted mb-4">Record a blood donation for {{ donor.full_name }}.</p>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        Please correct the donation details below.
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="{{ form.date.id_for_label }}">Donation date *</label>
+                        {{ form.date }}
+                        {% for error in form.date.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="{{ form.blood_group.id_for_label }}">Blood group *</label>
+                        {{ form.blood_group }}
+                        {% for error in form.blood_group.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="{{ form.location.id_for_label }}">Donation location *</label>
+                        {{ form.location }}
+                        {% for error in form.location.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" for="{{ form.organization.id_for_label }}">Organization</label>
+                        {{ form.organization }}
+                        {% for error in form.organization.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        {% if history %}Update Donation{% else %}Save Donation{% endif %}
+                    </button>
+                    <a href="{% url 'donor_detail' donor.id %}" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

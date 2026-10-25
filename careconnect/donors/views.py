@@ -2,8 +2,8 @@ import math
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Donor
-from .forms import DonorRegistrationForm
+from .models import DonationHistory, Donor
+from .forms import DonationHistoryForm, DonorRegistrationForm
 
 
 def calculate_distance(lat1, lon1, lat2, lon2):
@@ -44,13 +44,21 @@ def nearby_donors(request):
 
     donor_list = []
     for donor in donors:
+        if donor.latitude is None or donor.longitude is None:
+            donor.distance = None
+            donor_list.append(donor)
+            continue
+
         dist = calculate_distance(user_lat, user_lng, donor.latitude, donor.longitude)
         if dist <= radius:
             donor.distance = round(dist, 1)
             donor_list.append(donor)
 
     # Sort donors by nearest distance
-    donor_list.sort(key=lambda x: x.distance)
+    donor_list.sort(key=lambda x: (
+        x.distance is None,
+        x.distance if x.distance is not None else 0,
+    ))
 
     context = {
         'donors': donor_list,
@@ -123,9 +131,44 @@ def delete_donor(request, donor_id):
 
 def donor_detail(request, donor_id):
     donor = get_object_or_404(Donor, id=donor_id, is_available=True)
-    donation_history = donor.donation_history.all()
+    donation_history = donor.donation_history.order_by('-date', '-id')
     context = {
         'donor': donor,
         'donation_history': donation_history,
     }
     return render(request, 'donors/donor_detail.html', context)
+
+
+def donor_donation_history(request, donor_id, history_id=None):
+    donor = get_object_or_404(Donor, id=donor_id, is_available=True)
+    history = None
+    if history_id is not None:
+        history = get_object_or_404(
+            DonationHistory,
+            id=history_id,
+            donor=donor,
+        )
+
+    if request.method == 'POST':
+        form = DonationHistoryForm(request.POST, instance=history)
+        if form.is_valid():
+            donation_history = form.save(commit=False)
+            donation_history.donor = donor
+            donation_history.save()
+            latest_donation_date = donor.donation_history.order_by(
+                '-date'
+            ).values_list('date', flat=True).first()
+            if donor.last_donated != latest_donation_date:
+                donor.last_donated = latest_donation_date
+                donor.save(update_fields=['last_donated'])
+            action = 'updated' if history else 'added'
+            messages.success(request, f'Donation history {action} successfully.')
+            return redirect('donor_detail', donor_id=donor.id)
+    else:
+        form = DonationHistoryForm(instance=history)
+
+    return render(request, 'donors/donation_history_form.html', {
+        'donor': donor,
+        'form': form,
+        'history': history,
+    })

@@ -1,14 +1,24 @@
 from django import forms
-from .models import Donor
+from .models import DonationHistory, Donor
+
 
 class DonorRegistrationForm(forms.ModelForm):
+    latitude = forms.FloatField(
+        label='Location latitude',
+        widget=forms.HiddenInput(attrs={'id': 'id_latitude'}),
+    )
+    longitude = forms.FloatField(
+        label='Location longitude',
+        widget=forms.HiddenInput(attrs={'id': 'id_longitude'}),
+    )
+
     class Meta:
         model = Donor
         fields = [
             'full_name', 'profile_photo', 'blood_group', 'gender', 'age',
             'district', 'upazila', 'area', 'phone_number',
             'whatsapp_number', 'email', 'occupation',
-            'languages', 'about_me', 'is_available'
+            'languages', 'about_me', 'is_available', 'latitude', 'longitude'
         ]
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your full name'}),
@@ -26,4 +36,40 @@ class DonorRegistrationForm(forms.ModelForm):
             'languages': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Bangla, English'}),
             'about_me': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Write a brief line about yourself...'}),
             'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.initial.setdefault('latitude', self.instance.latitude)
+            self.initial.setdefault('longitude', self.instance.longitude)
+
+    def clean_latitude(self):
+        latitude = self.cleaned_data['latitude']
+        if not -90 <= latitude <= 90:
+            raise forms.ValidationError('Enter a latitude between -90 and 90.')
+        return latitude
+
+    def clean_longitude(self):
+        longitude = self.cleaned_data['longitude']
+        if not -180 <= longitude <= 180:
+            raise forms.ValidationError('Enter a longitude between -180 and 180.')
+        return longitude
+
+
+class DonationHistoryForm(forms.ModelForm):
+    class Meta:
+        model = DonationHistory
+        fields = ['date', 'blood_group', 'location', 'organization']
+        widgets = {
+            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'blood_group': forms.Select(attrs={'class': 'form-select'}),
+            'location': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Hospital, blood bank, or area',
+            }),
+            'organization': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Organization (optional)',
+            }),
         }
