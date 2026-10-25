@@ -22,6 +22,8 @@ class NearbyDonorAddressFilterTests(TestCase):
             district='Dhaka',
             upazila='Mirpur',
             area='Pallabi',
+            latitude=23.7461,
+            longitude=90.3742,
         )
         Donor.objects.create(
             full_name='Mirpur A Positive',
@@ -67,6 +69,13 @@ class NearbyDonorAddressFilterTests(TestCase):
         self.assertContains(response, '0.0 km away')
         self.assertEqual(response.context['selected_address'], 'mirpur')
         self.assertEqual(response.context['available_donors_count'], 3)
+
+    def test_donors_without_coordinates_show_location_not_set(self):
+        response = self.client.get(reverse('nearby_donors'))
+
+        self.assertContains(response, 'Location not set', count=2)
+        self.assertContains(response, 'Mirpur A Positive')
+        self.assertContains(response, 'Chattogram O Positive')
 
     def test_donor_cards_support_hover_and_animated_detail_navigation(self):
         response = self.client.get(reverse('nearby_donors'))
@@ -170,6 +179,8 @@ class DonorRegistrationTests(TestCase):
             'languages': 'Bangla',
             'about_me': 'Ready to donate.',
             'is_available': 'on',
+            'latitude': '23.8103',
+            'longitude': '90.4125',
         }
 
     def test_address_field_does_not_suggest_a_default_location(self):
@@ -179,6 +190,14 @@ class DonorRegistrationTests(TestCase):
         self.assertNotContains(response, 'Dhanmondi, Dhaka')
         self.assertContains(response, 'Enter your area or full address')
 
+    def test_registration_page_offers_map_pin_and_opt_in_browser_location(self):
+        response = self.client.get(self.registration_url)
+
+        self.assertContains(response, 'donor-location-map')
+        self.assertContains(response, 'Use my current location')
+        self.assertContains(response, 'navigator.geolocation')
+        self.assertContains(response, 'OpenStreetMap')
+
     def test_valid_registration_creates_donor_and_redirects(self):
         response = self.client.post(self.registration_url, self.valid_data)
 
@@ -186,6 +205,8 @@ class DonorRegistrationTests(TestCase):
         donor = Donor.objects.get(full_name='New Blood Donor')
         self.assertEqual(donor.blood_group, 'B+')
         self.assertTrue(donor.is_available)
+        self.assertAlmostEqual(donor.latitude, 23.8103)
+        self.assertAlmostEqual(donor.longitude, 90.4125)
         nearby_response = self.client.get(reverse('nearby_donors'))
         self.assertContains(nearby_response, donor.full_name)
         self.assertContains(nearby_response, 'No profile photo')
@@ -236,6 +257,23 @@ class DonorRegistrationTests(TestCase):
         self.assertContains(response, 'District')
         self.assertEqual(Donor.objects.count(), 0)
 
+    def test_registration_requires_valid_location_coordinates(self):
+        missing_location_response = self.client.post(
+            self.registration_url,
+            {key: value for key, value in self.valid_data.items()
+             if key not in {'latitude', 'longitude'}},
+        )
+        self.assertEqual(missing_location_response.status_code, 200)
+        self.assertEqual(Donor.objects.count(), 0)
+
+        invalid_location_response = self.client.post(
+            self.registration_url,
+            {**self.valid_data, 'latitude': '91'},
+        )
+        self.assertEqual(invalid_location_response.status_code, 200)
+        self.assertContains(invalid_location_response, 'between -90 and 90')
+        self.assertEqual(Donor.objects.count(), 0)
+
     def test_logged_in_user_registration_adds_another_donor_profile(self):
         user = get_user_model().objects.create_user(
             username='existing-donor',
@@ -281,6 +319,8 @@ class DonorProfileCrudTests(TestCase):
             district='Dhaka',
             upazila='Dhanmondi',
             area='Dhanmondi',
+            latitude=23.7461,
+            longitude=90.3742,
         )
         self.edit_url = reverse('edit_donor', args=[self.donor.pk])
         self.delete_url = reverse('delete_donor', args=[self.donor.pk])
@@ -302,6 +342,10 @@ class DonorProfileCrudTests(TestCase):
             response.context['form'].initial['full_name'],
             self.donor.full_name,
         )
+        self.assertAlmostEqual(
+            response.context['form'].initial['latitude'],
+            self.donor.latitude,
+        )
 
         response = self.client.post(self.edit_url, {
             'full_name': 'Updated Donor Name',
@@ -318,6 +362,8 @@ class DonorProfileCrudTests(TestCase):
             'languages': 'Bangla, English',
             'about_me': 'Updated profile.',
             'is_available': 'on',
+            'latitude': '22.3569',
+            'longitude': '91.7832',
         })
 
         self.assertRedirects(
@@ -328,6 +374,8 @@ class DonorProfileCrudTests(TestCase):
         self.assertEqual(self.donor.full_name, 'Updated Donor Name')
         self.assertEqual(self.donor.blood_group, 'A+')
         self.assertEqual(self.donor.district, 'Chattogram')
+        self.assertAlmostEqual(self.donor.latitude, 22.3569)
+        self.assertAlmostEqual(self.donor.longitude, 91.7832)
 
     def test_delete_requires_confirmation_and_post_deletes_profile(self):
         DonationHistory.objects.create(
@@ -348,3 +396,84 @@ class DonorProfileCrudTests(TestCase):
         self.assertRedirects(response, reverse('nearby_donors'))
         self.assertFalse(Donor.objects.filter(pk=self.donor.pk).exists())
         self.assertFalse(DonationHistory.objects.exists())
+
+    def test_donor_can_add_and_edit_donation_history_from_profile(self):
+        detail_url = reverse('donor_detail', args=[self.donor.pk])
+        add_url = reverse('add_donation_history', args=[self.donor.pk])
+
+        detail_response = self.client.get(detail_url)
+        self.assertContains(detail_response, 'Donation History (0)')
+        self.assertContains(detail_response, add_url)
+
+        response = self.client.post(add_url, {
+            'date': '2025-04-15',
+            'blood_group': 'O+',
+            'location': 'Dhaka Medical College Hospital',
+            'organization': 'CareConnect Blood Bank',
+        })
+
+        self.assertRedirects(response, detail_url)
+        history = DonationHistory.objects.get(donor=self.donor)
+        self.assertEqual(history.location, 'Dhaka Medical College Hospital')
+        self.donor.refresh_from_db()
+        self.assertEqual(str(self.donor.last_donated), '2025-04-15')
+
+        detail_response = self.client.get(detail_url)
+        self.assertContains(detail_response, 'Donation History (1)')
+        self.assertContains(detail_response, history.location)
+        self.assertContains(
+            detail_response,
+            reverse('edit_donation_history', args=[self.donor.pk, history.pk]),
+        )
+
+        edit_url = reverse(
+            'edit_donation_history',
+            args=[self.donor.pk, history.pk],
+        )
+        edit_response = self.client.get(edit_url)
+        self.assertEqual(edit_response.status_code, 200)
+        self.assertEqual(
+            edit_response.context['form'].initial['location'],
+            history.location,
+        )
+
+        response = self.client.post(edit_url, {
+            'date': '2025-04-16',
+            'blood_group': 'A+',
+            'location': 'Square Hospital',
+            'organization': '',
+        })
+
+        self.assertRedirects(response, detail_url)
+        history.refresh_from_db()
+        self.assertEqual(history.location, 'Square Hospital')
+        self.assertEqual(history.blood_group, 'A+')
+        self.assertEqual(DonationHistory.objects.filter(donor=self.donor).count(), 1)
+        self.donor.refresh_from_db()
+        self.assertEqual(str(self.donor.last_donated), '2025-04-16')
+
+    def test_donor_cannot_edit_another_donors_history(self):
+        another_donor = Donor.objects.create(
+            full_name='Another Donor',
+            gender='Female',
+            blood_group='B+',
+            phone_number='01700000010',
+            district='Dhaka',
+            area='Mirpur',
+            latitude=23.8,
+            longitude=90.4,
+        )
+        history = DonationHistory.objects.create(
+            donor=another_donor,
+            date='2025-04-15',
+            blood_group='B+',
+            location='Mirpur Hospital',
+        )
+        edit_url = reverse(
+            'edit_donation_history',
+            args=[self.donor.pk, history.pk],
+        )
+
+        response = self.client.get(edit_url)
+
+        self.assertEqual(response.status_code, 404)
